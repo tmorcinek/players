@@ -22,7 +22,12 @@
                 android:title="@string/menu_tools" />
     </group>
 
-    <item android:title="Teams">
+    <item android:title="Teams" android:id="@+id/teams">
+        <menu>
+        </menu>
+    </item>
+
+    <item android:title="Communicate">
         <menu>
             <item
                     android:id="@+id/nav_share"

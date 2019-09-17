@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-        navView.menu.add("New Item")
+        navView.menu.findItem(R.id.teams).subMenu.add("Skrzaty")
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
