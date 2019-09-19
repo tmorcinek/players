@@ -57,5 +57,14 @@ dependencies {
     implementation "org.koin:koin-android:$koin_version"
     implementation "org.koin:koin-androidx-viewmodel:$koin_version"
 
+    //Firebase
+    implementation "com.google.firebase:firebase-core:17.2.0"
+    implementation "com.google.firebase:firebase-database:19.1.0"
+//    implementation "com.google.firebase:firebase-auth:17.0.0"
+//    implementation "com.google.firebase:firebase-messaging:18.0.0"
+//    implementation "com.google.firebase:firebase-crash:$versions.firebase"
+//    implementation "com.google.firebase:firebase-storage:$versions.firebase"
+//    implementation "com.google.firebase:firebase-config:17.0.0"
+
     testImplementation 'junit:junit:4.12'
 }
