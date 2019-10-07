@@ -15,5 +15,5 @@
             android:id="@+id/nav_teams"
             android:name="com.morcinek.players.ui.teams.TeamsFragment"
             android:label="@string/menu_teams"
-            tools:layout="@layout/fragment_teams" />
+            tools:layout="@layout/fragment_list" />
 </navigation>
