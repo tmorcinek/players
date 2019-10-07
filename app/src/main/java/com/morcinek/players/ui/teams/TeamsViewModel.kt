@@ -7,8 +7,10 @@ import com.morcinek.players.core.data.TeamData
 
 class TeamsViewModel : ViewModel() {
 
-    private val _text = MutableLiveData<TeamData>().apply {
-        value = TeamData("Skrzaty 2001", "Skrzaty", 2019, listOf())
+    val teams: LiveData<List<TeamData>> = MutableLiveData<List<TeamData>>().apply {
+        value = listOf(
+            TeamData("Skrzaty 2019", "Skrzaty", 2019, listOf()),
+            TeamData("Zaki 2019", "Zaki", 2019, listOf())
+        )
     }
-    val text: LiveData<TeamData> = _text
 }

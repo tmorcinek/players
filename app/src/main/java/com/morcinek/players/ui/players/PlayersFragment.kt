@@ -1,4 +1,4 @@
-package com.morcinek.players.ui.teams
+package com.morcinek.players.ui.players
 
 import android.os.Bundle
 import android.view.View
@@ -13,28 +13,25 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.dsl.module
 
-class TeamsFragment : BaseFragment() {
+class PlayersFragment : BaseFragment() {
 
     override val layoutResourceId = R.layout.fragment_list
 
-    private val viewModel by viewModel<TeamsViewModel>()
+    private val viewModel by viewModel<PlayersViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.apply {
             recyclerView.layoutManager = LinearLayoutManager(activity)
             recyclerView.layoutAnimation = LayoutAnimationController(AnimationUtils.loadAnimation(activity, android.R.anim.fade_in))
-            recyclerView.adapter = TeamsAdapter().apply {
-                viewModel.teams.observe(this@TeamsFragment, Observer { submitList(it) })
+            recyclerView.adapter = PlayersAdapter().apply {
+                viewModel.players.observe(this@PlayersFragment, Observer { submitList(it) })
             }
         }
-
-        viewModel.teams.observe(this, Observer {
-
-        })
     }
+
 }
 
-val teamsModule = module {
-    viewModel { TeamsViewModel() }
+val playersModule = module {
+    viewModel { PlayersViewModel() }
 }

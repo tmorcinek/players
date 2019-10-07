@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.morcinek.players.ui.player.playerModule
+import com.morcinek.players.ui.players.playersModule
 import com.morcinek.players.ui.teams.teamsModule
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
@@ -20,7 +21,8 @@ class Application : Application() {
             androidContext(this@Application)
             modules(
                 appModule,
-                teamsModule, playerModule
+                teamsModule, playersModule,
+                playerModule
             )
         }
     }
