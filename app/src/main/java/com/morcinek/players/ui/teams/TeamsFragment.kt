@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
+import com.morcinek.players.core.ClickableListAdapter
 import com.morcinek.players.core.ViewHolder
 import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.itemCallback
@@ -31,8 +32,11 @@ class TeamsFragment : BaseFragment() {
         view.apply {
             recyclerView.layoutManager = LinearLayoutManager(activity)
             recyclerView.layoutAnimation = LayoutAnimationController(AnimationUtils.loadAnimation(activity, android.R.anim.fade_in))
-            recyclerView.adapter = TeamsAdapter().apply {
+            recyclerView.adapter = TeamsAdapterExt().apply {
                 viewModel.teams.observe(this@TeamsFragment, Observer { submitList(it) })
+                onClickListener { view, teamData ->
+
+                }
             }
         }
     }
@@ -50,6 +54,16 @@ private class TeamsAdapter : ListAdapter<TeamData, ViewHolder>(itemCallback {
                 name.text = "${it.name}/${it.category}"
             }
         }
+    }
+}
+
+private class TeamsAdapterExt : ClickableListAdapter<TeamData>(itemCallback {
+    areItemsTheSame { oldItem, newItem -> oldItem.name == newItem.name }
+}) {
+    override val vhResourceId = R.layout.vh_player
+
+    override fun onBindViewHolder(item: TeamData, view: View) {
+        view.name.text =  "${item.name}/${item.category}"
     }
 }
 

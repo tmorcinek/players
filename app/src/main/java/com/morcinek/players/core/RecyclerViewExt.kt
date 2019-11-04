@@ -1,7 +1,10 @@
 package com.morcinek.players.core
 
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
@@ -24,4 +27,34 @@ class ItemCallback<T> : DiffUtil.ItemCallback<T>() {
     override fun areItemsTheSame(oldItem: T, newItem: T) = _areItemsTheSame(oldItem, newItem)
 
     override fun areContentsTheSame(oldItem: T, newItem: T) = _areContentsTheSame(oldItem, newItem)
+}
+
+abstract class ClickableListAdapter<T>(diffCallback: ItemCallback<T>) : ListAdapter<T, ViewHolder>(diffCallback) {
+
+//    private var _onClickListener: View.OnClickListener? = null
+    private var _onClickListener: ((View, T) -> Unit) = { _, _ -> }
+
+//    fun onClickListener(function: View.OnClickListener){
+//        _onClickListener = function
+//    }
+    fun onClickListener(function: (View, T) -> Unit){
+        _onClickListener = function
+    }
+
+    protected abstract val vhResourceId: Int
+    protected abstract fun onBindViewHolder(item: T, view: View)
+
+
+    final override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+        ViewHolder(LayoutInflater.from(parent.context).inflate(vhResourceId, parent, false))
+
+    final override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        getItem(position).let { item ->
+            holder.itemView.apply {
+                setOnClickListener { _onClickListener(this, item) }
+                onBindViewHolder(item, this)
+            }
+        }
+    }
+
 }

@@ -4,9 +4,8 @@
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="half_margin">8dp</dimen>
+    <dimen name="half_margin">4dp</dimen>
+    <dimen name="margin">8dp</dimen>
+    <dimen name="double_margin">16dp</dimen>
 
-    <dimen name="list_item_title">16sp</dimen>
 </resources>
