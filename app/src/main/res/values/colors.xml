@@ -10,9 +10,16 @@
     <color name="black_60">#99000000</color>
     <color name="black">#000000</color>
 
+    <color name="textPrimary">@color/black</color>
+    <color name="textSecondary">@color/black_60</color>
+
     <color name="white">#ffffff</color>
     <color name="white80">#ccffffff</color>
     <color name="dark_indigo">#0b1844</color>
     <color name="dark_indigo_70">#b30b1844</color>
+
+    <color name="lipstick">#da1c55</color>
+    <color name="golden">#f5bc00</color>
+    <color name="golden_30">#44f5bc00</color>
 
 </resources>

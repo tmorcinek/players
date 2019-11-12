@@ -18,6 +18,12 @@
             tools:layout="@layout/fragment_list" />
 
     <fragment
+            android:id="@+id/nav_tournament"
+            android:name="com.morcinek.players.ui.funino.TournamentsFragment"
+            android:label="@string/menu_tournaments"
+            tools:layout="@layout/fragment_list" />
+
+    <fragment
             android:id="@+id/nav_team_details"
             android:name="com.morcinek.players.ui.teams.details.TeamDetailsFragment"
             android:label="@string/menu_team_details"

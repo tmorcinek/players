@@ -10,7 +10,9 @@
     <string name="menu_players">Players</string>
     <string name="menu_teams">Teams</string>
     <string name="menu_team_details">Team Details</string>
+    <string name="menu_tournaments">Tournaments</string>
 
     <string name="team_title">Team</string>
     <string name="player_title">Player</string>
+    <string name="today">Today</string>
 </resources>

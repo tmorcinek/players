@@ -31,12 +31,8 @@ class ItemCallback<T> : DiffUtil.ItemCallback<T>() {
 
 abstract class ClickableListAdapter<T>(diffCallback: ItemCallback<T>) : ListAdapter<T, ViewHolder>(diffCallback) {
 
-//    private var _onClickListener: View.OnClickListener? = null
     private var _onClickListener: ((View, T) -> Unit) = { _, _ -> }
 
-//    fun onClickListener(function: View.OnClickListener){
-//        _onClickListener = function
-//    }
     fun onClickListener(function: (View, T) -> Unit){
         _onClickListener = function
     }

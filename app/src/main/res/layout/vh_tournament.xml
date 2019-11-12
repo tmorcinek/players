@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/margin"
+        android:layout_marginStart="@dimen/margin"
+        android:layout_marginEnd="@dimen/margin"
+        card_view:cardCornerRadius="8dp">
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin">
+
+        <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textColor="@color/textPrimary"
+                android:textSize="@dimen/font_big"
+                tools:text="Monday 13 November" />
+
+        <TextView
+                android:id="@+id/subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title"
+                android:layout_marginTop="@dimen/margin"
+                android:textAlignment="center"
+                android:textColor="@color/textSecondary"
+                android:textSize="@dimen/font_std"
+                tools:text="13 Players" />
+
+        <TextView
+                android:id="@+id/isToday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="@string/today"
+                android:textAlignment="center"
+                android:textColor="@color/lipstick"
+                android:textSize="@dimen/font_std"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+        <TextView
+                android:id="@+id/finished"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="@dimen/margin"
+                android:textAlignment="center"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/font_std"
+                tools:text="Not Finished" />
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

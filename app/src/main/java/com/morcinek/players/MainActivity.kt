@@ -1,8 +1,11 @@
 package com.morcinek.players
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.Menu
+import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.navigation.*
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -16,7 +19,7 @@ class MainActivity : AppCompatActivity() {
 
     private val appBarConfiguration by lazy {
         AppBarConfiguration(
-            setOf(R.id.nav_players, R.id.nav_teams),
+            setOf(R.id.nav_players, R.id.nav_teams, R.id.nav_tournament),
             drawerLayout
         )
     }
@@ -50,3 +53,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp() = findNavController(R.id.navHostFragment).navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
 }
+
+fun Fragment.findNavController(): NavController =
+    Navigation.findNavController(requireActivity(), R.id.navHostFragment)
+
+fun Fragment.lazyNavController() = lazy { findNavController() }
