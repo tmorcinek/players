@@ -27,5 +27,13 @@
         <item name="android:textSize">@dimen/font_std</item>
     </style>
 
+    <style name="GameScore">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/lipstick</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/font_super_size</item>
+    </style>
+
 
 </resources>

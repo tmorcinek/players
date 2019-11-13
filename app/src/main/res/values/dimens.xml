@@ -8,4 +8,6 @@
     <dimen name="margin">8dp</dimen>
     <dimen name="double_margin">16dp</dimen>
 
+    <dimen name="team_color_height">30dp</dimen>
+
 </resources>
