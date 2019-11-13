@@ -1,4 +1,4 @@
-package com.morcinek.players
+package com.morcinek.players.ui
 
 import android.os.Bundle
 import android.view.Menu
@@ -13,6 +13,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.snackbar.Snackbar
+import com.morcinek.players.R
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 

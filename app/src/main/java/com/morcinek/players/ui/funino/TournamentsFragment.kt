@@ -11,10 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.ClickableListAdapter
-import com.morcinek.players.core.extensions.putParcel
 import com.morcinek.players.core.extensions.toBundle
 import com.morcinek.players.core.itemCallback
-import com.morcinek.players.lazyNavController
+import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_list.view.*
 import kotlinx.android.synthetic.main.vh_tournament.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -37,7 +36,7 @@ class TournamentsFragment : BaseFragment() {
             adapter = TournamentAdapter().apply {
                 viewModel.players.observe(this@TournamentsFragment, Observer { submitList(it) })
                 onClickListener { _, item ->
-                    navController.navigate(R.id.nav_tournament_details, Bundle().apply { putParcel(item) })
+                    navController.navigate(R.id.nav_tournament_details, item.toBundle())
                 }
             }
         }

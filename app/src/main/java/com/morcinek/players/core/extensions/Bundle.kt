@@ -28,4 +28,4 @@ inline fun <reified T : Parcelable> Intent.getParcelOrNull(key: String = T::clas
 fun Intent.putInt(value: Int) = putExtra(Int::class.java.name, value)
 fun Bundle.getInt() = getInt(Int::class.java.name).takeIf { it != 0 }
 
-fun Parcelable.toBundle() = Bundle().apply { putParcel(this) }
+fun Parcelable.toBundle() = Bundle().apply { putParcel(this@toBundle) }

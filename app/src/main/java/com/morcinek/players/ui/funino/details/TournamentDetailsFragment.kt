@@ -15,10 +15,8 @@ import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.ViewHolder
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.extensions.getParcelable
-import com.morcinek.players.core.extensions.getParcelableOrNull
 import com.morcinek.players.core.extensions.viewModelWithFragment
 import com.morcinek.players.core.itemCallback
-import com.morcinek.players.ui.funino.TournamentData
 import kotlinx.android.synthetic.main.fragment_tournament_details.*
 import kotlinx.android.synthetic.main.vh_player.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -33,8 +31,6 @@ class TournamentDetailsFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.apply {
-            val parcelable = getParcelableOrNull<TournamentData>()
-//            parcelable.finished
             viewModel.team.observe(this@TournamentDetailsFragment, Observer { details ->
                 details.tournamentData.let {
                     title.text = it.title
