@@ -16,5 +16,16 @@
         <item name="android:textColor">@color/black_60</item>
     </style>
 
+    <style name="ItemTitle">
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:textSize">@dimen/font_big</item>
+    </style>
+
+    <style name="ItemSubtitle">
+        <item name="android:layout_marginTop">@dimen/margin</item>
+        <item name="android:textColor">@color/textSecondary</item>
+        <item name="android:textSize">@dimen/font_std</item>
+    </style>
+
 
 </resources>

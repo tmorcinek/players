@@ -15,13 +15,27 @@
             android:id="@+id/nav_teams"
             android:name="com.morcinek.players.ui.teams.TeamsFragment"
             android:label="@string/menu_teams"
-            tools:layout="@layout/fragment_list" />
+            tools:layout="@layout/fragment_list" >
+        <action
+                android:id="@+id/action_nav_teams_to_nav_team_details"
+                app:destination="@id/nav_team_details" />
+    </fragment>
 
     <fragment
             android:id="@+id/nav_tournament"
             android:name="com.morcinek.players.ui.funino.TournamentsFragment"
             android:label="@string/menu_tournaments"
-            tools:layout="@layout/fragment_list" />
+            tools:layout="@layout/fragment_list" >
+        <action
+                android:id="@+id/action_nav_tournament_to_nav_tournament_details"
+                app:destination="@id/nav_tournament_details" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/nav_tournament_details"
+            android:name="com.morcinek.players.ui.funino.details.TournamentDetailsFragment"
+            android:label="@string/menu_tournament_details"
+            tools:layout="@layout/fragment_tournament_details" />
 
     <fragment
             android:id="@+id/nav_team_details"

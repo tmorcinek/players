@@ -3,6 +3,7 @@ package com.morcinek.players
 import android.app.Application
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import com.morcinek.players.ui.funino.details.tournamentDetailsModule
 import com.morcinek.players.ui.funino.funinoModule
 import com.morcinek.players.ui.player.playerModule
 import com.morcinek.players.ui.players.playersModule
@@ -24,7 +25,7 @@ class Application : Application() {
             modules(
                 appModule,
                 teamsModule, playersModule, funinoModule,
-                playerModule, teamDetailsModule
+                playerModule, teamDetailsModule, tournamentDetailsModule
             )
         }
     }

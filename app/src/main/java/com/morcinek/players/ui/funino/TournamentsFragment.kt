@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
@@ -12,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.ClickableListAdapter
+import com.morcinek.players.core.extensions.putParcel
+import com.morcinek.players.core.extensions.toBundle
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.lazyNavController
 import kotlinx.android.synthetic.main.fragment_list.view.*
@@ -35,7 +36,9 @@ class TournamentsFragment : BaseFragment() {
             layoutAnimation = LayoutAnimationController(AnimationUtils.loadAnimation(activity, android.R.anim.fade_in))
             adapter = TournamentAdapter().apply {
                 viewModel.players.observe(this@TournamentsFragment, Observer { submitList(it) })
-                onClickListener { view, tournamentData -> Toast.makeText(requireContext(), "djksf", Toast.LENGTH_SHORT).show() }
+                onClickListener { _, item ->
+                    navController.navigate(R.id.nav_tournament_details, Bundle().apply { putParcel(item) })
+                }
             }
         }
     }
@@ -44,6 +47,7 @@ class TournamentsFragment : BaseFragment() {
 class TournamentAdapter : ClickableListAdapter<TournamentData>(itemCallback {
     areItemsTheSame { oldItem, newItem -> oldItem.id == newItem.id }
 }) {
+
     override val vhResourceId = R.layout.vh_tournament
 
     override fun onBindViewHolder(item: TournamentData, view: View) {

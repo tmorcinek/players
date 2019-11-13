@@ -19,21 +19,16 @@
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:textColor="@color/textPrimary"
-                android:textSize="@dimen/font_big"
-                tools:text="Monday 13 November" />
+                tools:text="Monday 13 November"
+                style="@style/ItemTitle" />
 
         <TextView
                 android:id="@+id/subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/title"
-                android:layout_marginTop="@dimen/margin"
-                android:textAlignment="center"
-                android:textColor="@color/textSecondary"
-                android:textSize="@dimen/font_std"
-                tools:text="13 Players" />
+                tools:text="13 Players"
+                style="@style/ItemSubtitle" />
 
         <TextView
                 android:id="@+id/isToday"
@@ -41,9 +36,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:text="@string/today"
-                android:textAlignment="center"
+                style="@style/ItemSubtitle"
                 android:textColor="@color/lipstick"
-                android:textSize="@dimen/font_std"
                 android:visibility="gone"
                 tools:visibility="visible" />
 
@@ -53,10 +47,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/title"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="@dimen/margin"
-                android:textAlignment="center"
+                style="@style/ItemSubtitle"
                 android:textColor="@color/colorAccent"
-                android:textSize="@dimen/font_std"
                 tools:text="Not Finished" />
 
     </RelativeLayout>
