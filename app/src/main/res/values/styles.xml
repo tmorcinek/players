@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="TitleText">
         <item name="android:layout_width">match_parent</item>
@@ -33,6 +33,25 @@
         <item name="android:textColor">@color/lipstick</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/font_super_size</item>
+    </style>
+
+    <style name="BigButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:paddingTop">@dimen/big_font_padding</item>
+        <item name="android:paddingBottom">@dimen/big_font_padding</item>
+        <item name="android:textSize">@dimen/font_std</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:stateListAnimator" tools:targetApi="lollipop">@null</item>
+        <item name="android:letterSpacing" tools:targetApi="lollipop">0.053</item>
+    </style>
+    <style name="BigButton.AccentTheme">
+        <item name="android:theme">@style/AccentButtonTheme</item>
+        <item name="theme">@style/AccentButtonTheme</item>
+    </style>
+    <style name="AccentButtonTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:colorAccent" tools:targetApi="lollipop">@color/accent_button</item>
+        <item name="colorAccent">@color/accent_button</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
 

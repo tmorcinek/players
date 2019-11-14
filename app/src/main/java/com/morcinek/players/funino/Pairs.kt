@@ -15,3 +15,22 @@ val pairs17 = listOf(setOf(4,1,11) to setOf(5,10,7),setOf(14,6,2) to setOf(8,12,
 val pairs18 = listOf(setOf(0,9,15) to setOf(11,1,17),setOf(3,6,13) to setOf(8,12,2),setOf(4,16,5) to setOf(14,7,10),setOf(14,2,16) to setOf(10,11,4),setOf(0,6,12) to setOf(13,9,8),setOf(5,7,17) to setOf(3,1,15),setOf(15,10,16) to setOf(13,12,14),setOf(2,11,9) to setOf(0,1,4),setOf(6,5,7) to setOf(17,8,3),setOf(1,8,6) to setOf(15,2,4),setOf(5,11,12) to setOf(10,17,9),setOf(0,14,3) to setOf(13,16,7),setOf(4,14,17) to setOf(16,9,6),setOf(0,11,8) to setOf(13,10,1),setOf(12,15,7) to setOf(2,3,5),setOf(2,0,10) to setOf(6,15,14),setOf(7,8,4) to setOf(9,1,12),setOf(11,3,16) to setOf(17,13,5),setOf(12,16,17) to setOf(14,8,5),setOf(11,15,13) to setOf(3,9,4),setOf(2,1,7) to setOf(10,6,0),setOf(5,1,15) to setOf(10,3,12),setOf(6,2,17) to setOf(0,7,16),setOf(14,11,9) to setOf(8,4,13),setOf(4,6,12) to setOf(16,1,14),setOf(8,15,10) to setOf(7,3,11),setOf(0,5,9) to setOf(13,17,2),setOf(5,10,6) to setOf(15,7,17),setOf(13,0,11) to setOf(8,16,1),setOf(9,12,2) to setOf(14,3,4),setOf(17,0,3) to setOf(7,9,6),setOf(1,14,5) to setOf(16,2,13),setOf(12,4,15) to setOf(10,11,8),setOf(5,10,16) to setOf(6,11,17),setOf(12,0,8) to setOf(7,9,14),setOf(1,2,4) to setOf(13,15,3))
 val pairs19 = listOf(setOf(7,2,1) to setOf(14,10,8),setOf(15,16,9) to setOf(6,3,4),setOf(11,17,5) to setOf(0,12,13),setOf(17,18,9) to setOf(8,4,7),setOf(2,18,6) to setOf(13,10,16),setOf(11,15,1) to setOf(14,0,5),setOf(1,0,3) to setOf(9,10,12),setOf(8,16,2) to setOf(17,6,13),setOf(7,12,14) to setOf(5,3,18),setOf(10,15,17) to setOf(11,18,4),setOf(13,3,15) to setOf(16,5,4),setOf(12,8,1) to setOf(0,11,7),setOf(2,11,12) to setOf(14,9,6),setOf(10,2,0) to setOf(14,1,4),setOf(3,7,17) to setOf(8,13,9),setOf(6,15,5) to setOf(1,16,18),setOf(11,16,6) to setOf(13,14,2),setOf(7,9,5) to setOf(4,0,17),setOf(18,15,8) to setOf(12,3,10),setOf(6,0,8) to setOf(17,16,14),setOf(11,9,3) to setOf(10,1,5),setOf(12,4,15) to setOf(13,18,7),setOf(15,7,16) to setOf(4,2,9),setOf(5,18,12) to setOf(1,10,6),setOf(2,3,14) to setOf(17,11,8),setOf(12,0,16) to setOf(5,13,8),setOf(1,17,13) to setOf(11,15,14),setOf(10,7,6) to setOf(0,18,9),setOf(0,2,15) to setOf(3,4,10),setOf(17,12,6) to setOf(14,18,1),setOf(4,13,11) to setOf(8,16,3),setOf(7,1,9) to setOf(17,5,2),setOf(15,7,8) to setOf(18,11,10),setOf(4,14,0) to setOf(2,5,9),setOf(2,12,13) to setOf(16,6,3),setOf(18,10,17) to setOf(6,12,14))
 val pairs20 = listOf(setOf(2,0,6) to setOf(14,18,1),setOf(10,7,8) to setOf(5,9,11),setOf(3,13,19) to setOf(12,15,4),setOf(7,19,9) to setOf(17,11,16),setOf(1,15,2) to setOf(0,17,3),setOf(8,16,4) to setOf(10,12,14),setOf(18,7,5) to setOf(15,13,6),setOf(3,6,18) to setOf(1,11,0),setOf(14,2,13) to setOf(8,5,17),setOf(16,12,19) to setOf(4,10,9),setOf(9,12,13) to setOf(16,7,0),setOf(11,18,10) to setOf(1,19,8),setOf(5,3,15) to setOf(6,4,14),setOf(16,2,3) to setOf(18,17,15),setOf(9,14,8) to setOf(6,11,19),setOf(7,13,1) to setOf(2,12,17),setOf(0,15,10) to setOf(5,4,19),setOf(8,0,13) to setOf(16,1,10),setOf(7,11,3) to setOf(18,2,4),setOf(6,12,5) to setOf(9,14,17),setOf(11,2,8) to setOf(6,1,9),setOf(4,17,7) to setOf(18,0,12),setOf(15,19,14) to setOf(13,5,10),setOf(16,18,13) to setOf(3,1,4),setOf(17,10,6) to setOf(5,14,0),setOf(9,15,16) to setOf(3,12,8),setOf(12,7,11) to setOf(10,2,19),setOf(4,11,13) to setOf(0,9,19),setOf(16,7,14) to setOf(5,1,2),setOf(3,15,17) to setOf(8,18,6),setOf(7,15,8) to setOf(3,9,2),setOf(17,18,19) to setOf(6,5,16),setOf(14,11,10) to setOf(13,0,4),setOf(7,2,6) to setOf(12,4,1),setOf(17,1,13) to setOf(10,3,14),setOf(9,5,18) to setOf(11,15,12))
+
+fun gamesCombination(numberOfPlayers: Int) = when (numberOfPlayers) {
+    6 -> pairs6
+    7 -> pairs7
+    8 -> pairs8
+    9 -> pairs9
+    10 -> pairs10
+    11 -> pairs11
+    12 -> pairs12
+    13 -> pairs13
+    14 -> pairs14
+    15 -> pairs15
+    16 -> pairs16
+    17 -> pairs17
+    18 -> pairs18
+    19 -> pairs19
+    20 -> pairs20
+    else -> throw IndexOutOfBoundsException()
+}

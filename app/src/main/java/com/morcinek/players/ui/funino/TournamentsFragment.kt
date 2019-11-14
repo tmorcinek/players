@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.ClickableListAdapter
+import com.morcinek.players.core.FabConfiguration
 import com.morcinek.players.core.extensions.toBundle
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.ui.lazyNavController
@@ -27,6 +28,8 @@ class TournamentsFragment : BaseFragment() {
     private val viewModel by viewModel<TournamentsViewModel>()
 
     private val navController: NavController by lazyNavController()
+
+    override val fabConfiguration = FabConfiguration({ navController.navigate(R.id.nav_how_many_players) })
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

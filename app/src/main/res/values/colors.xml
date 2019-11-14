@@ -3,7 +3,9 @@
     <color name="colorPrimary">#88C425</color>
     <color name="colorPrimaryDark">#519548</color>
     <color name="colorAccent">#1B676B</color>
+    <color name="colorAccent30">#441B676B</color>
 
+    <color name="disabledBackground">#EAFDE6</color>
     <color name="dreamBase">#EAFDE6</color>
     <color name="black_10">#0a000000</color>
     <color name="black_33">#33000000</color>

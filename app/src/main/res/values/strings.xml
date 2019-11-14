@@ -12,9 +12,12 @@
     <string name="menu_team_details">Team Details</string>
     <string name="menu_tournaments">Tournaments</string>
     <string name="menu_tournament_details">Tournament Details</string>
+    <string name="menu_how_many_players">How many players</string>
+    <string name="menu_how_many_games">How many games</string>
 
     <string name="team_title">Team</string>
     <string name="player_title">Player</string>
     <string name="today">Today</string>
     <string name="finished">Finished Tournament</string>
+    <string name="next">Next</string>
 </resources>
