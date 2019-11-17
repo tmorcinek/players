@@ -8,7 +8,6 @@ import com.morcinek.players.ui.funino.ScoreData
 import com.morcinek.players.ui.funino.TeamData
 import com.morcinek.players.ui.funino.TournamentData
 import com.morcinek.players.ui.funino.TournamentGameData
-import com.morcinek.players.ui.funino.creator.colors
 import java.util.*
 
 class TournamentDetailsViewModel(private val tournamentData: TournamentData) : ViewModel() {
@@ -26,8 +25,8 @@ class TournamentDetailsViewModel(private val tournamentData: TournamentData) : V
             tournamentData,
             players,
             listOf(
-                TournamentGameData(1, TeamData(colors.first(), players.take(3).toSet()), TeamData(colors[1], players.takeLast(3).toSet()), null),
-                TournamentGameData(2, TeamData(colors[2], players.take(3).toSet()), TeamData(colors[3], players.takeLast(3).toSet()), ScoreData(3,4))
+                TournamentGameData(1, TeamData(0xFFA93226.toInt(), players.take(3).toSet()), TeamData(0xFF633974.toInt(), players.takeLast(3).toSet()), null),
+                TournamentGameData(2, TeamData(0xFF1A5276.toInt(), players.take(3).toSet()), TeamData(0xFF196F3D.toInt(), players.takeLast(3).toSet()), ScoreData(3,4))
             )
         )
     }

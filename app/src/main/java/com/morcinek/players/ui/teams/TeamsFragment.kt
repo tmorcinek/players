@@ -63,6 +63,7 @@ private class TeamsAdapterExt : ClickableListAdapter<TeamData>(itemCallback {
     override val vhResourceId = R.layout.vh_player
 
     override fun onBindViewHolder(item: TeamData, view: View) {
+        super.onBindViewHolder(item, view)
         view.name.text =  "${item.name}/${item.category}"
     }
 }

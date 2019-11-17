@@ -15,6 +15,7 @@ import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.ClickableListAdapter
 import com.morcinek.players.core.extensions.getParcelable
+import com.morcinek.players.core.extensions.toBundle
 import com.morcinek.players.core.extensions.viewModelWithFragment
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.ui.lazyNavController
@@ -48,9 +49,9 @@ class HowManyGamesFragment : BaseFragment() {
         }
         viewModel.selectedGamesNumber.observe(this, Observer {
             view.nextButton.isEnabled = it != null
-            it?.score?.let { view.message.text = "Games difference is ${it.first}, dispersion ratio is ${it.second}" }
+            it?.score?.let { view.message.text = "Games difference is ${it.first}\nDispersion ratio is ${it.second}" }
         })
-//        view.nextButton.setOnClickListener { navController.navigate() }
+        view.nextButton.setOnClickListener { navController.navigate(R.id.nav_what_colors, viewModel.createTournamentData.toBundle()) }
     }
 }
 
@@ -63,6 +64,7 @@ private class HowManyGamesAdapter : ClickableListAdapter<GamesNumber>(itemCallba
     override val vhResourceId = R.layout.vh_games_number
 
     override fun onBindViewHolder(item: GamesNumber, view: View) {
+        super.onBindViewHolder(item, view)
         view.text.text = item.numberOfGames.toString()
         view.text.isSelected = item == selectedItem
     }
@@ -72,7 +74,7 @@ val howManyGamesModule = module {
     viewModel { (fragment: Fragment) -> HowManyGamesViewModel(fragment.getParcelable()) }
 }
 
-class HowManyGamesViewModel(private val createTournamentData: CreateTournamentData) : ViewModel() {
+class HowManyGamesViewModel(val createTournamentData: CreateTournamentData) : ViewModel() {
 
     val selectedGamesNumber: LiveData<GamesNumber?> = MutableLiveData<GamesNumber?>().apply { value = null }
     fun select(gamesNumber: GamesNumber) = (selectedGamesNumber as MutableLiveData).postValue(gamesNumber)

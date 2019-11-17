@@ -53,6 +53,7 @@ class TournamentAdapter : ClickableListAdapter<TournamentData>(itemCallback {
     override val vhResourceId = R.layout.vh_tournament
 
     override fun onBindViewHolder(item: TournamentData, view: View) {
+        super.onBindViewHolder(item, view)
         view.apply {
             title.text = item.title
             subtitle.text = item.subtitle

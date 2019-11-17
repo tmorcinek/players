@@ -20,7 +20,6 @@ class HowManyPlayersFragment : BaseFragment() {
         view.numberPicker.apply {
             minValue = 6
             maxValue = 20
-//            setOnValueChangedListener { picker, oldVal, newVal -> view.nextButton.isEnabled =  }
         }
         view.nextButton.setOnClickListener { navController.navigate(R.id.nav_how_many_games, CreateTournamentData(view.numberPicker.value).toBundle()) }
     }

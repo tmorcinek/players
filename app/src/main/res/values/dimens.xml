@@ -12,4 +12,6 @@
     <dimen name="next_button_width">336dp</dimen>
     <dimen name="big_font_padding">16dp</dimen>
 
+    <dimen name="team_color_big_height">60dp</dimen>
+
 </resources>

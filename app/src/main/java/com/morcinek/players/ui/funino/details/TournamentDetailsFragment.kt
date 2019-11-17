@@ -75,6 +75,7 @@ private class GamesAdapter : ClickableListAdapter<TournamentGameData>(itemCallba
     override val vhResourceId = R.layout.vh_game
 
     override fun onBindViewHolder(item: TournamentGameData, view: View) {
+        super.onBindViewHolder(item, view)
         view.apply {
             item.homeTeamData.let {
                 homeColor.setDrawableColor(it.color)

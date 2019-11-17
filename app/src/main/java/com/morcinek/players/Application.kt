@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.morcinek.players.ui.funino.creator.howManyGamesModule
+import com.morcinek.players.ui.funino.creator.whatColorsModule
 import com.morcinek.players.ui.funino.details.tournamentDetailsModule
 import com.morcinek.players.ui.funino.funinoModule
 import com.morcinek.players.ui.player.playerModule
@@ -27,7 +28,7 @@ class Application : Application() {
                 appModule,
                 teamsModule, playersModule, funinoModule,
                 playerModule, teamDetailsModule, tournamentDetailsModule,
-                howManyGamesModule
+                howManyGamesModule, whatColorsModule
             )
         }
     }

@@ -17,7 +17,7 @@ import com.morcinek.players.R
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 
-class MainActivity : AppCompatActivity() {
+class NavActivity : AppCompatActivity() {
 
     private val appBarConfiguration by lazy {
         AppBarConfiguration(
