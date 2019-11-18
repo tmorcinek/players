@@ -19,6 +19,8 @@
     <color name="white80">#ccffffff</color>
     <color name="dark_indigo">#0b1844</color>
     <color name="dark_indigo_70">#b30b1844</color>
+    <color name="dark_indigo_20">#330b1844</color>
+    <color name="dark_indigo_10">#190b1844</color>
 
     <color name="lipstick">#da1c55</color>
     <color name="golden">#f5bc00</color>

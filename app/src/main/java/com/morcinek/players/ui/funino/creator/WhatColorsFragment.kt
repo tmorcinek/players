@@ -92,7 +92,7 @@ val whatColorsModule = module {
     viewModel { (fragment: Fragment) -> WhatColorsViewModel(fragment.getParcelable()) }
 }
 
-class WhatColorsViewModel(private val createTournamentData: CreateTournamentData) : ViewModel() {
+private class WhatColorsViewModel(private val createTournamentData: CreateTournamentData) : ViewModel() {
 
     val selectedColors: LiveData<Set<Color>> = MutableLiveData<Set<Color>>().apply { value = setOf() }
 

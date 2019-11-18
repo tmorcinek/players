@@ -55,3 +55,18 @@ abstract class ClickableListAdapter<T>(diffCallback: ItemCallback<T>) : SimpleLi
         view.setOnClickListener { _onClickListener(it, item) }
     }
 }
+
+abstract class SelectableListAdapter<T>(diffCallback: ItemCallback<T>) : ClickableListAdapter<T>(diffCallback) {
+
+    var selectedItems: Set<T> = setOf()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+
+    @CallSuper
+    override fun onBindViewHolder(item: T, view: View) {
+        super.onBindViewHolder(item, view)
+        view.isSelected = item in selectedItems
+    }
+}

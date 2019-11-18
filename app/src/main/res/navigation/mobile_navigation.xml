@@ -45,9 +45,9 @@
 
     <fragment
             android:id="@+id/nav_how_many_players"
-            android:name="com.morcinek.players.ui.funino.creator.HowManyPlayersFragment"
+            android:name="com.morcinek.players.ui.funino.creator.WhichPlayersFragment"
             android:label="@string/menu_how_many_players"
-            tools:layout="@layout/fragment_number" />
+            tools:layout="@layout/fragment_which_players" />
 
     <fragment
             android:id="@+id/nav_how_many_games"

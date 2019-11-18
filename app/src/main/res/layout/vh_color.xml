@@ -21,7 +21,7 @@
             android:layout_height="@dimen/team_color_big_height"
             android:gravity="center"
             android:textAllCaps="true"
-            android:background="@drawable/ring_background"
+            android:background="@drawable/ring_selector"
             android:textColor="@color/dark_indigo"
             android:textSize="@dimen/font_tiny"
             android:textStyle="bold"
