@@ -2,8 +2,6 @@ package com.morcinek.players.ui.funino.creator
 
 import android.os.Bundle
 import android.view.View
-import android.view.animation.AnimationUtils
-import android.view.animation.LayoutAnimationController
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,12 +10,14 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.morcinek.players.R
+import com.morcinek.players.TeamsGenerator
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.ClickableListAdapter
 import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.toBundle
 import com.morcinek.players.core.extensions.viewModelWithFragment
 import com.morcinek.players.core.itemCallback
+import com.morcinek.players.funino.gamesCombination
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_number_games.view.*
 import kotlinx.android.synthetic.main.vh_games_number.view.*
@@ -36,7 +36,6 @@ class HowManyGamesFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         view.recyclerView.apply {
             layoutManager = GridLayoutManager(activity, 3)
-            layoutAnimation = LayoutAnimationController(AnimationUtils.loadAnimation(activity, android.R.anim.fade_in))
             adapter = HowManyGamesAdapter().apply {
                 viewModel.gamesNumbers.observe(this@HowManyGamesFragment, Observer { submitList(it) })
                 viewModel.selectedGamesNumber.observe(this@HowManyGamesFragment, Observer {
@@ -73,17 +72,28 @@ val howManyGamesModule = module {
     viewModel { (fragment: Fragment) -> HowManyGamesViewModel(fragment.getParcelable()) }
 }
 
+private const val NUMBER_OF_GAMES_TO_CHOOSE_FROM = 15
+
 class HowManyGamesViewModel(val createTournamentData: CreateTournamentData) : ViewModel() {
 
+    private val teamsGenerator = TeamsGenerator()
+    private val allGames = gamesCombination(createTournamentData.numberOfPlayers)
+
     val selectedGamesNumber: LiveData<GamesNumber?> = MutableLiveData<GamesNumber?>().apply { value = null }
-    fun select(gamesNumber: GamesNumber) = (selectedGamesNumber as MutableLiveData).postValue(gamesNumber)
+
+    fun select(gamesNumber: GamesNumber){
+        (selectedGamesNumber as MutableLiveData).postValue(gamesNumber)
+        createTournamentData.games = allGames.take(gamesNumber.numberOfGames)
+    }
 
     val gamesNumbers: LiveData<List<GamesNumber>> = MutableLiveData<List<GamesNumber>>().apply {
-        value = listOf(
-            GamesNumber(13, 0 to 14),
-            GamesNumber(17, 1 to 36),
-            GamesNumber(15, 0 to 50)
-        )
+        value = combinations().map { GamesNumber(it.second.size, it.first) }
+    }
+
+    private fun combinations() = allGames.let { games ->
+        (6..games.size).map {
+            games.take(it).let { gamesSubset -> teamsGenerator.overallScore(createTournamentData.numberOfPlayers, gamesSubset) to gamesSubset }
+        }.sortedBy { it.first.first * 10 + it.first.second }.take(NUMBER_OF_GAMES_TO_CHOOSE_FROM)
     }
 }
 

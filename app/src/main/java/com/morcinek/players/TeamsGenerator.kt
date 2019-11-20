@@ -5,8 +5,6 @@ import kotlin.math.pow
 import kotlin.math.roundToInt
 
 
-private const val numberOfPlayersInTheTeam = 3
-
 class TeamsGenerator {
 
     fun balance(players: List<Int>, data: List<Pair<Set<Int>, Set<Int>>>) = balanceN(players, data.flatten())
@@ -39,6 +37,8 @@ class TeamsGenerator {
         balance.map { it.first to opponents(balance.map(Pair<Int, List<Int>>::first), it) }
 
     fun dataScore(balance: List<Pair<Int, List<Int>>>): Pair<Int, Int> = balanceScore(balance) to opponentsScore(opponentsData(balance))
+
+    fun overallScore(numberOfPlayers: Int, data: List<Pair<Set<Int>, Set<Int>>>) = dataScore(balance((0 until numberOfPlayers).toList(), data))
 
     fun take(balance: List<Pair<Int, List<Int>>>, number: Int): List<Int> = balance.shuffled().sortedBy { it.second.size }.take(number).map { it.first }
 //    fun take(balance: List<Pair<Int, List<Int>>>, number: Int): List<Int> = balance.shuffled().take(number).map { it.first }

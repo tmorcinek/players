@@ -1,6 +1,7 @@
 package com.morcinek.players.ui.funino.creator
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -18,9 +19,10 @@ import com.morcinek.players.core.extensions.setDrawableColor
 import com.morcinek.players.core.extensions.viewModelWithFragment
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.ui.lazyNavController
-import kotlinx.android.synthetic.main.fragment_select_colors.view.*
+import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.fragment_number_games.view.nextButton
 import kotlinx.android.synthetic.main.fragment_number_games.view.recyclerView
+import kotlinx.android.synthetic.main.fragment_select_colors.view.*
 import kotlinx.android.synthetic.main.vh_color.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -100,7 +102,10 @@ private class WhatColorsViewModel(private val createTournamentData: CreateTourna
 
     fun select(color: Color) {
         if (selectedColors.value!!.size < requiredNumberOfColors || color in selectedColors.value!!) {
-            (selectedColors as MutableLiveData).postValue(updateSelectedColors(color))
+            updateSelectedColors(color).let {
+                (selectedColors as MutableLiveData).postValue(it)
+                createTournamentData.colors = it
+            }
         }
     }
 
@@ -113,14 +118,15 @@ private class WhatColorsViewModel(private val createTournamentData: CreateTourna
     val colors: LiveData<List<Color>> = MutableLiveData<List<Color>>().apply {
         value = listOf(
             0xFFA93226 to "Czerwony",
-            0xFF633974 to "Fioletowy",
-            0xFF1A5276 to "Niebieski",
-            0xFF196F3D to "Zielony",
+            0xFFFDFEFE to "Bialy",
             0xFFF4D03F to "Żółty",
+            0xFF1A5276 to "Niebieski",
             0xFFE67E22 to "Pomaranczowy",
-            0xFFFDFEFE to "Bialy"
-            ).map { Color(it.first.toInt(), it.second) }
+            0xFF196F3D to "Zielony",
+            0xFF633974 to "Fioletowy"
+        ).map { Color(it.first.toInt(), it.second) }
     }
 }
 
-class Color(val code: Int, val name: String)
+@Parcelize
+class Color(val code: Int, val name: String) : Parcelable
