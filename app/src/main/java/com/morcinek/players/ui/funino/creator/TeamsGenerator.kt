@@ -1,4 +1,4 @@
-package com.morcinek.players
+package com.morcinek.players.ui.funino.creator
 
 import kotlin.math.abs
 import kotlin.math.pow

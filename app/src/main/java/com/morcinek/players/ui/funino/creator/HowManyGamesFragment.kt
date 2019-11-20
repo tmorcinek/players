@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.morcinek.players.R
-import com.morcinek.players.TeamsGenerator
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.ClickableListAdapter
 import com.morcinek.players.core.extensions.getParcelable

@@ -1,5 +1,7 @@
 package com.morcinek.players
 
+import com.morcinek.players.ui.funino.creator.TeamsGenerator
+import com.morcinek.players.ui.funino.creator.flatten
 import junit.framework.Assert.assertEquals
 import org.junit.Test
 

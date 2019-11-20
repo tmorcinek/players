@@ -7,13 +7,16 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
 import androidx.lifecycle.Observer
+import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
+import com.morcinek.players.core.FabConfiguration
 import com.morcinek.players.core.ViewHolder
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.itemCallback
+import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.vh_player.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -25,6 +28,10 @@ class PlayersFragment : BaseFragment() {
     override val layoutResourceId = R.layout.fragment_list
 
     private val viewModel by viewModel<PlayersViewModel>()
+
+    private val navController: NavController by lazyNavController()
+
+    override val fabConfiguration = FabConfiguration({ navController.navigate(R.id.nav_how_many_players) })
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
