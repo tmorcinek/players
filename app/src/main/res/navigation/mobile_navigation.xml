@@ -60,4 +60,10 @@
             android:name="com.morcinek.players.ui.funino.creator.WhatColorsFragment"
             android:label="@string/menu_what_colors"
             tools:layout="@layout/fragment_number_games" />
+
+    <fragment
+            android:id="@+id/nav_create_player"
+            android:name="com.morcinek.players.ui.players.create.CreatePlayerFragment"
+            android:label="@string/menu_create_player"
+            tools:layout="@layout/fragment_create_player" />
 </navigation>

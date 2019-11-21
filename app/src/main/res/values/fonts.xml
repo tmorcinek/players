@@ -8,4 +8,5 @@
     <dimen name="font_tiny">9sp</dimen>
     <dimen name="font_title">18sp</dimen>
     <dimen name="font_super_size">24sp</dimen>
+    <dimen name="font_edit_text">22sp</dimen>
 </resources>

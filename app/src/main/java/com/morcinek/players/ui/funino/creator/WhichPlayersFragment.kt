@@ -2,14 +2,12 @@ package com.morcinek.players.ui.funino.creator
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.isVisible
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
@@ -32,7 +30,6 @@ class WhichPlayersFragment : BaseFragment() {
     private val navController: NavController by lazyNavController()
 
     private val viewModel by viewModel<WhichPlayersViewModel>()
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -1,4 +1,4 @@
-package com.morcinek.players.ui.player
+package com.morcinek.players.ui.players.details
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

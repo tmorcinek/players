@@ -1,4 +1,4 @@
-package com.morcinek.players.ui.player
+package com.morcinek.players.ui.players.details
 
 import android.os.Bundle
 import android.view.View

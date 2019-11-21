@@ -17,6 +17,7 @@
 
     <color name="white">#ffffff</color>
     <color name="white80">#ccffffff</color>
+    <color name="white60">#99ffffff</color>
     <color name="dark_indigo">#0b1844</color>
     <color name="dark_indigo_70">#b30b1844</color>
     <color name="dark_indigo_20">#330b1844</color>

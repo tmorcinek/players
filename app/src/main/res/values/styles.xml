@@ -66,5 +66,25 @@
         <item name="android:textSize">@dimen/font_big</item>
     </style>
 
+    <style name="DefaultTextInputLayout" parent="@style/Widget.Design.TextInputLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/double_margin</item>
+        <item name="passwordToggleTint">@color/black_60</item>
+    </style>
+
+    <style name="DefaultEditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">@dimen/font_edit_text</item>
+    </style>
+
+    <style name="ButtonHeader">
+        <item name="android:paddingStart">2dp</item>
+        <item name="android:textSize">@dimen/font_small</item>
+        <item name="android:textColor">@color/black_60</item>
+    </style>
 
 </resources>
