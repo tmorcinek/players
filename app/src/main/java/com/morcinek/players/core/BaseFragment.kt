@@ -24,8 +24,10 @@ abstract class BaseFragment : Fragment() {
             requireActivity().fab.apply {
                 setImageResource(it.fabIcon)
                 setOnClickListener(it.fabActon)
+                if (isShown) hide()
                 show()
             }
+
         } ?: requireActivity().fab.hide()
     }
 }

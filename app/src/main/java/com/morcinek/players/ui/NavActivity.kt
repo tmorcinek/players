@@ -2,6 +2,7 @@ package com.morcinek.players.ui
 
 import android.os.Bundle
 import android.view.Menu
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
@@ -13,9 +14,11 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
 import com.morcinek.players.R
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.nav_header_main.view.*
 
 class NavActivity : AppCompatActivity() {
 
@@ -26,6 +29,10 @@ class NavActivity : AppCompatActivity() {
         )
     }
 
+    private val headerView: View
+        get() = navigationView.getHeaderView(0)
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -34,6 +41,11 @@ class NavActivity : AppCompatActivity() {
         fab.setOnClickListener { view ->
             fab.hide()
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show()
+        }
+
+        FirebaseAuth.getInstance().currentUser?.let {
+            headerView.navHeaderTitle.text = it.displayName
+            headerView.navHeaderSubtitle.text = it.uid
         }
 
         findNavController(R.id.navHostFragment).let { navController ->

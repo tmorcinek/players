@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#DD519548</color>
     <color name="colorAccent">#1B676B</color>
     <color name="colorAccent30">#441B676B</color>
+<!--    <color name="colorAccent">@color/dark_indigo</color>-->
+<!--    <color name="colorAccent30">@color/dark_indigo_30</color>-->
 
     <color name="disabledBackground">#EAFDE6</color>
     <color name="dreamBase">#EAFDE6</color>
@@ -18,8 +20,11 @@
     <color name="white">#ffffff</color>
     <color name="white80">#ccffffff</color>
     <color name="white60">#99ffffff</color>
+
     <color name="dark_indigo">#0b1844</color>
+    <color name="dark_indigo_90">#e60b1844</color>
     <color name="dark_indigo_70">#b30b1844</color>
+    <color name="dark_indigo_30">#4c0b1844</color>
     <color name="dark_indigo_20">#330b1844</color>
     <color name="dark_indigo_10">#190b1844</color>
 
