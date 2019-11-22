@@ -2,8 +2,6 @@ package com.morcinek.players.ui.teams
 
 import android.os.Bundle
 import android.view.View
-import android.view.animation.AnimationUtils
-import android.view.animation.LayoutAnimationController
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
@@ -27,7 +25,6 @@ class TeamsFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         view.apply {
             recyclerView.layoutManager = LinearLayoutManager(activity)
-            recyclerView.layoutAnimation = LayoutAnimationController(AnimationUtils.loadAnimation(activity, android.R.anim.fade_in))
             recyclerView.adapter = TeamsAdapter().apply {
                 viewModel.teams.observe(this@TeamsFragment, Observer { submitList(it) })
                 onClickListener { view, teamData ->

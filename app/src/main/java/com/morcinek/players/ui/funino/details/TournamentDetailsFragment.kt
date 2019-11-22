@@ -2,8 +2,6 @@ package com.morcinek.players.ui.funino.details
 
 import android.os.Bundle
 import android.view.View
-import android.view.animation.AnimationUtils
-import android.view.animation.LayoutAnimationController
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -41,7 +39,6 @@ class TournamentDetailsFragment : BaseFragment() {
                     isFinished.visibility = View.VISIBLE
                 }
                 recyclerView.layoutManager = LinearLayoutManager(activity)
-                recyclerView.layoutAnimation = LayoutAnimationController(AnimationUtils.loadAnimation(activity, android.R.anim.fade_in))
 //                recyclerView.adapter = PlayersAdapter().apply { submitList(details.players) }
                 recyclerView.adapter = GamesAdapter().apply { submitList(details.tournamentGames) }
             })
@@ -57,7 +54,7 @@ class PlayersAdapter : SimpleListAdapter2<PlayerData>(R.layout.vh_player, itemCa
 }
 
 
-private class GamesAdapter : ClickableListAdapter<TournamentGameData>(itemCallback ()) {
+private class GamesAdapter : ClickableListAdapter<TournamentGameData>(itemCallback()) {
     override val vhResourceId = R.layout.vh_game
 
     override fun onBindViewHolder(item: TournamentGameData, view: View) {

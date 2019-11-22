@@ -40,7 +40,6 @@ class PlayersFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         view.apply {
             recyclerView.layoutManager = LinearLayoutManager(activity)
-            recyclerView.layoutAnimation = LayoutAnimationController(AnimationUtils.loadAnimation(activity, android.R.anim.fade_in))
             recyclerView.adapter = PlayersAdapter().apply {
                 viewModel.players.observe(this@PlayersFragment, Observer { submitList(it) })
             }
@@ -60,18 +59,8 @@ class PlayersAdapter : SimpleListAdapter<PlayerData>(itemCallback()) {
 class PlayersViewModel(references: FirebaseReferences) : ViewModel() {
 
     val players: LiveData<List<PlayerData>> = MutableLiveData<List<PlayerData>>().apply {
-        references.playersReference().addListenerForSingleValueEvent(valueEventListener { postValue(it.getList()) })
+        references.playersReference().addValueEventListener(valueEventListener { postValue(it.getList()) })
     }
-
-//    val players: LiveData<List<PlayerData>> = MutableLiveData<List<PlayerData>>().apply {
-//        value = listOf(
-//            PlayerData("Tomasz", "Morcinek", Calendar.getInstance().apply { set(1988, 3, 21) }.time, null),
-//            PlayerData("Marek", "Piechniczek", Calendar.getInstance().apply { set(1988, 3, 21) }.time, null),
-//            PlayerData("Faustyn", "Marek", Calendar.getInstance().apply { set(1988, 3, 21) }.time, null),
-//            PlayerData("Guardian", "Zok", Calendar.getInstance().apply { set(1988, 3, 21) }.time, null),
-//            PlayerData("Dominik", "Czempik", Calendar.getInstance().apply { set(1988, 3, 21) }.time, null)
-//        )
-//    }
 }
 
 val playersModule = module {

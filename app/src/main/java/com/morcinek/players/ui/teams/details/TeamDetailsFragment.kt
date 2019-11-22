@@ -2,8 +2,6 @@ package com.morcinek.players.ui.teams.details
 
 import android.os.Bundle
 import android.view.View
-import android.view.animation.AnimationUtils
-import android.view.animation.LayoutAnimationController
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
@@ -31,7 +29,6 @@ class TeamDetailsFragment : BaseFragment() {
                 category.text = it.category
                 year.text = it.year.toString()
                 recyclerView.layoutManager = LinearLayoutManager(activity)
-                recyclerView.layoutAnimation = LayoutAnimationController(AnimationUtils.loadAnimation(activity, android.R.anim.fade_in))
                 recyclerView.adapter = PlayersAdapter().apply {
                     //                    submitList(it.)
                 }
