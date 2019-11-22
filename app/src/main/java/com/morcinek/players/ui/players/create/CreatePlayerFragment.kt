@@ -2,7 +2,6 @@ package com.morcinek.players.ui.players.create
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,6 +12,7 @@ import androidx.navigation.NavController
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.database.FirebaseReferences
+import com.morcinek.players.core.extensions.calendar
 import com.morcinek.players.core.extensions.showDatePickerDialog
 import com.morcinek.players.core.extensions.toStandardString
 import com.morcinek.players.core.extensions.year
@@ -37,8 +37,8 @@ class CreatePlayerFragment : BaseFragment() {
         view.nameTextInputLayout.editText?.doOnTextChanged { text, _, _, _ -> viewModel.updateValue { name = text.toString() } }
         view.surnameTextInputLayout.editText?.doOnTextChanged { text, _, _, _ -> viewModel.updateValue { surname = text.toString() } }
         view.birthDateButton.setOnClickListener {
-            startDatePicker(viewModel.createPlayer.value?.birthDate) {
-                viewModel.updateValue { birthDate = it }
+            startDatePicker(viewModel.createPlayer.value?.birthDateInMillis ?: 0) {
+                viewModel.updateValue { birthDateInMillis = it.timeInMillis }
                 view.birthDateButton.text = it.toStandardString()
             }
         }
@@ -50,8 +50,8 @@ class CreatePlayerFragment : BaseFragment() {
         }
     }
 
-    private fun startDatePicker(calendar: Calendar?, updatedDate: (Calendar) -> Unit) =
-        requireContext().showDatePickerDialog(calendar ?: Calendar.getInstance().apply { year = 2009 }, updatedDate)
+    private fun startDatePicker(timeInMillis: Long, updatedDate: (Calendar) -> Unit) =
+        requireContext().showDatePickerDialog(calendar(timeInMillis) ?: Calendar.getInstance().apply { year = 2009 }, updatedDate)
 }
 
 val createPlayerModule = module {
@@ -71,7 +71,11 @@ class CreatePlayerViewModel(val references: FirebaseReferences) : ViewModel() {
     fun createPlayer(doOnComplete: () -> Unit) = references.playersReference().push().setValue(createPlayer.value).addOnSuccessListener { doOnComplete() }
 }
 
-class CreatePlayer(var name: String = "", var surname: String = "", var birthDate: Calendar? = null) {
+class CreatePlayer(
+    var name: String = "",
+    var surname: String = "",
+    var birthDateInMillis: Long = 0L
+) {
 
-    fun isValid() = name.isNotBlank() && surname.isNotBlank() && birthDate != null
+    fun isValid() = name.isNotBlank() && surname.isNotBlank() && birthDateInMillis != 0L
 }

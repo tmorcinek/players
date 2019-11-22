@@ -10,6 +10,7 @@ import java.util.*
 @IgnoreExtraProperties
 @Parcelize
 data class PlayerData(
+    var id: String = "",
     var name: String = "",
     var surname: String = "",
     var birthDateInMillis: Long = 0,
@@ -30,5 +31,5 @@ data class PlayerData(
 
     override fun toString() = "$name $surname"
 
-    override fun id() = name
+    override fun id() = id
 }

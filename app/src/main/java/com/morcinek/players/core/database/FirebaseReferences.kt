@@ -5,6 +5,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.morcinek.players.core.HasId
+import com.morcinek.players.core.data.PlayerData
 
 class FirebaseReferences(val auth: FirebaseAuth, val database: FirebaseDatabase) {
 
@@ -29,4 +31,6 @@ inline fun valueEventListener(crossinline function: (DataSnapshot) -> Unit) = ob
     override fun onCancelled(p0: DatabaseError) {}
 }
 
-inline fun <reified T> DataSnapshot.getList() = children.map { it.getValue(T::class.java)!! }
+inline fun <reified T> DataSnapshot.getList(): List<Pair<String, T>> = children.map { it.key!! to it.getValue(T::class.java)!! }
+
+fun DataSnapshot.getPlayers(): List<PlayerData> = getList<PlayerData>().map { it.second.apply { id = it.first } }

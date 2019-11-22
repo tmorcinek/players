@@ -11,8 +11,15 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin"
             android:textSize="@dimen/font_medium"
-            tools:text="Name Surname"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            tools:text="Name Surname" />
+
+    <TextView
+            android:id="@+id/subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin"
+            android:layout_marginBottom="@dimen/margin"
+            android:textSize="@dimen/font_small"
+            android:layout_below="@id/name"
+            tools:text="subtitle"/>
 </RelativeLayout>

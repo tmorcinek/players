@@ -17,6 +17,7 @@ import com.morcinek.players.core.SimpleListAdapter
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.getList
+import com.morcinek.players.core.database.getPlayers
 import com.morcinek.players.core.database.valueEventListener
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.ui.lazyNavController
@@ -53,13 +54,14 @@ class PlayersAdapter : SimpleListAdapter<PlayerData>(itemCallback()) {
 
     override fun onBindViewHolder(item: PlayerData, view: View) {
         view.name.text = "${item.name} ${item.surname}"
+        view.subtitle.text = item.id
     }
 }
 
 class PlayersViewModel(references: FirebaseReferences) : ViewModel() {
 
     val players: LiveData<List<PlayerData>> = MutableLiveData<List<PlayerData>>().apply {
-        references.playersReference().addValueEventListener(valueEventListener { postValue(it.getList()) })
+        references.playersReference().addValueEventListener(valueEventListener { postValue(it.getPlayers()) })
     }
 }
 

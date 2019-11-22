@@ -2,11 +2,7 @@ package com.morcinek.players.ui.funino.creator
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
@@ -14,7 +10,7 @@ import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.SelectableListAdapter
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.database.FirebaseReferences
-import com.morcinek.players.core.database.getList
+import com.morcinek.players.core.database.getPlayers
 import com.morcinek.players.core.database.valueEventListener
 import com.morcinek.players.core.extensions.toBundle
 import com.morcinek.players.core.itemCallback
@@ -24,7 +20,6 @@ import kotlinx.android.synthetic.main.vh_selectable_player.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.dsl.module
-import java.util.*
 
 class WhichPlayersFragment : BaseFragment() {
 
@@ -79,6 +74,6 @@ private class WhichPlayersViewModel(references: FirebaseReferences) : ViewModel(
     }
 
     val players: LiveData<List<PlayerData>> = MutableLiveData<List<PlayerData>>().apply {
-        references.playersReference().addValueEventListener(valueEventListener { postValue(it.getList()) })
+        references.playersReference().addValueEventListener(valueEventListener { postValue(it.getPlayers()) })
     }
 }

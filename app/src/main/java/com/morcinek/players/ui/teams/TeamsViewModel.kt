@@ -12,6 +12,6 @@ import com.morcinek.players.core.database.valueEventListener
 class TeamsViewModel(private val references: FirebaseReferences) : ViewModel() {
 
     val teams: LiveData<List<TeamData>> = MutableLiveData<List<TeamData>>().apply {
-        references.teamsReference().addListenerForSingleValueEvent(valueEventListener { postValue(it.getList()) })
+        references.teamsReference().addListenerForSingleValueEvent(valueEventListener { postValue(it.getList<TeamData>().map { it.second }) })
     }
 }

@@ -29,3 +29,5 @@ var Calendar.dayOfWeek: Int
 var Calendar.dayOfMonth: Int
     get() = get(Calendar.DAY_OF_MONTH)
     set(value) = set(Calendar.DAY_OF_MONTH, value)
+
+fun calendar(time: Long) = Calendar.getInstance().apply { timeInMillis = time }
