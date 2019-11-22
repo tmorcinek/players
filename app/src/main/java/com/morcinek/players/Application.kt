@@ -3,6 +3,8 @@ package com.morcinek.players
 import android.app.Application
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.morcinek.players.ui.funino.creator.howManyGamesModule
 import com.morcinek.players.ui.funino.creator.whatColorsModule
 import com.morcinek.players.ui.funino.creator.whichPlayersModule
@@ -38,5 +40,7 @@ class Application : Application() {
 
 val appModule = module {
 
-    single<SharedPreferences> { PreferenceManager.getDefaultSharedPreferences(androidApplication()) }
+//    single<SharedPreferences> { PreferenceManager.getDefaultSharedPreferences(androidApplication()) }
+    single { FirebaseAuth.getInstance() }
+    single { FirebaseDatabase.getInstance() }
 }

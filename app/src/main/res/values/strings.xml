@@ -2,8 +2,8 @@
     <string name="app_name">Players</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_title">Anonymous User</string>
+    <string name="nav_header_subtitle">Click to login</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
@@ -28,4 +28,5 @@
     <string name="surname_hint">Surname</string>
     <string name="birth_date">Birth date</string>
     <string name="value_not_set">Not set</string>
+    <string name="logout_message">Are you sure you want to logout?</string>
 </resources>
