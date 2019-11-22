@@ -1,19 +1,16 @@
 package com.morcinek.players.ui.players
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.ListAdapter
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.FabConfiguration
-import com.morcinek.players.core.ViewHolder
+import com.morcinek.players.core.SimpleListAdapter
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.ui.lazyNavController
@@ -45,20 +42,12 @@ class PlayersFragment : BaseFragment() {
     }
 }
 
-class PlayersAdapter : ListAdapter<PlayerData, ViewHolder>(itemCallback<PlayerData> {
-    areItemsTheSame { oldItem, newItem ->
-        oldItem.name + oldItem.surname + oldItem.birthDate == newItem.name + newItem.surname + newItem.birthDate
-    }
-}) {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.vh_player, parent, false))
+class PlayersAdapter : SimpleListAdapter<PlayerData>(itemCallback()) {
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        getItem(position).let {
-            holder.itemView.apply {
-                name.text = "${it.name} ${it.surname}"
-            }
-        }
+    override val vhResourceId = R.layout.vh_player
+
+    override fun onBindViewHolder(item: PlayerData, view: View) {
+        view.name.text = "${item.name} ${item.surname}"
     }
 }
 

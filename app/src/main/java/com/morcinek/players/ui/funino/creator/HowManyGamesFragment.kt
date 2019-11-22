@@ -12,11 +12,11 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.ClickableListAdapter
+import com.morcinek.players.core.HasId
 import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.toBundle
 import com.morcinek.players.core.extensions.viewModelWithFragment
 import com.morcinek.players.core.itemCallback
-import com.morcinek.players.funino.gamesCombination
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_number_games.view.*
 import kotlinx.android.synthetic.main.vh_games_number.view.*

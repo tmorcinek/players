@@ -49,11 +49,7 @@ class WhichPlayersFragment : BaseFragment() {
     }
 }
 
-class WhichPlayersAdapter : SelectableListAdapter<PlayerData>(itemCallback {
-    areItemsTheSame { oldItem, newItem ->
-        oldItem.name + oldItem.surname + oldItem.birthDate == newItem.name + newItem.surname + newItem.birthDate
-    }
-}) {
+class WhichPlayersAdapter : SelectableListAdapter<PlayerData>(itemCallback()) {
 
     override val vhResourceId = R.layout.vh_selectable_player
 

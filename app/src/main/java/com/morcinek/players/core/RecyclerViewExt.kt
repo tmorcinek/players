@@ -12,6 +12,15 @@ class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
 fun <T> itemCallback(function: ItemCallback<T>.() -> Unit) = ItemCallback<T>().apply(function)
 
+fun <T: HasId> itemCallback() = ItemCallback<T>().apply{
+    areItemsTheSame { t, t2 ->  t.id() == t2.id()}
+    areContentsTheSame { t, t2 -> t == t2 }
+}
+
+interface HasId {
+    fun id(): String
+}
+
 class ItemCallback<T> : DiffUtil.ItemCallback<T>() {
 
     private var _areItemsTheSame: (T, T) -> Boolean = { _, _ -> true }
@@ -35,6 +44,16 @@ abstract class SimpleListAdapter<T>(diffCallback: ItemCallback<T>) : ListAdapter
     protected abstract val vhResourceId: Int
     protected abstract fun onBindViewHolder(item: T, view: View)
 
+
+    final override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+        ViewHolder(LayoutInflater.from(parent.context).inflate(vhResourceId, parent, false))
+
+    final override fun onBindViewHolder(holder: ViewHolder, position: Int) = onBindViewHolder(getItem(position), holder.itemView)
+}
+
+abstract class SimpleListAdapter2<T>(val vhResourceId: Int, diffCallback: ItemCallback<T>) : ListAdapter<T, ViewHolder>(diffCallback) {
+
+    protected abstract fun onBindViewHolder(item: T, view: View)
 
     final override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder(LayoutInflater.from(parent.context).inflate(vhResourceId, parent, false))

@@ -1,18 +1,14 @@
 package com.morcinek.players.ui.teams
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.ListAdapter
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.ClickableListAdapter
-import com.morcinek.players.core.ViewHolder
 import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.itemCallback
 import kotlinx.android.synthetic.main.fragment_list.*
@@ -32,7 +28,7 @@ class TeamsFragment : BaseFragment() {
         view.apply {
             recyclerView.layoutManager = LinearLayoutManager(activity)
             recyclerView.layoutAnimation = LayoutAnimationController(AnimationUtils.loadAnimation(activity, android.R.anim.fade_in))
-            recyclerView.adapter = TeamsAdapterExt().apply {
+            recyclerView.adapter = TeamsAdapter().apply {
                 viewModel.teams.observe(this@TeamsFragment, Observer { submitList(it) })
                 onClickListener { view, teamData ->
 
@@ -42,29 +38,13 @@ class TeamsFragment : BaseFragment() {
     }
 }
 
-private class TeamsAdapter : ListAdapter<TeamData, ViewHolder>(itemCallback {
-    areItemsTheSame { oldItem, newItem -> oldItem.name == newItem.name }
-}) {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.vh_player, parent, false))
+private class TeamsAdapter : ClickableListAdapter<TeamData>(itemCallback()) {
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        getItem(position).let {
-            holder.itemView.apply {
-                name.text = "${it.name}/${it.category}"
-            }
-        }
-    }
-}
-
-private class TeamsAdapterExt : ClickableListAdapter<TeamData>(itemCallback {
-    areItemsTheSame { oldItem, newItem -> oldItem.name == newItem.name }
-}) {
     override val vhResourceId = R.layout.vh_player
 
     override fun onBindViewHolder(item: TeamData, view: View) {
         super.onBindViewHolder(item, view)
-        view.name.text =  "${item.name}/${item.category}"
+        view.name.text = "${item.name}/${item.category}"
     }
 }
 

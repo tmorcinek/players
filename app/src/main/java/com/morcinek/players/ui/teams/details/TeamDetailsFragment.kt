@@ -1,17 +1,14 @@
 package com.morcinek.players.ui.teams.details
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.ListAdapter
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
-import com.morcinek.players.core.ViewHolder
+import com.morcinek.players.core.SimpleListAdapter2
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.itemCallback
 import kotlinx.android.synthetic.main.fragment_team_details.view.*
@@ -36,27 +33,17 @@ class TeamDetailsFragment : BaseFragment() {
                 recyclerView.layoutManager = LinearLayoutManager(activity)
                 recyclerView.layoutAnimation = LayoutAnimationController(AnimationUtils.loadAnimation(activity, android.R.anim.fade_in))
                 recyclerView.adapter = PlayersAdapter().apply {
-//                    submitList(it.)
+                    //                    submitList(it.)
                 }
             })
         }
     }
 }
 
-private class PlayersAdapter : ListAdapter<PlayerData, ViewHolder>(itemCallback<PlayerData> {
-    areItemsTheSame { oldItem, newItem ->
-        oldItem.name + oldItem.surname + oldItem.birthDate == newItem.name + newItem.surname + newItem.birthDate
-    }
-}) {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.vh_player, parent, false))
+class PlayersAdapter : SimpleListAdapter2<PlayerData>(R.layout.vh_player, itemCallback()) {
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        getItem(position).let {
-            holder.itemView.apply {
-                name.text = "${it.name} ${it.surname}"
-            }
-        }
+    override fun onBindViewHolder(item: PlayerData, view: View) {
+        view.name.text = "${item.name} ${item.surname}"
     }
 }
 

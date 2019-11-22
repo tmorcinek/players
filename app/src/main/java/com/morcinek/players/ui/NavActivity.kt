@@ -32,7 +32,6 @@ class NavActivity : AppCompatActivity() {
     private val headerView: View
         get() = navigationView.getHeaderView(0)
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
