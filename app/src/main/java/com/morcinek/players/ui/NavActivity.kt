@@ -10,14 +10,12 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.firebase.ui.auth.AuthUI
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.morcinek.players.R
 import com.morcinek.players.core.extensions.alert.alert
@@ -32,7 +30,7 @@ import org.koin.android.ext.android.inject
 
 class NavActivity : AppCompatActivity() {
 
-    private val firebaseAuth by inject<FirebaseAuth>()
+    private val auth by inject<FirebaseAuth>()
 
     private val appBarConfiguration by lazy {
         AppBarConfiguration(
@@ -49,12 +47,7 @@ class NavActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
-            fab.hide()
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show()
-        }
-
-        firebaseAuth.currentUser?.let { currentUser ->
+        auth.currentUser?.let { currentUser ->
             headerView.apply {
                 if (currentUser.isAnonymous) {
                     navHeaderTitle.setText(R.string.nav_header_title)
@@ -87,7 +80,7 @@ class NavActivity : AppCompatActivity() {
                     setOnClickListener {
                         alert(R.string.logout_message) {
                             yesButton {
-                                firebaseAuth.signOut()
+                                auth.signOut()
                                 startNewActivityFinishCurrent<SplashActivity>()
                             }
                             noButton {}
@@ -126,7 +119,6 @@ class NavActivity : AppCompatActivity() {
     override fun onSupportNavigateUp() = findNavController(R.id.navHostFragment).navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
 }
 
-fun Fragment.findNavController(): NavController =
-    Navigation.findNavController(requireActivity(), R.id.navHostFragment)
+fun Fragment.findNavController(): NavController = requireActivity().findNavController(R.id.navHostFragment)
 
 fun Fragment.lazyNavController() = lazy { findNavController() }

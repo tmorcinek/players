@@ -9,13 +9,16 @@ import com.google.firebase.auth.FirebaseAuth
 import com.morcinek.players.R
 import com.morcinek.players.core.extensions.startActivity
 import com.morcinek.players.core.extensions.startActivityForResult
+import org.koin.android.ext.android.inject
 
 class SplashActivity : AppCompatActivity() {
+
+    private val auth by inject<FirebaseAuth>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        when (FirebaseAuth.getInstance().currentUser) {
+        when (auth.currentUser) {
             null -> startSignInActivity()
             else -> finishAndStartNextActivity()
         }
