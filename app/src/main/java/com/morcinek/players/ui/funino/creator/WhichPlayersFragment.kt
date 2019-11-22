@@ -13,6 +13,9 @@ import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.SelectableListAdapter
 import com.morcinek.players.core.data.PlayerData
+import com.morcinek.players.core.database.FirebaseReferences
+import com.morcinek.players.core.database.getList
+import com.morcinek.players.core.database.valueEventListener
 import com.morcinek.players.core.extensions.toBundle
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.ui.lazyNavController
@@ -60,10 +63,10 @@ class WhichPlayersAdapter : SelectableListAdapter<PlayerData>(itemCallback()) {
 }
 
 val whichPlayersModule = module {
-    viewModel { WhichPlayersViewModel() }
+    viewModel { WhichPlayersViewModel(get()) }
 }
 
-private class WhichPlayersViewModel : ViewModel() {
+private class WhichPlayersViewModel(references: FirebaseReferences) : ViewModel() {
 
     val selectedPlayers: LiveData<Set<PlayerData>> = MutableLiveData<Set<PlayerData>>().apply { value = setOf() }
     val selectedPlayersNumber: LiveData<Int> = Transformations.map(selectedPlayers) { it.size }
@@ -76,22 +79,6 @@ private class WhichPlayersViewModel : ViewModel() {
     }
 
     val players: LiveData<List<PlayerData>> = MutableLiveData<List<PlayerData>>().apply {
-        value = listOf(
-            PlayerData("Tomasz", "Morcinek", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
-            PlayerData("Marek", "Piechniczek", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
-            PlayerData("Faustyn", "Marek", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
-            PlayerData("Guardian", "Zok", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
-            PlayerData("Dominik", "Czempik", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
-            PlayerData("Piotr", "Gubała", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
-            PlayerData("Tomasz", "Tomaszowski", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
-            PlayerData("Paweł", "Kamiński", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
-            PlayerData("Paweł", "Klyta", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
-            PlayerData("Dominik", "Klusek", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
-            PlayerData("Antek", "Trzeciak", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
-            PlayerData("Paweł", "Sapiela", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
-            PlayerData("Bartosz", "Zawiązalec", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
-            PlayerData("Gabriel", "Zok", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
-            PlayerData("Kamil", "Dyrka", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null)
-        )
+        references.playersReference().addValueEventListener(valueEventListener { postValue(it.getList()) })
     }
 }
