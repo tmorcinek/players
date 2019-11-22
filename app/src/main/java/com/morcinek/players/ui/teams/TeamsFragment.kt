@@ -49,5 +49,5 @@ private class TeamsAdapter : ClickableListAdapter<TeamData>(itemCallback()) {
 }
 
 val teamsModule = module {
-    viewModel { TeamsViewModel() }
+    viewModel { TeamsViewModel(get()) }
 }

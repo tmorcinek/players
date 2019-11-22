@@ -9,11 +9,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
+import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.extensions.showDatePickerDialog
 import com.morcinek.players.core.extensions.toStandardString
 import com.morcinek.players.core.extensions.year
+import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_create_player.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -25,6 +28,8 @@ class CreatePlayerFragment : BaseFragment() {
     override val layoutResourceId = R.layout.fragment_create_player
 
     private val viewModel by viewModel<CreatePlayerViewModel>()
+
+    private val navController: NavController by lazyNavController()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -40,7 +45,7 @@ class CreatePlayerFragment : BaseFragment() {
         view.nextButton.apply {
             viewModel.isNextEnabled.observe(this@CreatePlayerFragment, Observer { isEnabled = it })
             setOnClickListener {
-                Toast.makeText(requireContext(), "Next Button", Toast.LENGTH_SHORT).show()
+                viewModel.createPlayer { navController.popBackStack() }
             }
         }
     }
@@ -50,10 +55,10 @@ class CreatePlayerFragment : BaseFragment() {
 }
 
 val createPlayerModule = module {
-    viewModel { CreatePlayerViewModel() }
+    viewModel { CreatePlayerViewModel(get()) }
 }
 
-class CreatePlayerViewModel : ViewModel() {
+class CreatePlayerViewModel(val references: FirebaseReferences) : ViewModel() {
 
     val createPlayer: LiveData<CreatePlayer> = MutableLiveData<CreatePlayer>().apply { value = CreatePlayer() }
 
@@ -62,6 +67,8 @@ class CreatePlayerViewModel : ViewModel() {
     fun updateValue(function: CreatePlayer.() -> Unit) {
         (createPlayer as MutableLiveData).postValue(createPlayer.value?.apply(function))
     }
+
+    fun createPlayer(doOnComplete: () -> Unit) = references.playersReference().push().setValue(createPlayer.value).addOnSuccessListener { doOnComplete() }
 }
 
 class CreatePlayer(var name: String = "", var surname: String = "", var birthDate: Calendar? = null) {

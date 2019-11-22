@@ -1,10 +1,9 @@
 package com.morcinek.players
 
 import android.app.Application
-import android.content.SharedPreferences
-import android.preference.PreferenceManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.ui.funino.creator.howManyGamesModule
 import com.morcinek.players.ui.funino.creator.whatColorsModule
 import com.morcinek.players.ui.funino.creator.whichPlayersModule
@@ -15,7 +14,6 @@ import com.morcinek.players.ui.players.details.playerModule
 import com.morcinek.players.ui.players.playersModule
 import com.morcinek.players.ui.teams.details.teamDetailsModule
 import com.morcinek.players.ui.teams.teamsModule
-import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -40,7 +38,8 @@ class Application : Application() {
 
 val appModule = module {
 
-//    single<SharedPreferences> { PreferenceManager.getDefaultSharedPreferences(androidApplication()) }
+    //    single<SharedPreferences> { PreferenceManager.getDefaultSharedPreferences(androidApplication()) }
     single { FirebaseAuth.getInstance() }
     single { FirebaseDatabase.getInstance() }
+    single { FirebaseReferences(get(), get()) }
 }

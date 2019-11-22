@@ -4,7 +4,7 @@ import com.google.firebase.database.IgnoreExtraProperties
 import com.morcinek.players.core.HasId
 
 @IgnoreExtraProperties
-data class TeamData(var name: String, var category: String, var year: Int, var players: List<Int>) : FBData, HasId {
+data class TeamData(var name: String, var category: String, var year: Int) : FBData, HasId {
     override fun toMap(): Map<String, Any?> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

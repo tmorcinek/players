@@ -77,21 +77,21 @@ private class WhichPlayersViewModel : ViewModel() {
 
     val players: LiveData<List<PlayerData>> = MutableLiveData<List<PlayerData>>().apply {
         value = listOf(
-            PlayerData("Tomasz", "Morcinek", Calendar.getInstance().apply { set(1988, 3, 21) }.time, null),
-            PlayerData("Marek", "Piechniczek", Calendar.getInstance().apply { set(1988, 3, 21) }.time, null),
-            PlayerData("Faustyn", "Marek", Calendar.getInstance().apply { set(1988, 3, 21) }.time, null),
-            PlayerData("Guardian", "Zok", Calendar.getInstance().apply { set(1988, 3, 21) }.time, null),
-            PlayerData("Dominik", "Czempik", Calendar.getInstance().apply { set(1988, 3, 21) }.time, null),
-            PlayerData("Piotr", "Gubała", Calendar.getInstance().apply { set(1988, 3, 21) }.time, null),
-            PlayerData("Tomasz", "Tomaszowski", Calendar.getInstance().apply { set(1988, 3, 21) }.time, null),
-            PlayerData("Paweł", "Kamiński", Calendar.getInstance().apply { set(1988, 3, 21) }.time, null),
-            PlayerData("Paweł", "Klyta", Calendar.getInstance().apply { set(1988, 3, 21) }.time, null),
-            PlayerData("Dominik", "Klusek", Calendar.getInstance().apply { set(1988, 3, 21) }.time, null),
-            PlayerData("Antek", "Trzeciak", Calendar.getInstance().apply { set(1988, 3, 21) }.time, null),
-            PlayerData("Paweł", "Sapiela", Calendar.getInstance().apply { set(1988, 3, 21) }.time, null),
-            PlayerData("Bartosz", "Zawiązalec", Calendar.getInstance().apply { set(1988, 3, 21) }.time, null),
-            PlayerData("Gabriel", "Zok", Calendar.getInstance().apply { set(1988, 3, 21) }.time, null),
-            PlayerData("Kamil", "Dyrka", Calendar.getInstance().apply { set(1988, 3, 21) }.time, null)
+            PlayerData("Tomasz", "Morcinek", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
+            PlayerData("Marek", "Piechniczek", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
+            PlayerData("Faustyn", "Marek", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
+            PlayerData("Guardian", "Zok", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
+            PlayerData("Dominik", "Czempik", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
+            PlayerData("Piotr", "Gubała", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
+            PlayerData("Tomasz", "Tomaszowski", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
+            PlayerData("Paweł", "Kamiński", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
+            PlayerData("Paweł", "Klyta", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
+            PlayerData("Dominik", "Klusek", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
+            PlayerData("Antek", "Trzeciak", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
+            PlayerData("Paweł", "Sapiela", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
+            PlayerData("Bartosz", "Zawiązalec", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
+            PlayerData("Gabriel", "Zok", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
+            PlayerData("Kamil", "Dyrka", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null)
         )
     }
 }

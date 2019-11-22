@@ -8,6 +8,6 @@ import com.morcinek.players.core.data.TeamData
 class TeamDetailsViewModel : ViewModel() {
 
     val team: LiveData<TeamData> = MutableLiveData<TeamData>().apply {
-        value = TeamData("Skrzaty 2019", "Skrzaty", 2019, listOf())
+        value = TeamData("Skrzaty 2019", "Skrzaty", 2019)
     }
 }

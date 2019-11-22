@@ -14,12 +14,12 @@ class TournamentDetailsViewModel(private val tournamentData: TournamentData) : V
 
     val team: LiveData<TournamentDetailsData> = MutableLiveData<TournamentDetailsData>().apply {
         val players = listOf(
-            PlayerData("Tomasz", "Morcinek", Calendar.getInstance().apply { set(1988, 3, 21) }.time, null),
-            PlayerData("Marek", "Piechniczek", Calendar.getInstance().apply { set(1988, 3, 21) }.time, null),
-            PlayerData("Faustyn", "Marek", Calendar.getInstance().apply { set(1988, 3, 21) }.time, null),
-            PlayerData("Guardian", "Zok", Calendar.getInstance().apply { set(1988, 3, 21) }.time, null),
-            PlayerData("Dominik", "Czempik", Calendar.getInstance().apply { set(1988, 3, 21) }.time, null),
-            PlayerData("Kamil", "Klusek", Calendar.getInstance().apply { set(1988, 3, 21) }.time, null)
+            PlayerData("Tomasz", "Morcinek", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
+            PlayerData("Marek", "Piechniczek", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
+            PlayerData("Faustyn", "Marek", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
+            PlayerData("Guardian", "Zok", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
+            PlayerData("Dominik", "Czempik", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null),
+            PlayerData("Kamil", "Klusek", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null)
         )
         value = TournamentDetailsData(
             tournamentData,

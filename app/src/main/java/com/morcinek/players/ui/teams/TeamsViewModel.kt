@@ -4,13 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.morcinek.players.core.data.TeamData
+import com.morcinek.players.core.database.FirebaseReferences
+import com.morcinek.players.core.database.getList
+import com.morcinek.players.core.database.valueEventListener
 
-class TeamsViewModel : ViewModel() {
+
+class TeamsViewModel(val references: FirebaseReferences) : ViewModel() {
 
     val teams: LiveData<List<TeamData>> = MutableLiveData<List<TeamData>>().apply {
-        value = listOf(
-            TeamData("Skrzaty 2019", "Skrzaty", 2019, listOf()),
-            TeamData("Zaki 2019", "Zaki", 2019, listOf())
-        )
+        references.teamsReference().addListenerForSingleValueEvent(valueEventListener { postValue(it.getList()) })
     }
 }

@@ -9,6 +9,6 @@ import java.util.*
 class PlayerViewModel : ViewModel() {
 
     val text: LiveData<PlayerData> = MutableLiveData<PlayerData>().apply {
-        value = PlayerData("Tomasz", "Morcinek", Calendar.getInstance().apply { set(1988, 3, 21) }.time, null)
+        value = PlayerData("Tomasz", "Morcinek", Calendar.getInstance().apply { set(1988, 3, 21) }.timeInMillis, null)
     }
 }
