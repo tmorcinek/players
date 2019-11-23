@@ -3,7 +3,6 @@ package com.morcinek.players.ui.funino.creator
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import androidx.navigation.NavController
@@ -16,8 +15,13 @@ import com.morcinek.players.core.ClickableListAdapter
 import com.morcinek.players.core.SimpleListAdapter
 import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.setDrawableColor
+import com.morcinek.players.core.extensions.toBundle
 import com.morcinek.players.core.extensions.viewModelWithFragment
 import com.morcinek.players.core.itemCallback
+import com.morcinek.players.ui.funino.TeamData
+import com.morcinek.players.ui.funino.TournamentData
+import com.morcinek.players.ui.funino.TournamentGameData
+import com.morcinek.players.ui.funino.details.TournamentDetailsData
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.fragment_number_games.view.nextButton
@@ -56,8 +60,25 @@ class WhatColorsFragment : BaseFragment() {
         }
         viewModel.isNextEnabled.observe(this, Observer { view.nextButton.isEnabled = it })
         view.nextButton.setOnClickListener {
-            Toast.makeText(requireContext(), "Next Button", Toast.LENGTH_SHORT).show()
-//            navController.navigate()
+            val colors = viewModel.selectedColors.value!!.map { it to 0 }.toMap().toMutableMap()
+            val list = viewModel.createTournamentData.players.toList().let { players ->
+                viewModel.createTournamentData.let { data ->
+                    data.games.mapIndexed { index, pair ->
+                        val takenColors = colors.toList().sortedBy { it.second }.take(2)
+                        takenColors.forEach { colors[it.first] = it.second + 1 }
+
+                        TournamentGameData(
+                            index,
+                            TeamData(takenColors[0].first.code, pair.first.map { players[it] }.toSet()),
+                            TeamData(takenColors[1].first.code, pair.second.map { players[it] }.toSet()),
+                            null
+                        )
+                    }
+                }
+            }
+
+            val tournamentDetailsData = TournamentDetailsData(TournamentData(1, "Tuesday 12 Listopada", "12 players", "Not Finished", true), list)
+            navController.navigate(R.id.nav_tournament_details, tournamentDetailsData.toBundle())
         }
     }
 }
@@ -94,7 +115,7 @@ val whatColorsModule = module {
     viewModel { (fragment: Fragment) -> WhatColorsViewModel(fragment.getParcelable()) }
 }
 
-private class WhatColorsViewModel(private val createTournamentData: CreateTournamentData) : ViewModel() {
+private class WhatColorsViewModel(val createTournamentData: CreateTournamentData) : ViewModel() {
 
     val selectedColors: LiveData<Set<Color>> = MutableLiveData<Set<Color>>().apply { value = setOf() }
 

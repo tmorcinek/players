@@ -4,13 +4,14 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.ClickableListAdapter
-import com.morcinek.players.core.SimpleListAdapter2
-import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.setDrawableColor
 import com.morcinek.players.core.extensions.viewModelWithFragment
@@ -39,20 +40,11 @@ class TournamentDetailsFragment : BaseFragment() {
                     isFinished.visibility = View.VISIBLE
                 }
                 recyclerView.layoutManager = LinearLayoutManager(activity)
-//                recyclerView.adapter = PlayersAdapter().apply { submitList(details.players) }
                 recyclerView.adapter = GamesAdapter().apply { submitList(details.tournamentGames) }
             })
         }
     }
 }
-
-class PlayersAdapter : SimpleListAdapter2<PlayerData>(R.layout.vh_player, itemCallback()) {
-
-    override fun onBindViewHolder(item: PlayerData, view: View) {
-        view.name.text = "${item.name} ${item.surname}"
-    }
-}
-
 
 private class GamesAdapter : ClickableListAdapter<TournamentGameData>(itemCallback()) {
     override val vhResourceId = R.layout.vh_game
@@ -83,6 +75,13 @@ private class GamesAdapter : ClickableListAdapter<TournamentGameData>(itemCallba
     }
 }
 
+class TournamentDetailsViewModel(private val tournamentData: TournamentDetailsData) : ViewModel() {
+
+
+    val team: LiveData<TournamentDetailsData> = MutableLiveData<TournamentDetailsData>().apply {
+        value = tournamentData
+    }
+}
 
 val tournamentDetailsModule = module {
     viewModel { (fragment: Fragment) -> TournamentDetailsViewModel(fragment.getParcelable()) }

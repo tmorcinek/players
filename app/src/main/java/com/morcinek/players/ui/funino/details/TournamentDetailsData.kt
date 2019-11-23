@@ -1,7 +1,10 @@
 package com.morcinek.players.ui.funino.details
 
+import android.os.Parcelable
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.ui.funino.TournamentData
 import com.morcinek.players.ui.funino.TournamentGameData
+import kotlinx.android.parcel.Parcelize
 
-class TournamentDetailsData(val tournamentData: TournamentData, val players: List<PlayerData>, val tournamentGames: List<TournamentGameData>)
+@Parcelize
+class TournamentDetailsData(val tournamentData: TournamentData, val tournamentGames: List<TournamentGameData>) : Parcelable
