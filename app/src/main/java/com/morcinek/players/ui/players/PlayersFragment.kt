@@ -2,18 +2,16 @@ package com.morcinek.players.ui.players
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
-import com.morcinek.players.core.BaseFragment
-import com.morcinek.players.core.FabConfiguration
-import com.morcinek.players.core.SimpleListAdapter
+import com.morcinek.players.core.*
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.database.FirebaseReferences
-import com.morcinek.players.core.database.getPlayers
-import com.morcinek.players.core.database.valueEventListener
-import com.morcinek.players.core.itemCallback
+import com.morcinek.players.core.database.playersLiveDataForValueListener
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.vh_player.view.*
@@ -42,9 +40,7 @@ class PlayersFragment : BaseFragment() {
     }
 }
 
-class PlayersAdapter : SimpleListAdapter<PlayerData>(itemCallback()) {
-
-    override val vhResourceId = R.layout.vh_player
+class PlayersAdapter : SimpleListAdapter2<PlayerData>(R.layout.vh_player, itemCallback()) {
 
     override fun onBindViewHolder(item: PlayerData, view: View) {
         view.name.text = "${item.name} ${item.surname}"
@@ -54,9 +50,7 @@ class PlayersAdapter : SimpleListAdapter<PlayerData>(itemCallback()) {
 
 class PlayersViewModel(references: FirebaseReferences) : ViewModel() {
 
-    val players: LiveData<List<PlayerData>> = MutableLiveData<List<PlayerData>>().apply {
-        references.playersReference().addValueEventListener(valueEventListener { postValue(it.getPlayers()) })
-    }
+    val players: LiveData<List<PlayerData>> = references.playersLiveDataForValueListener()
 }
 
 val playersModule = module {

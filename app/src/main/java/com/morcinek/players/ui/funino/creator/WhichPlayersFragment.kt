@@ -10,8 +10,7 @@ import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.SelectableListAdapter
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.database.FirebaseReferences
-import com.morcinek.players.core.database.getPlayers
-import com.morcinek.players.core.database.valueEventListener
+import com.morcinek.players.core.database.playersLiveDataForValueListener
 import com.morcinek.players.core.extensions.toBundle
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.ui.lazyNavController
@@ -47,9 +46,7 @@ class WhichPlayersFragment : BaseFragment() {
     }
 }
 
-class WhichPlayersAdapter : SelectableListAdapter<PlayerData>(itemCallback()) {
-
-    override val vhResourceId = R.layout.vh_selectable_player
+class WhichPlayersAdapter : SelectableListAdapter<PlayerData>(R.layout.vh_selectable_player, itemCallback()) {
 
     override fun onBindViewHolder(item: PlayerData, view: View) {
         super.onBindViewHolder(item, view)
@@ -73,7 +70,5 @@ private class WhichPlayersViewModel(references: FirebaseReferences) : ViewModel(
         if (color in selectedColors) selectedColors.minus(color) else selectedColors.plus(color)
     }
 
-    val players: LiveData<List<PlayerData>> = MutableLiveData<List<PlayerData>>().apply {
-        references.playersReference().addValueEventListener(valueEventListener { postValue(it.getPlayers()) })
-    }
+    val players: LiveData<List<PlayerData>> = references.playersLiveDataForValueListener()
 }

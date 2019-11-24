@@ -10,13 +10,10 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.morcinek.players.R
-import com.morcinek.players.core.BaseFragment
-import com.morcinek.players.core.ClickableListAdapter
-import com.morcinek.players.core.HasId
+import com.morcinek.players.core.*
 import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.toBundle
 import com.morcinek.players.core.extensions.viewModelWithFragment
-import com.morcinek.players.core.itemCallback
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_number_games.view.*
 import kotlinx.android.synthetic.main.vh_games_number.view.*
@@ -52,13 +49,11 @@ class HowManyGamesFragment : BaseFragment() {
     }
 }
 
-private class HowManyGamesAdapter : ClickableListAdapter<GamesNumber>(itemCallback {
+private class HowManyGamesAdapter : ClickableListAdapter2<GamesNumber>(R.layout.vh_games_number, itemCallback {
     areItemsTheSame { oldItem, newItem -> oldItem.numberOfGames == newItem.numberOfGames }
 }) {
 
     var selectedItem: GamesNumber? = null
-
-    override val vhResourceId = R.layout.vh_games_number
 
     override fun onBindViewHolder(item: GamesNumber, view: View) {
         super.onBindViewHolder(item, view)

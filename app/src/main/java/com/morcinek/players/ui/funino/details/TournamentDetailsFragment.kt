@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
-import com.morcinek.players.core.ClickableListAdapter
+import com.morcinek.players.core.ClickableListAdapter2
 import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.setDrawableColor
 import com.morcinek.players.core.extensions.viewModelWithFragment
@@ -46,8 +46,7 @@ class TournamentDetailsFragment : BaseFragment() {
     }
 }
 
-private class GamesAdapter : ClickableListAdapter<TournamentGameData>(itemCallback()) {
-    override val vhResourceId = R.layout.vh_game
+private class GamesAdapter : ClickableListAdapter2<TournamentGameData>(R.layout.vh_game, itemCallback()) {
 
     override fun onBindViewHolder(item: TournamentGameData, view: View) {
         super.onBindViewHolder(item, view)
@@ -66,7 +65,6 @@ private class GamesAdapter : ClickableListAdapter<TournamentGameData>(itemCallba
                     awayTeam.addView(TextView(context).apply { text = "${player.name} ${player.surname}" })
                 }
             }
-
             item.scoreData?.let {
                 homeScore.text = "${it.homeTeamScore}"
                 awayScore.text = "${it.awayTeamScore}"

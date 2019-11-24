@@ -10,14 +10,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.morcinek.players.R
-import com.morcinek.players.core.BaseFragment
-import com.morcinek.players.core.ClickableListAdapter
-import com.morcinek.players.core.SimpleListAdapter
+import com.morcinek.players.core.*
+import com.morcinek.players.core.data.PlayerData
+import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.setDrawableColor
 import com.morcinek.players.core.extensions.toBundle
 import com.morcinek.players.core.extensions.viewModelWithFragment
-import com.morcinek.players.core.itemCallback
 import com.morcinek.players.ui.funino.TeamData
 import com.morcinek.players.ui.funino.TournamentData
 import com.morcinek.players.ui.funino.TournamentGameData
@@ -28,6 +27,7 @@ import kotlinx.android.synthetic.main.fragment_number_games.view.nextButton
 import kotlinx.android.synthetic.main.fragment_number_games.view.recyclerView
 import kotlinx.android.synthetic.main.fragment_select_colors.view.*
 import kotlinx.android.synthetic.main.vh_color.view.*
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -36,6 +36,7 @@ class WhatColorsFragment : BaseFragment() {
     override val layoutResourceId = R.layout.fragment_select_colors
 
     private val navController: NavController by lazyNavController()
+    private val references by inject<FirebaseReferences>()
 
     private val viewModel by viewModelWithFragment<WhatColorsViewModel>()
 
@@ -76,6 +77,9 @@ class WhatColorsFragment : BaseFragment() {
                     }
                 }
             }
+            MediatorLiveData<Pair<PlayerData,TeamData>>().apply {
+//                addSource(references)
+            }
 
             val tournamentDetailsData = TournamentDetailsData(TournamentData(1, "Tuesday 12 Listopada", "12 players", "Not Finished", true), list)
             navController.navigate(R.id.nav_tournament_details, tournamentDetailsData.toBundle())
@@ -83,13 +87,11 @@ class WhatColorsFragment : BaseFragment() {
     }
 }
 
-private class WhatColorsAdapter : ClickableListAdapter<Color>(itemCallback {
+private class WhatColorsAdapter : ClickableListAdapter2<Color>(R.layout.vh_color, itemCallback {
     areItemsTheSame { oldItem, newItem -> oldItem.code == newItem.code }
 }) {
 
     var selectedItems: Set<Color> = setOf()
-
-    override val vhResourceId = R.layout.vh_color
 
     override fun onBindViewHolder(item: Color, view: View) {
         super.onBindViewHolder(item, view)
@@ -99,12 +101,9 @@ private class WhatColorsAdapter : ClickableListAdapter<Color>(itemCallback {
     }
 }
 
-private class SelectedColorsAdapter : SimpleListAdapter<Color>(itemCallback {
+private class SelectedColorsAdapter : SimpleListAdapter2<Color>(R.layout.vh_color_selected, itemCallback {
     areItemsTheSame { oldItem, newItem -> oldItem.code == newItem.code }
 }) {
-
-    override val vhResourceId = R.layout.vh_color_selected
-
     override fun onBindViewHolder(item: Color, view: View) {
         view.text.text = item.name
         view.image.setDrawableColor(item.code)

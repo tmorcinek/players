@@ -12,8 +12,8 @@ class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
 fun <T> itemCallback(function: ItemCallback<T>.() -> Unit) = ItemCallback<T>().apply(function)
 
-fun <T: HasId> itemCallback() = ItemCallback<T>().apply{
-    areItemsTheSame { t, t2 ->  t.id() == t2.id()}
+fun <T : HasId> itemCallback() = ItemCallback<T>().apply {
+    areItemsTheSame { t, t2 -> t.id() == t2.id() }
     areContentsTheSame { t, t2 -> t == t2 }
 }
 
@@ -39,19 +39,7 @@ class ItemCallback<T> : DiffUtil.ItemCallback<T>() {
     override fun areContentsTheSame(oldItem: T, newItem: T) = _areContentsTheSame(oldItem, newItem)
 }
 
-abstract class SimpleListAdapter<T>(diffCallback: ItemCallback<T>) : ListAdapter<T, ViewHolder>(diffCallback) {
-
-    protected abstract val vhResourceId: Int
-    protected abstract fun onBindViewHolder(item: T, view: View)
-
-
-    final override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        ViewHolder(LayoutInflater.from(parent.context).inflate(vhResourceId, parent, false))
-
-    final override fun onBindViewHolder(holder: ViewHolder, position: Int) = onBindViewHolder(getItem(position), holder.itemView)
-}
-
-abstract class SimpleListAdapter2<T>(val vhResourceId: Int, diffCallback: ItemCallback<T>) : ListAdapter<T, ViewHolder>(diffCallback) {
+abstract class SimpleListAdapter2<T>(private val vhResourceId: Int, diffCallback: ItemCallback<T>) : ListAdapter<T, ViewHolder>(diffCallback) {
 
     protected abstract fun onBindViewHolder(item: T, view: View)
 
@@ -61,7 +49,7 @@ abstract class SimpleListAdapter2<T>(val vhResourceId: Int, diffCallback: ItemCa
     final override fun onBindViewHolder(holder: ViewHolder, position: Int) = onBindViewHolder(getItem(position), holder.itemView)
 }
 
-abstract class ClickableListAdapter<T>(diffCallback: ItemCallback<T>) : SimpleListAdapter<T>(diffCallback) {
+abstract class ClickableListAdapter2<T>(vhResourceId: Int, diffCallback: ItemCallback<T>) : SimpleListAdapter2<T>(vhResourceId, diffCallback) {
 
     private var _onClickListener: ((View, T) -> Unit) = { _, _ -> }
 
@@ -75,7 +63,7 @@ abstract class ClickableListAdapter<T>(diffCallback: ItemCallback<T>) : SimpleLi
     }
 }
 
-abstract class SelectableListAdapter<T>(diffCallback: ItemCallback<T>) : ClickableListAdapter<T>(diffCallback) {
+abstract class SelectableListAdapter<T>(vhResourceId: Int, diffCallback: ItemCallback<T>) : ClickableListAdapter2<T>(vhResourceId, diffCallback) {
 
     var selectedItems: Set<T> = setOf()
         set(value) {

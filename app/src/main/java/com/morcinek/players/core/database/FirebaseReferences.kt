@@ -5,7 +5,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.morcinek.players.core.HasId
 import com.morcinek.players.core.data.PlayerData
 
 class FirebaseReferences(val auth: FirebaseAuth, val database: FirebaseDatabase) {
