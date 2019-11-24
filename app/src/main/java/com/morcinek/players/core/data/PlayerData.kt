@@ -3,19 +3,19 @@ package com.morcinek.players.core.data
 import android.os.Parcelable
 import com.google.firebase.database.Exclude
 import com.google.firebase.database.IgnoreExtraProperties
-import com.morcinek.players.core.HasId
+import com.morcinek.players.core.HasKey
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
 @IgnoreExtraProperties
 @Parcelize
 data class PlayerData(
-    var id: String = "",
+    @Exclude override var id: String = "",
     var name: String = "",
     var surname: String = "",
     var birthDateInMillis: Long = 0,
     var photoUrl: String? = null
-) : FBData, Parcelable, HasId {
+) : Parcelable, HasKey {
 
     @Exclude
     fun getBirthDate() = Calendar.getInstance().apply { timeInMillis = birthDateInMillis }
@@ -25,11 +25,5 @@ data class PlayerData(
         birthDateInMillis = calendar.timeInMillis
     }
 
-    override fun toMap(): Map<String, Any?> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun toString() = "$name $surname"
-
-    override fun id() = id
 }

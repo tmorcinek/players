@@ -2,12 +2,16 @@ package com.morcinek.players.ui.teams
 
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
-import com.morcinek.players.core.ClickableListAdapter
+import com.morcinek.players.core.clickableListAdapter
 import com.morcinek.players.core.data.TeamData
+import com.morcinek.players.core.database.FirebaseReferences
+import com.morcinek.players.core.database.teamsLiveDataForValueListener
 import com.morcinek.players.core.itemCallback
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.vh_player.view.*
@@ -25,7 +29,9 @@ class TeamsFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         view.apply {
             recyclerView.layoutManager = LinearLayoutManager(activity)
-            recyclerView.adapter = TeamsAdapter().apply {
+            recyclerView.adapter = clickableListAdapter<TeamData>(R.layout.vh_player, itemCallback()) { item, view ->
+                view.name.text = "${item.name}/${item.category}"
+            }.apply {
                 viewModel.teams.observe(this@TeamsFragment, Observer { submitList(it) })
                 onClickListener { view, teamData ->
 
@@ -35,12 +41,9 @@ class TeamsFragment : BaseFragment() {
     }
 }
 
-private class TeamsAdapter : ClickableListAdapter<TeamData>(R.layout.vh_player, itemCallback()) {
+class TeamsViewModel(references: FirebaseReferences) : ViewModel() {
 
-    override fun onBindViewHolder(item: TeamData, view: View) {
-        super.onBindViewHolder(item, view)
-        view.name.text = "${item.name}/${item.category}"
-    }
+    val teams: LiveData<List<TeamData>> = references.teamsLiveDataForValueListener()
 }
 
 val teamsModule = module {

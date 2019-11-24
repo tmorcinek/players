@@ -75,7 +75,6 @@ private class GamesAdapter : ClickableListAdapter<TournamentGameData>(R.layout.v
 
 class TournamentDetailsViewModel(private val tournamentData: TournamentDetailsData) : ViewModel() {
 
-
     val team: LiveData<TournamentDetailsData> = MutableLiveData<TournamentDetailsData>().apply {
         value = tournamentData
     }
