@@ -40,7 +40,7 @@ class PlayersFragment : BaseFragment() {
     }
 }
 
-class PlayersAdapter : SimpleListAdapter2<PlayerData>(R.layout.vh_player, itemCallback()) {
+class PlayersAdapter : SimpleListAdapter<PlayerData>(R.layout.vh_player, itemCallback()) {
 
     override fun onBindViewHolder(item: PlayerData, view: View) {
         view.name.text = "${item.name} ${item.surname}"

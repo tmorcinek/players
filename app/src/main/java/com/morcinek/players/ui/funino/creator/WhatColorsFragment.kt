@@ -87,7 +87,7 @@ class WhatColorsFragment : BaseFragment() {
     }
 }
 
-private class WhatColorsAdapter : ClickableListAdapter2<Color>(R.layout.vh_color, itemCallback {
+private class WhatColorsAdapter : ClickableListAdapter<Color>(R.layout.vh_color, itemCallback {
     areItemsTheSame { oldItem, newItem -> oldItem.code == newItem.code }
 }) {
 
@@ -101,7 +101,7 @@ private class WhatColorsAdapter : ClickableListAdapter2<Color>(R.layout.vh_color
     }
 }
 
-private class SelectedColorsAdapter : SimpleListAdapter2<Color>(R.layout.vh_color_selected, itemCallback {
+private class SelectedColorsAdapter : SimpleListAdapter<Color>(R.layout.vh_color_selected, itemCallback {
     areItemsTheSame { oldItem, newItem -> oldItem.code == newItem.code }
 }) {
     override fun onBindViewHolder(item: Color, view: View) {

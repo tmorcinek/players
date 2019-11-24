@@ -6,7 +6,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
-import com.morcinek.players.core.SimpleListAdapter2
+import com.morcinek.players.core.SimpleListAdapter
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.itemCallback
 import kotlinx.android.synthetic.main.fragment_team_details.view.*
@@ -37,7 +37,7 @@ class TeamDetailsFragment : BaseFragment() {
     }
 }
 
-class PlayersAdapter : SimpleListAdapter2<PlayerData>(R.layout.vh_player, itemCallback()) {
+class PlayersAdapter : SimpleListAdapter<PlayerData>(R.layout.vh_player, itemCallback()) {
 
     override fun onBindViewHolder(item: PlayerData, view: View) {
         view.name.text = "${item.name} ${item.surname}"

@@ -6,7 +6,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
-import com.morcinek.players.core.ClickableListAdapter2
+import com.morcinek.players.core.ClickableListAdapter
 import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.itemCallback
 import kotlinx.android.synthetic.main.fragment_list.*
@@ -35,7 +35,7 @@ class TeamsFragment : BaseFragment() {
     }
 }
 
-private class TeamsAdapter : ClickableListAdapter2<TeamData>(R.layout.vh_player, itemCallback()) {
+private class TeamsAdapter : ClickableListAdapter<TeamData>(R.layout.vh_player, itemCallback()) {
 
     override fun onBindViewHolder(item: TeamData, view: View) {
         super.onBindViewHolder(item, view)

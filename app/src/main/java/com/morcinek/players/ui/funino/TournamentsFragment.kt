@@ -10,7 +10,7 @@ import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
-import com.morcinek.players.core.ClickableListAdapter2
+import com.morcinek.players.core.ClickableListAdapter
 import com.morcinek.players.core.FabConfiguration
 import com.morcinek.players.core.extensions.toBundle
 import com.morcinek.players.core.itemCallback
@@ -46,7 +46,7 @@ class TournamentsFragment : BaseFragment() {
     }
 }
 
-class TournamentAdapter : ClickableListAdapter2<TournamentData>(R.layout.vh_tournament, itemCallback {
+class TournamentAdapter : ClickableListAdapter<TournamentData>(R.layout.vh_tournament, itemCallback {
     areItemsTheSame { oldItem, newItem -> oldItem.id == newItem.id }
 }) {
 

@@ -49,7 +49,7 @@ class HowManyGamesFragment : BaseFragment() {
     }
 }
 
-private class HowManyGamesAdapter : ClickableListAdapter2<GamesNumber>(R.layout.vh_games_number, itemCallback {
+private class HowManyGamesAdapter : ClickableListAdapter<GamesNumber>(R.layout.vh_games_number, itemCallback {
     areItemsTheSame { oldItem, newItem -> oldItem.numberOfGames == newItem.numberOfGames }
 }) {
 
