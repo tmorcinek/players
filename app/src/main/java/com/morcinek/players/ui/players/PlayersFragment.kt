@@ -44,7 +44,7 @@ class PlayersAdapter : SimpleListAdapter<PlayerData>(R.layout.vh_player, itemCal
 
     override fun onBindViewHolder(item: PlayerData, view: View) {
         view.name.text = "${item.name} ${item.surname}"
-        view.subtitle.text = item.id
+        view.subtitle.text = item.key
     }
 }
 

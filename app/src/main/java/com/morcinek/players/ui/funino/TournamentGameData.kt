@@ -7,7 +7,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 class TournamentGameData(val gameId: Int, val homeTeamData: TeamData, val awayTeamData: TeamData, val scoreData: ScoreData?) : HasKey, Parcelable {
-    override var id = gameId.toString()
+    override var key = gameId.toString()
 }
 
 @Parcelize

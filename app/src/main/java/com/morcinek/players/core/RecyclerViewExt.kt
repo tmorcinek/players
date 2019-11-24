@@ -13,12 +13,12 @@ class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
 fun <T> itemCallback(function: ItemCallback<T>.() -> Unit) = ItemCallback<T>().apply(function)
 
 fun <T : HasKey> itemCallback() = ItemCallback<T>().apply {
-    areItemsTheSame { t, t2 -> t.id == t2.id }
+    areItemsTheSame { t, t2 -> t.key == t2.key }
     areContentsTheSame { t, t2 -> t == t2 }
 }
 
 interface HasKey {
-    var id: String
+    var key: String
 }
 
 class ItemCallback<T> : DiffUtil.ItemCallback<T>() {
