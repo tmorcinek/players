@@ -29,7 +29,7 @@ class TournamentsFragment : BaseFragment() {
 
     private val navController: NavController by lazyNavController()
 
-    override val fabConfiguration = FabConfiguration({ navController.navigate(R.id.nav_how_many_players) }, R.drawable.ic_menu_gallery)
+    override val fabConfiguration = FabConfiguration({ navController.navigate(R.id.nav_how_many_players) })
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
