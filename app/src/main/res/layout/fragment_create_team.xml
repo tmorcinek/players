@@ -17,6 +17,15 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/double_margin"
+            android:layout_marginBottom="@dimen/double_margin"
+            app:layout_constraintBottom_toTopOf="@id/nextButton"
+            app:layout_constraintTop_toBottomOf="@id/nameTextInputLayout" />
+
     <TextView
             android:id="@+id/nextButton"
             style="@style/BigButton.AccentTheme"

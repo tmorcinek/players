@@ -13,11 +13,11 @@ class FirebaseReferences(private val auth: FirebaseAuth, val database: FirebaseD
     private val userId: String
         get() = auth.currentUser!!.uid
 
-    private fun userReference() = database.getReference("users").child(userId)
+    fun rootReference() = database.getReference("users").child(userId)
 
-    fun playersReference() = userReference().child("players")
+    fun playersReference() = rootReference().child("players")
 
-    fun teamsReference() = userReference().child("teams")
+    fun teamsReference() = rootReference().child("teams")
 }
 
 inline fun valueEventListener(crossinline function: (DataSnapshot) -> Unit) = object : ValueEventListener {
@@ -33,11 +33,12 @@ inline fun <reified T> DataSnapshot.getList(): List<Pair<String, T>> = children.
 
 inline fun <reified T : HasKey> DataSnapshot.getHasKeyObjects(): List<T> = getList<T>().map { it.second.apply { key = it.first } }
 
-inline fun <reified T : HasKey> DatabaseReference.objectsLiveDataForValueListener(): LiveData<List<T>> = MutableLiveData<List<T>>().apply {
+inline fun <reified T : HasKey> Query.objectsLiveDataForValueListener(): LiveData<List<T>> = MutableLiveData<List<T>>().apply {
     addValueEventListener(valueEventListener { postValue(it.getHasKeyObjects()) })
 }
 
 fun FirebaseReferences.playersLiveDataForValueListener(): LiveData<List<PlayerData>> = playersReference().objectsLiveDataForValueListener()
+fun FirebaseReferences.playersWithoutTeamLiveDataForValueListener(): LiveData<List<PlayerData>> = playersReference().orderByChild("teamKey").equalTo(null).objectsLiveDataForValueListener()
 
 fun FirebaseReferences.teamsLiveDataForValueListener(): LiveData<List<TeamData>> = teamsReference().objectsLiveDataForValueListener()
 

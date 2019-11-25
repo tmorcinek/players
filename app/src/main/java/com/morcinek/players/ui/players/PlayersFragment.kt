@@ -38,7 +38,7 @@ class PlayersFragment : BaseFragment() {
             recyclerView.layoutManager = LinearLayoutManager(activity)
             recyclerView.adapter = simpleListAdapter(R.layout.vh_player, itemCallback()) { item: PlayerData, view ->
                 view.name.text = item.toString()
-                view.subtitle.text = item.key
+                view.subtitle.text = item.teamKey
             }.apply {
                 viewModel.players.observe(this@PlayersFragment) {
                     submitList(it)

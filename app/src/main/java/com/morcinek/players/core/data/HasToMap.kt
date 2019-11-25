@@ -1,6 +1,6 @@
 package com.morcinek.players.core.data
 
 
-interface FBData {
+interface HasToMap {
     fun toMap(): Map<String, Any?>
 }

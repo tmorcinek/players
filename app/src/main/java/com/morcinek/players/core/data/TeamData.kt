@@ -10,4 +10,6 @@ data class TeamData(
     var name: String = ""
 //    var category: String,
 //    var year: Int
-) : HasKey
+) : HasKey, HasToMap {
+    override fun toMap() = mapOf( "name" to name)
+}
