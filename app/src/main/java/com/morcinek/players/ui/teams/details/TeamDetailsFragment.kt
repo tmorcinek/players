@@ -30,8 +30,8 @@ class TeamDetailsFragment : BaseFragment() {
         view.apply {
             viewModel.team.observe(this@TeamDetailsFragment, Observer {
                 title.text = it.name
-                category.text = it.category
-                year.text = it.year.toString()
+//                category.text = it.category
+//                year.text = it.year.toString()
                 recyclerView.layoutManager = LinearLayoutManager(activity)
                 recyclerView.adapter = simpleListAdapter<PlayerData>(R.layout.vh_player, itemCallback()) { item, view ->
                     view.name.text = item.toString()
@@ -50,6 +50,6 @@ val teamDetailsModule = module {
 class TeamDetailsViewModel : ViewModel() {
 
     val team: LiveData<TeamData> = MutableLiveData<TeamData>().apply {
-        value = TeamData("key", "Skrzaty 2019", "Skrzaty", 2019)
+        value = TeamData("key", "Skrzaty 2019")
     }
 }

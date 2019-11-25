@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
+import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.extensions.calendar
 import com.morcinek.players.core.extensions.showDatePickerDialog
@@ -37,7 +38,7 @@ class CreatePlayerFragment : BaseFragment() {
         view.nameTextInputLayout.editText?.doOnTextChanged { text, _, _, _ -> viewModel.updateValue { name = text.toString() } }
         view.surnameTextInputLayout.editText?.doOnTextChanged { text, _, _, _ -> viewModel.updateValue { surname = text.toString() } }
         view.birthDateButton.setOnClickListener {
-            startDatePicker(viewModel.createPlayer.value?.birthDateInMillis ?: 0) {
+            startDatePicker(viewModel.player.value?.birthDateInMillis ?: 0) {
                 viewModel.updateValue { birthDateInMillis = it.timeInMillis }
                 view.birthDateButton.text = it.toStandardString()
             }
@@ -58,24 +59,17 @@ val createPlayerModule = module {
     viewModel { CreatePlayerViewModel(get()) }
 }
 
-class CreatePlayerViewModel(val references: FirebaseReferences) : ViewModel() {
+private class CreatePlayerViewModel(val references: FirebaseReferences) : ViewModel() {
 
-    val createPlayer: LiveData<CreatePlayer> = MutableLiveData<CreatePlayer>().apply { value = CreatePlayer() }
+    val player: LiveData<PlayerData> = MutableLiveData<PlayerData>().apply { value = PlayerData() }
 
-    val isNextEnabled: LiveData<Boolean> = Transformations.map(createPlayer) { it.isValid() }
+    val isNextEnabled: LiveData<Boolean> = Transformations.map(player) { it.isValid() }
 
-    fun updateValue(function: CreatePlayer.() -> Unit) {
-        (createPlayer as MutableLiveData).postValue(createPlayer.value?.apply(function))
+    fun updateValue(function: PlayerData.() -> Unit) {
+        (player as MutableLiveData).postValue(player.value?.apply(function))
     }
 
-    fun createPlayer(doOnComplete: () -> Unit) = references.playersReference().push().setValue(createPlayer.value).addOnSuccessListener { doOnComplete() }
+    fun createPlayer(doOnComplete: () -> Unit) = references.playersReference().push().setValue(player.value).addOnSuccessListener { doOnComplete() }
 }
 
-class CreatePlayer(
-    var name: String = "",
-    var surname: String = "",
-    var birthDateInMillis: Long = 0L
-) {
-
-    fun isValid() = name.isNotBlank() && surname.isNotBlank() && birthDateInMillis != 0L
-}
+private fun PlayerData.isValid() = name.isNotBlank() && surname.isNotBlank() && birthDateInMillis != 0L

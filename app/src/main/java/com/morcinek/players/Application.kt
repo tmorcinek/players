@@ -12,6 +12,7 @@ import com.morcinek.players.ui.funino.funinoModule
 import com.morcinek.players.ui.players.create.createPlayerModule
 import com.morcinek.players.ui.players.details.playerModule
 import com.morcinek.players.ui.players.playersModule
+import com.morcinek.players.ui.teams.create.createTeamModule
 import com.morcinek.players.ui.teams.details.teamDetailsModule
 import com.morcinek.players.ui.teams.teamsModule
 import org.koin.android.ext.koin.androidContext
@@ -28,8 +29,9 @@ class Application : Application() {
             androidContext(this@Application)
             modules(
                 appModule,
-                teamsModule, playersModule, funinoModule,
-                playerModule, createPlayerModule, teamDetailsModule, tournamentDetailsModule,
+                teamsModule, teamDetailsModule, createTeamModule,
+                playersModule, playerModule, createPlayerModule,
+                funinoModule, tournamentDetailsModule,
                 whichPlayersModule, howManyGamesModule, whatColorsModule
             )
         }

@@ -16,6 +16,7 @@
     <string name="menu_how_many_games">How many games</string>
     <string name="menu_what_colors">What colors of teams</string>
     <string name="menu_create_player">Create Player</string>
+    <string name="menu_create_team">Create Team</string>
 
     <string name="team_title">Team</string>
     <string name="player_title">Player</string>

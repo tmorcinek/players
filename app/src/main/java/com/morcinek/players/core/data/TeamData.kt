@@ -6,8 +6,8 @@ import com.morcinek.players.core.HasKey
 
 @IgnoreExtraProperties
 data class TeamData(
-    @Exclude override var key: String,
-    var name: String,
-    var category: String,
-    var year: Int
+    @Exclude override var key: String = "",
+    var name: String = ""
+//    var category: String,
+//    var year: Int
 ) : HasKey
