@@ -14,7 +14,7 @@ data class PlayerData(
     var name: String = "",
     var surname: String = "",
     var birthDateInMillis: Long = 0,
-    var photoUrl: String? = null
+    var teamKey: String? = null
 ) : Parcelable, HasKey {
 
     @Exclude

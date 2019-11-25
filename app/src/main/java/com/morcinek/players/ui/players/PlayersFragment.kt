@@ -2,16 +2,19 @@ package com.morcinek.players.ui.players
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
-import com.morcinek.players.core.*
+import com.morcinek.players.core.BaseFragment
+import com.morcinek.players.core.FabConfiguration
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.database.FirebaseReferences
+import com.morcinek.players.core.database.observe
 import com.morcinek.players.core.database.playersLiveDataForValueListener
+import com.morcinek.players.core.itemCallback
+import com.morcinek.players.core.simpleListAdapter
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.vh_player.view.*
@@ -33,24 +36,19 @@ class PlayersFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         view.apply {
             recyclerView.layoutManager = LinearLayoutManager(activity)
-            recyclerView.adapter = PlayersAdapter().apply {
-                viewModel.players.observe(this@PlayersFragment, Observer { submitList(it) })
+            recyclerView.adapter = simpleListAdapter(R.layout.vh_player, itemCallback()) { item: PlayerData, view ->
+                view.name.text = item.toString()
+                view.subtitle.text = item.key
+            }.apply {
+                viewModel.players.observe(this@PlayersFragment) { submitList(it) }
             }
         }
     }
 }
 
-class PlayersAdapter : SimpleListAdapter<PlayerData>(R.layout.vh_player, itemCallback()) {
-
-    override fun onBindViewHolder(item: PlayerData, view: View) {
-        view.name.text = "${item.name} ${item.surname}"
-        view.subtitle.text = item.key
-    }
-}
-
 class PlayersViewModel(references: FirebaseReferences) : ViewModel() {
 
-    val players: LiveData<List<PlayerData>> = references.playersLiveDataForValueListener()
+    val players = references.playersLiveDataForValueListener()
 }
 
 val playersModule = module {

@@ -23,9 +23,7 @@ class FirebaseReferences(private val auth: FirebaseAuth, val database: FirebaseD
 inline fun valueEventListener(crossinline function: (DataSnapshot) -> Unit) = object : ValueEventListener {
 
     override fun onDataChange(dataSnapshot: DataSnapshot) {
-        if (dataSnapshot.exists()) {
-            function(dataSnapshot)
-        }
+        function(dataSnapshot)
     }
 
     override fun onCancelled(p0: DatabaseError) {}

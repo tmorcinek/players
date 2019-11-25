@@ -34,7 +34,7 @@ class TeamDetailsFragment : BaseFragment() {
                 year.text = it.year.toString()
                 recyclerView.layoutManager = LinearLayoutManager(activity)
                 recyclerView.adapter = simpleListAdapter<PlayerData>(R.layout.vh_player, itemCallback()) { item, view ->
-                    view.name.text = "${item.name} ${item.surname}"
+                    view.name.text = item.toString()
                 }.apply {
                     //                    submitList(it.)
                 }

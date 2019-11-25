@@ -70,5 +70,5 @@ private class WhichPlayersViewModel(references: FirebaseReferences) : ViewModel(
         if (color in selectedColors) selectedColors.minus(color) else selectedColors.plus(color)
     }
 
-    val players: LiveData<List<PlayerData>> = references.playersLiveDataForValueListener()
+    val players = references.playersLiveDataForValueListener()
 }
