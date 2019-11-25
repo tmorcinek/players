@@ -51,9 +51,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin"
             android:padding="@dimen/margin"
-            android:text="Logout"
+            android:text="@string/logout"
             android:textAllCaps="true"
-            android:textColor="@color/golden"
+            android:textColor="@color/colorAccent"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

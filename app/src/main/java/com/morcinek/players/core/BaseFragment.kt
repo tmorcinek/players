@@ -32,4 +32,4 @@ abstract class BaseFragment : Fragment() {
     }
 }
 
-class FabConfiguration(val fabActon: (View) -> Unit, val fabIcon: Int = R.drawable.ic_menu_send)
+class FabConfiguration(val fabActon: (View) -> Unit, val fabIcon: Int = R.drawable.ic_add)
