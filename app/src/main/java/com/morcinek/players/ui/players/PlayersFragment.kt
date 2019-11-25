@@ -2,7 +2,6 @@ package com.morcinek.players.ui.players
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,7 +15,7 @@ import com.morcinek.players.core.database.playersLiveDataForValueListener
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.core.simpleListAdapter
 import com.morcinek.players.ui.lazyNavController
-import kotlinx.android.synthetic.main.fragment_list.*
+import kotlinx.android.synthetic.main.fragment_list.view.*
 import kotlinx.android.synthetic.main.vh_player.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -34,13 +33,17 @@ class PlayersFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view.progressBar.show()
         view.apply {
             recyclerView.layoutManager = LinearLayoutManager(activity)
             recyclerView.adapter = simpleListAdapter(R.layout.vh_player, itemCallback()) { item: PlayerData, view ->
                 view.name.text = item.toString()
                 view.subtitle.text = item.key
             }.apply {
-                viewModel.players.observe(this@PlayersFragment) { submitList(it) }
+                viewModel.players.observe(this@PlayersFragment) {
+                    submitList(it)
+                    view.progressBar.hide()
+                }
             }
         }
     }
