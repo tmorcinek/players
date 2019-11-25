@@ -13,6 +13,7 @@ import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.observe
 import com.morcinek.players.core.database.teamsLiveDataForValueListener
+import com.morcinek.players.core.extensions.toBundle
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_list.view.*
@@ -43,9 +44,7 @@ class TeamsFragment : BaseFragment() {
                     submitList(it)
                     view.progressBar.hide()
                 }
-                onClickListener { view, teamData ->
-
-                }
+                onClickListener { _, teamData -> navController.navigate(R.id.nav_team_details, teamData.toBundle()) }
             }
         }
     }
