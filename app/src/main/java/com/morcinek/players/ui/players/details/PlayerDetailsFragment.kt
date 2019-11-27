@@ -14,7 +14,11 @@ import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.map
 import com.morcinek.players.core.database.observe
 import com.morcinek.players.core.database.teamsLiveDataForValueListener
+import com.morcinek.players.core.extensions.alert.alert
+import com.morcinek.players.core.extensions.alert.noButton
+import com.morcinek.players.core.extensions.alert.yesButton
 import com.morcinek.players.core.extensions.getParcelable
+import com.morcinek.players.core.extensions.showOkAlert
 import com.morcinek.players.core.extensions.toStandardString
 import com.morcinek.players.core.extensions.viewModelWithFragment
 import com.morcinek.players.ui.lazyNavController
@@ -25,10 +29,6 @@ import org.koin.dsl.module
 class PlayerDetailsFragment : BaseFragment() {
 
     override val layoutResourceId = R.layout.fragment_player
-    override val menuConfiguration = MenuConfiguration(R.menu.player_details,
-        R.id.delete to { Toast.makeText(requireContext(), "Delete", Toast.LENGTH_SHORT).show() },
-        R.id.edit to { Toast.makeText(requireContext(), "Edit", Toast.LENGTH_SHORT).show() }
-    )
 
     private val viewModel by viewModelWithFragment<PlayerDetailsViewModel>()
 
@@ -42,18 +42,33 @@ class PlayerDetailsFragment : BaseFragment() {
             playerTeam.observe(this@PlayerDetailsFragment) {
                 view.team.text = it?.name ?: "-"
             }
-//            navController.
         }
     }
+
+    override val menuConfiguration = MenuConfiguration(R.menu.player_details,
+        R.id.delete to {
+            if (viewModel.playerData.teamKey != null) {
+                showOkAlert(R.string.player_cannot_delete_message)
+            } else {
+                alert(R.string.player_delete_message) {
+                    yesButton { viewModel.deletePlayer { navController.popBackStack() } }
+                    noButton {}
+                }.show()
+            }
+        },
+        R.id.edit to { Toast.makeText(requireContext(), "Edit", Toast.LENGTH_SHORT).show() }
+    )
 }
 
 val playerDetailsModule = module {
     viewModel { (fragment: Fragment) -> PlayerDetailsViewModel(get(), fragment.getParcelable()) }
 }
 
-class PlayerDetailsViewModel(references: FirebaseReferences, val playerData: PlayerData) : ViewModel() {
+class PlayerDetailsViewModel(val references: FirebaseReferences, val playerData: PlayerData) : ViewModel() {
 
     private val teams = references.teamsLiveDataForValueListener()
 
     val playerTeam = teams.map { it.find { it.key == playerData.teamKey } }
+
+    fun deletePlayer(doOnComplete: () -> Unit) = references.playersReference().child(playerData.key).removeValue().addOnCompleteListener { doOnComplete() }
 }

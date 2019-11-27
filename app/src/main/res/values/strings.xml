@@ -37,4 +37,7 @@
 
     <string name="action_delete">Delete</string>
     <string name="action_edit">Edit</string>
+
+    <string name="player_delete_message">Are you sure you want to delete this player?</string>
+    <string name="player_cannot_delete_message">This player has assigned team. You cannot delete him.</string>
 </resources>

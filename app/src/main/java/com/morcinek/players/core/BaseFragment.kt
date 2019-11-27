@@ -60,6 +60,6 @@ abstract class BaseFragment : Fragment() {
 }
 
 class FabConfiguration(val fabActon: (View) -> Unit, val fabIcon: Int = R.drawable.ic_add)
-class MenuConfiguration(val menuResourceId: Int, vararg actionArgs: Pair<Int, () -> Unit>) {
-    val actions: Map<Int, () -> Unit> = actionArgs.toMap()
+class MenuConfiguration(val menuResourceId: Int, vararg actionArgs: Pair<Int, () -> Any>) {
+    val actions: Map<Int, () -> Any> = actionArgs.toMap()
 }
