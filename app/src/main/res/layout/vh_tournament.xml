@@ -2,13 +2,8 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/margin"
-        android:layout_marginStart="@dimen/margin"
-        android:layout_marginEnd="@dimen/margin"
-        card_view:cardCornerRadius="8dp">
+        card_view:cardCornerRadius="8dp"
+        style="@style/StandardCardView">
 
     <RelativeLayout
             android:layout_width="match_parent"
@@ -26,6 +21,7 @@
                 android:id="@+id/subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin"
                 android:layout_below="@id/title"
                 tools:text="13 Players"
                 style="@style/ItemSubtitle" />
@@ -34,6 +30,7 @@
                 android:id="@+id/isToday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin"
                 android:layout_alignParentEnd="true"
                 android:text="@string/today"
                 style="@style/ItemSubtitle"
@@ -46,6 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/title"
+                android:layout_marginTop="@dimen/margin"
                 android:layout_alignParentEnd="true"
                 style="@style/ItemSubtitle"
                 android:textColor="@color/colorAccent"

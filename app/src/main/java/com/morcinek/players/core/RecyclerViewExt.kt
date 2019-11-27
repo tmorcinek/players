@@ -49,18 +49,6 @@ abstract class SimpleListAdapter<T>(private val vhResourceId: Int, diffCallback:
     final override fun onBindViewHolder(holder: ViewHolder, position: Int) = onBindViewHolder(getItem(position), holder.itemView)
 }
 
-fun <T> simpleListAdapter(vhResourceId: Int, diffCallback: ItemCallback<T>, onBindView: (item: T, view: View) -> Unit) = object : SimpleListAdapter<T>(vhResourceId, diffCallback) {
-    override fun onBindViewHolder(item: T, view: View) = onBindView(item, view)
-}
-
-fun <T> clickableListAdapter(vhResourceId: Int, diffCallback: ItemCallback<T>, onBindView: (item: T, view: View) -> Unit) = object : ClickableListAdapter<T>(vhResourceId, diffCallback) {
-
-    override fun onBindViewHolder(item: T, view: View) {
-        super.onBindViewHolder(item, view)
-        onBindView(item, view)
-    }
-}
-
 abstract class ClickableListAdapter<T>(vhResourceId: Int, diffCallback: ItemCallback<T>) : SimpleListAdapter<T>(vhResourceId, diffCallback) {
 
     private var _onClickListener: ((View, T) -> Unit) = { _, _ -> }
@@ -89,3 +77,24 @@ abstract class SelectableListAdapter<T>(vhResourceId: Int, diffCallback: ItemCal
         view.isSelected = item in selectedItems
     }
 }
+
+fun <T> simpleListAdapter(vhResourceId: Int, diffCallback: ItemCallback<T>, onBindView: (item: T, view: View) -> Unit) = object : SimpleListAdapter<T>(vhResourceId, diffCallback) {
+    override fun onBindViewHolder(item: T, view: View) = onBindView(item, view)
+}
+
+fun <T> clickableListAdapter(vhResourceId: Int, diffCallback: ItemCallback<T>, onBindView: (item: T, view: View) -> Unit) = object : ClickableListAdapter<T>(vhResourceId, diffCallback) {
+
+    override fun onBindViewHolder(item: T, view: View) {
+        super.onBindViewHolder(item, view)
+        onBindView(item, view)
+    }
+}
+
+fun <T> selectableListAdapter(vhResourceId: Int, diffCallback: ItemCallback<T>, onBindView: (item: T, view: View) -> Unit) = object : SelectableListAdapter<T>(vhResourceId, diffCallback) {
+
+    override fun onBindViewHolder(item: T, view: View) {
+        super.onBindViewHolder(item, view)
+        onBindView(item, view)
+    }
+}
+

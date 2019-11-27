@@ -17,7 +17,7 @@ import com.morcinek.players.core.extensions.toBundle
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_list.view.*
-import kotlinx.android.synthetic.main.vh_player.view.*
+import kotlinx.android.synthetic.main.vh_team.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.dsl.module
@@ -37,7 +37,7 @@ class TeamsFragment : BaseFragment() {
         view.progressBar.show()
         view.apply {
             recyclerView.layoutManager = LinearLayoutManager(activity)
-            recyclerView.adapter = clickableListAdapter<TeamData>(R.layout.vh_player, itemCallback()) { item, view ->
+            recyclerView.adapter = clickableListAdapter<TeamData>(R.layout.vh_team, itemCallback()) { item, view ->
                 view.name.text = item.name
             }.apply {
                 viewModel.teams.observe(this@TeamsFragment) {

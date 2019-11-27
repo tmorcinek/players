@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.morcinek.players.R
+import com.morcinek.players.core.extensions.hide
 import kotlinx.android.synthetic.main.app_bar_main.*
 
 abstract class BaseFragment : Fragment() {
@@ -20,15 +22,23 @@ abstract class BaseFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
+        requireActivity().fab.let { fab ->
+            if (fab.isOrWillBeShown) fab.hide {
+                initializeFab(fab)
+            } else {
+                initializeFab(fab)
+            }
+        }
+    }
+
+    private fun initializeFab(fab: FloatingActionButton) {
         fabConfiguration?.let {
-            requireActivity().fab.apply {
+            fab.apply {
                 setImageResource(it.fabIcon)
                 setOnClickListener(it.fabActon)
-                if (isShown) hide()
                 show()
             }
-
-        } ?: requireActivity().fab.hide()
+        }
     }
 }
 

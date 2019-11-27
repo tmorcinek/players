@@ -72,4 +72,10 @@
             android:name="com.morcinek.players.ui.teams.create.CreateTeamFragment"
             android:label="@string/menu_create_team"
             tools:layout="@layout/fragment_create_team" />
+
+    <fragment
+            android:id="@+id/nav_add_players_to_team"
+            android:name="com.morcinek.players.ui.teams.addPlayers.AddPlayersFragment"
+            android:label="@string/menu_add_players_to_team"
+            tools:layout="@layout/fragment_add_players" />
 </navigation>

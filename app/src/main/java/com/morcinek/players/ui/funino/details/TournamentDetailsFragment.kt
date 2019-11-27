@@ -4,9 +4,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
@@ -32,7 +29,7 @@ class TournamentDetailsFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.apply {
-            viewModel.team.observe(this@TournamentDetailsFragment, Observer { details ->
+            viewModel.tournamentDetailsData.let { details ->
                 details.tournamentData.let {
                     title.text = it.title
                     subtitle.text = it.subtitle
@@ -41,7 +38,7 @@ class TournamentDetailsFragment : BaseFragment() {
                 }
                 recyclerView.layoutManager = LinearLayoutManager(activity)
                 recyclerView.adapter = GamesAdapter().apply { submitList(details.tournamentGames) }
-            })
+            }
         }
     }
 }
@@ -73,12 +70,7 @@ private class GamesAdapter : ClickableListAdapter<TournamentGameData>(R.layout.v
     }
 }
 
-class TournamentDetailsViewModel(private val tournamentData: TournamentDetailsData) : ViewModel() {
-
-    val team: LiveData<TournamentDetailsData> = MutableLiveData<TournamentDetailsData>().apply {
-        value = tournamentData
-    }
-}
+class TournamentDetailsViewModel(val tournamentDetailsData: TournamentDetailsData) : ViewModel()
 
 val tournamentDetailsModule = module {
     viewModel { (fragment: Fragment) -> TournamentDetailsViewModel(fragment.getParcelable()) }

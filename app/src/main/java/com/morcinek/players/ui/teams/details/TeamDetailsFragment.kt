@@ -4,22 +4,25 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
+import com.morcinek.players.core.FabConfiguration
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.observe
 import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.getParcelable
+import com.morcinek.players.core.extensions.toBundle
 import com.morcinek.players.core.extensions.viewModelWithFragment
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.core.simpleListAdapter
+import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_team_details.view.*
 import kotlinx.android.synthetic.main.vh_player.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.dsl.module
 
 class TeamDetailsFragment : BaseFragment() {
@@ -27,6 +30,10 @@ class TeamDetailsFragment : BaseFragment() {
     override val layoutResourceId = R.layout.fragment_team_details
 
     private val viewModel by viewModelWithFragment<TeamDetailsViewModel>()
+
+    private val navController: NavController by lazyNavController()
+
+    override val fabConfiguration = FabConfiguration({ navController.navigate(R.id.nav_add_players_to_team, viewModel.teamData.toBundle()) }, R.drawable.ic_group_add)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

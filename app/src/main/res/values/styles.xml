@@ -18,13 +18,18 @@
 
     <style name="ItemTitle">
         <item name="android:textColor">@color/textPrimary</item>
-        <item name="android:textSize">@dimen/font_big</item>
+        <item name="android:textSize">@dimen/font_medium</item>
     </style>
 
     <style name="ItemSubtitle">
-        <item name="android:layout_marginTop">@dimen/margin</item>
         <item name="android:textColor">@color/textSecondary</item>
+        <item name="android:textSize">@dimen/font_small</item>
+    </style>
+
+    <style name="ItemSpecial">
+        <item name="android:textColor">@color/colorPrimaryDark</item>
         <item name="android:textSize">@dimen/font_std</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="GameScore">
@@ -85,6 +90,14 @@
         <item name="android:paddingStart">2dp</item>
         <item name="android:textSize">@dimen/font_small</item>
         <item name="android:textColor">@color/black_60</item>
+    </style>
+
+    <style name="StandardCardView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/margin</item>
+        <item name="android:layout_marginStart">@dimen/margin</item>
+        <item name="android:layout_marginEnd">@dimen/margin</item>
     </style>
 
 </resources>
