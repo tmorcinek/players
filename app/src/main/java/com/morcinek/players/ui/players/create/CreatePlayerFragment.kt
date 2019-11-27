@@ -38,7 +38,7 @@ class CreatePlayerFragment : BaseFragment() {
         view.nameTextInputLayout.editText?.doOnTextChanged { text, _, _, _ -> viewModel.updateValue { name = text.toString() } }
         view.surnameTextInputLayout.editText?.doOnTextChanged { text, _, _, _ -> viewModel.updateValue { surname = text.toString() } }
         view.birthDateButton.setOnClickListener {
-            startDatePicker(viewModel.player.value?.birthDateInMillis ?: 0) {
+            startDatePicker(viewModel.dateInMillis) {
                 viewModel.updateValue { birthDateInMillis = it.timeInMillis }
                 view.birthDateButton.text = it.toStandardString()
             }
@@ -59,9 +59,13 @@ val createPlayerModule = module {
     viewModel { CreatePlayerViewModel(get()) }
 }
 
+private val DefaultDate = Calendar.getInstance().apply { year = 2009 }.timeInMillis
+
 private class CreatePlayerViewModel(val references: FirebaseReferences) : ViewModel() {
 
     val player: LiveData<PlayerData> = MutableLiveData<PlayerData>().apply { value = PlayerData() }
+
+    val dateInMillis = player.value!!.birthDateInMillis.takeIf { it > 0 } ?: DefaultDate
 
     val isNextEnabled: LiveData<Boolean> = Transformations.map(player) { it.isValid() }
 
