@@ -45,16 +45,14 @@ class PlayerDetailsFragment : BaseFragment() {
     }
 
     override val menuConfiguration = createMenuConfiguration(R.menu.player_details) {
-        actions(
-            R.id.delete to {
-                alert(R.string.player_delete_message) {
-                    yesButton { viewModel.deletePlayer { navController.popBackStack() } }
-                    noButton {}
-                }.show()
-            },
-            R.id.edit to { Toast.makeText(requireContext(), "Edit", Toast.LENGTH_SHORT).show() }
-        )
-        visibilities(R.id.delete to { viewModel.playerData.teamKey == null })
+        addAction(R.id.delete) {
+            alert(R.string.player_delete_message) {
+                yesButton { viewModel.deletePlayer { navController.popBackStack() } }
+                noButton {}
+            }.show()
+        }
+        addAction(R.id.edit) { Toast.makeText(requireContext(), "Edit", Toast.LENGTH_SHORT).show() }
+        addPrepare(R.id.delete) { it.isVisible = viewModel.playerData.teamKey == null }
     }
 }
 

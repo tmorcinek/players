@@ -59,22 +59,22 @@ abstract class BaseFragment : Fragment() {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
-        menuConfiguration?.let { it.visibilities.forEach { entry -> menu.findItem(entry.key).isVisible = entry.value() } }
+        menuConfiguration?.let { it.prepare.forEach { entry -> entry.value(menu.findItem(entry.key))  } }
     }
 }
 
 class FabConfiguration(val fabActon: (View) -> Unit, val fabIcon: Int = R.drawable.ic_add)
 
 class MenuConfiguration(val menuResourceId: Int) {
-    internal var actions: Map<Int, () -> Any> = emptyMap()
-    internal var visibilities: Map<Int, () -> Boolean> = emptyMap()
+    internal var actions = mutableMapOf<Int, () -> Any>()
+    internal var prepare = mutableMapOf<Int, (MenuItem) -> Unit>()
 
-    fun actions(vararg args: Pair<Int, () -> Any>) {
-        actions = args.toMap()
+    fun addAction(itemId: Int, action: () -> Any) {
+        actions[itemId] = action
     }
 
-    fun visibilities(vararg args: Pair<Int, () -> Boolean>) {
-        visibilities = args.toMap()
+    fun addPrepare(itemId: Int, action: (MenuItem) -> Unit) {
+        prepare[itemId] = action
     }
 }
 
