@@ -38,7 +38,6 @@ class AddPlayersFragment : BaseFragment() {
         title.text = viewModel.teamData.name
 
         view.nextButton.apply {
-            text = "Add Player"
             viewModel.isNextEnabled.observe(this@AddPlayersFragment) { isEnabled = it }
             setOnClickListener {
                 viewModel.addPlayersToTeam { viewModel.clearSelectedPlayer() }

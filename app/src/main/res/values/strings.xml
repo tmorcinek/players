@@ -18,6 +18,7 @@
     <string name="menu_create_player">Create Player</string>
     <string name="menu_create_team">Create Team</string>
     <string name="menu_add_players_to_team">Add Players to Team</string>
+    <string name="menu_player_details">Player Details</string>
 
     <string name="team_title">Team</string>
     <string name="player_title">Player</string>

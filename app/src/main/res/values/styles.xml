@@ -15,6 +15,10 @@
         <item name="android:textSize">@dimen/font_medium</item>
         <item name="android:textColor">@color/black_60</item>
     </style>
+    <style name="SubtitleText.Bold">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/font_big</item>
+    </style>
 
     <style name="ItemTitle">
         <item name="android:textColor">@color/textPrimary</item>

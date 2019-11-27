@@ -10,7 +10,7 @@ import com.morcinek.players.ui.funino.creator.whichPlayersModule
 import com.morcinek.players.ui.funino.details.tournamentDetailsModule
 import com.morcinek.players.ui.funino.funinoModule
 import com.morcinek.players.ui.players.create.createPlayerModule
-import com.morcinek.players.ui.players.details.playerModule
+import com.morcinek.players.ui.players.details.playerDetailsModule
 import com.morcinek.players.ui.players.playersModule
 import com.morcinek.players.ui.teams.addPlayers.addPlayersModule
 import com.morcinek.players.ui.teams.create.createTeamModule
@@ -31,7 +31,7 @@ class Application : Application() {
             modules(
                 appModule,
                 teamsModule, teamDetailsModule, createTeamModule, addPlayersModule,
-                playersModule, playerModule, createPlayerModule,
+                playersModule, playerDetailsModule, createPlayerModule,
                 funinoModule, tournamentDetailsModule,
                 whichPlayersModule, howManyGamesModule, whatColorsModule
             )
