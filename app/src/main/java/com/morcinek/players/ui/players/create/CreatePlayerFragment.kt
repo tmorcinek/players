@@ -6,13 +6,13 @@ import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.database.FirebaseReferences
+import com.morcinek.players.core.database.map
 import com.morcinek.players.core.extensions.calendar
 import com.morcinek.players.core.extensions.showDatePickerDialog
 import com.morcinek.players.core.extensions.toStandardString
@@ -67,7 +67,7 @@ private class CreatePlayerViewModel(val references: FirebaseReferences) : ViewMo
 
     val dateInMillis = player.value!!.birthDateInMillis.takeIf { it > 0 } ?: DefaultDate
 
-    val isNextEnabled: LiveData<Boolean> = Transformations.map(player) { it.isValid() }
+    val isNextEnabled: LiveData<Boolean> = player.map { it.isValid() }
 
     fun updateValue(function: PlayerData.() -> Unit) {
         (player as MutableLiveData).postValue(player.value?.apply(function))

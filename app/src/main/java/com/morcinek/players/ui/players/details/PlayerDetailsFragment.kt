@@ -9,6 +9,7 @@ import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.database.FirebaseReferences
+import com.morcinek.players.core.database.map
 import com.morcinek.players.core.database.observe
 import com.morcinek.players.core.database.teamsLiveDataForValueListener
 import com.morcinek.players.core.extensions.getParcelable
@@ -45,5 +46,5 @@ class PlayerDetailsViewModel(references: FirebaseReferences, val playerData: Pla
 
     private val teams = references.teamsLiveDataForValueListener()
 
-    val playerTeam = Transformations.map(teams) { it.find { it.key == playerData.teamKey } }
+    val playerTeam = teams.map { it.find { it.key == playerData.teamKey } }
 }
