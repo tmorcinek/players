@@ -34,4 +34,7 @@
     <string name="logout_message">Are you sure you want to logout?</string>
     <string name="logout">Logout</string>
     <string name="add_players">Add Players</string>
+
+    <string name="action_delete">Delete</string>
+    <string name="action_edit">Edit</string>
 </resources>
