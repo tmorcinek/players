@@ -19,9 +19,7 @@ import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.viewModelWithFragment
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.core.selectableListAdapter
-import kotlinx.android.synthetic.main.fragment_add_players.*
-import kotlinx.android.synthetic.main.fragment_create_player.view.nextButton
-import kotlinx.android.synthetic.main.fragment_which_players.view.*
+import kotlinx.android.synthetic.main.fragment_add_players.view.*
 import kotlinx.android.synthetic.main.vh_selectable_player.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -35,7 +33,7 @@ class AddPlayersFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        title.text = viewModel.teamData.name
+        view.title.text = viewModel.teamData.name
 
         view.nextButton.apply {
             viewModel.isNextEnabled.observe(this@AddPlayersFragment) { isEnabled = it }

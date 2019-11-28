@@ -31,26 +31,21 @@
     </com.google.android.material.textfield.TextInputLayout>
 
 
-    <LinearLayout
+    <include
+            android:id="@+id/birthDateLayout"
+            layout="@layout/header_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_margin="@dimen/double_margin"
-            app:layout_constraintTop_toBottomOf="@id/surnameTextInputLayout">
+            app:layout_constraintTop_toBottomOf="@id/surnameTextInputLayout" />
 
-        <TextView
-                style="@style/ButtonHeader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/birth_date" />
-
-        <TextView
-                android:id="@+id/birthDateButton"
-                style="@style/DefaultEditText"
-                android:gravity="center"
-                android:padding="2dp"
-                android:text="@string/value_not_set" />
-    </LinearLayout>
+    <include
+            android:id="@+id/teamLayout"
+            layout="@layout/header_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/double_margin"
+            app:layout_constraintTop_toBottomOf="@id/birthDateLayout" />
 
     <TextView
             android:id="@+id/nextButton"

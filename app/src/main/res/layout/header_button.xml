@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/button_selector"
+        tools:showIn="@layout/fragment_create_player">
+
+    <TextView
+            style="@style/ButtonHeader"
+            android:id="@+id/header"
+            android:clickable="false"
+            android:layout_margin="@dimen/half_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/birth_date" />
+
+    <TextView
+            android:id="@+id/value"
+            style="@style/DefaultEditText"
+            android:clickable="false"
+            android:gravity="center"
+            android:padding="2dp"
+            android:text="@string/value_not_set" />
+</LinearLayout>

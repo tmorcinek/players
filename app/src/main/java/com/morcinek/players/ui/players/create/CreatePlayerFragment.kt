@@ -13,12 +13,16 @@ import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.map
+import com.morcinek.players.core.database.observe
+import com.morcinek.players.core.database.teamsLiveDataForSingleValueListener
 import com.morcinek.players.core.extensions.calendar
 import com.morcinek.players.core.extensions.showDatePickerDialog
 import com.morcinek.players.core.extensions.toStandardString
 import com.morcinek.players.core.extensions.year
+import com.morcinek.players.core.ui.showDropDown
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_create_player.view.*
+import kotlinx.android.synthetic.main.header_button.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.dsl.module
@@ -37,10 +41,29 @@ class CreatePlayerFragment : BaseFragment() {
 
         view.nameTextInputLayout.editText?.doOnTextChanged { text, _, _, _ -> viewModel.updateValue { name = text.toString() } }
         view.surnameTextInputLayout.editText?.doOnTextChanged { text, _, _, _ -> viewModel.updateValue { surname = text.toString() } }
-        view.birthDateButton.setOnClickListener {
-            startDatePicker(viewModel.dateInMillis) {
-                viewModel.updateValue { birthDateInMillis = it.timeInMillis }
-                view.birthDateButton.text = it.toStandardString()
+        view.birthDateLayout.apply {
+            header.setText(R.string.birth_date)
+            value.setText(R.string.value_not_set)
+            setOnClickListener {
+                startDatePicker(viewModel.dateInMillis) {
+                    viewModel.updateValue { birthDateInMillis = it.timeInMillis }
+                    value.text = it.toStandardString()
+                }
+            }
+        }
+        view.teamLayout.apply {
+            header.setText(R.string.team)
+            value.setText(R.string.value_not_set)
+            setOnClickListener {
+                viewModel.teams.observe(this@CreatePlayerFragment) {
+                    showDropDown(this) {
+                        setBackgroundDrawable(R.drawable.button)
+                        setAdapter(android.R.layout.simple_dropdown_item_1line, it) {
+                            viewModel.updateValue { teamKey = it.key }
+                            value.text = it.name
+                        }
+                    }
+                }
             }
         }
         view.nextButton.apply {
@@ -62,6 +85,8 @@ val createPlayerModule = module {
 private val DefaultDate = Calendar.getInstance().apply { year = 2009 }.timeInMillis
 
 private class CreatePlayerViewModel(val references: FirebaseReferences) : ViewModel() {
+
+    val teams = references.teamsLiveDataForSingleValueListener()
 
     val player: LiveData<PlayerData> = MutableLiveData<PlayerData>().apply { value = PlayerData() }
 

@@ -60,7 +60,7 @@ val playerDetailsModule = module {
     viewModel { (fragment: Fragment) -> PlayerDetailsViewModel(get(), fragment.getParcelable()) }
 }
 
-class PlayerDetailsViewModel(val references: FirebaseReferences, val playerData: PlayerData) : ViewModel() {
+class PlayerDetailsViewModel(private val references: FirebaseReferences, val playerData: PlayerData) : ViewModel() {
 
     private val teams = references.teamsLiveDataForValueListener()
 

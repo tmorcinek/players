@@ -14,5 +14,7 @@ data class TeamData(
 //    var category: String,
 //    var year: Int
 ) : HasKey, HasToMap, Parcelable {
-    override fun toMap() = mapOf( "name" to name)
+    override fun toMap() = mapOf("name" to name)
+
+    override fun toString() = name
 }
