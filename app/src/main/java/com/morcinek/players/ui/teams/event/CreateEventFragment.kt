@@ -13,7 +13,7 @@ import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
-import com.morcinek.players.core.data.TeamEventData
+import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.observe
 import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
@@ -92,7 +92,7 @@ val createEventModule = module {
 
 class TeamDetailsViewModel(private val references: FirebaseReferences, private val teamData: TeamData) : ViewModel() {
 
-    val event: LiveData<TeamEventData> = MutableLiveData<TeamEventData>().apply { value = TeamEventData().apply { setDate(Calendar.getInstance()) } }
+    val event: LiveData<EventData> = MutableLiveData<EventData>().apply { value = EventData().apply { setDate(Calendar.getInstance()) } }
 
     val players = references.playersForTeamLiveDataForValueListener(teamData.key)
 
@@ -104,7 +104,7 @@ class TeamDetailsViewModel(private val references: FirebaseReferences, private v
         postValue(updateSelectedItem(player))
     }
 
-    fun updateValue(function: TeamEventData.() -> Unit) {
+    fun updateValue(function: EventData.() -> Unit) {
         (event as MutableLiveData).postValue(event.value?.apply(function))
     }
 

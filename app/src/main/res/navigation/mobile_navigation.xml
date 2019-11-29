@@ -90,4 +90,10 @@
             android:name="com.morcinek.players.ui.teams.event.CreateEventFragment"
             android:label="@string/menu_create_event"
             tools:layout="@layout/fragment_create_event" />
+
+    <fragment
+            android:id="@+id/nav_event_details"
+            android:name="com.morcinek.players.ui.teams.event.EventDetailsFragment"
+            android:label="@string/menu_event_details"
+            tools:layout="@layout/fragment_event_details" />
 </navigation>

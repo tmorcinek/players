@@ -57,6 +57,10 @@ abstract class ClickableListAdapter<T>(vhResourceId: Int, diffCallback: ItemCall
         _onClickListener = function
     }
 
+    fun onItemClickListener(function: (T) -> Unit) {
+        _onClickListener = { _, item -> function(item)}
+    }
+
     @CallSuper
     override fun onBindViewHolder(item: T, view: View) {
         view.setOnClickListener { _onClickListener(it, item) }

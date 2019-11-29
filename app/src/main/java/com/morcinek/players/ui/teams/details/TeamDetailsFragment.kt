@@ -7,20 +7,14 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
-import com.morcinek.players.core.BaseFragment
-import com.morcinek.players.core.FabConfiguration
+import com.morcinek.players.core.*
 import com.morcinek.players.core.data.TeamData
-import com.morcinek.players.core.data.TeamEventData
+import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.eventsForTeamLiveDataForValueListener
 import com.morcinek.players.core.database.observe
 import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
-import com.morcinek.players.core.extensions.getParcelable
-import com.morcinek.players.core.extensions.toBundle
-import com.morcinek.players.core.extensions.toStandardString
-import com.morcinek.players.core.extensions.viewModelWithFragment
-import com.morcinek.players.core.itemCallback
-import com.morcinek.players.core.simpleListAdapter
+import com.morcinek.players.core.extensions.*
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_team_details.view.*
 import kotlinx.android.synthetic.main.vh_player.view.*
@@ -43,12 +37,13 @@ class TeamDetailsFragment : BaseFragment() {
             title.text = viewModel.teamData.name
             recyclerView.apply {
                 recyclerView.layoutManager = LinearLayoutManager(activity)
-                recyclerView.adapter = simpleListAdapter<TeamEventData>(R.layout.vh_player, itemCallback()) { item, view ->
+                recyclerView.adapter = clickableListAdapter<EventData>(R.layout.vh_player, itemCallback()) { item, view ->
                     view.name.text = item.type
                     view.date.text = item.getDate().toStandardString()
                     view.subtitle.text = "${item.players.size} players"
                 }.apply {
                     viewModel.events.observe(this@TeamDetailsFragment) { submitList(it) }
+                    onItemClickListener { navController.navigate(R.id.nav_event_details, bundle(it, viewModel.teamData)) }
                 }
 //                recyclerView.adapter = simpleListAdapter<PlayerData>(R.layout.vh_player, itemCallback()) { item, view ->
 //                    view.name.text = item.toString()

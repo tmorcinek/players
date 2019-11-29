@@ -7,7 +7,7 @@ import com.google.firebase.database.*
 import com.morcinek.players.core.HasKey
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
-import com.morcinek.players.core.data.TeamEventData
+import com.morcinek.players.core.data.EventData
 
 class FirebaseReferences(private val auth: FirebaseAuth, val database: FirebaseDatabase) {
 
@@ -50,4 +50,4 @@ fun FirebaseReferences.playersForTeamLiveDataForValueListener(teamKey: String): 
 fun FirebaseReferences.teamsLiveDataForValueListener(): LiveData<List<TeamData>> = teamsReference().objectsLiveDataForValueListener()
 fun FirebaseReferences.teamsLiveDataForSingleValueListener(): LiveData<List<TeamData>> = teamsReference().objectsLiveDataForSingleValueListener()
 
-fun FirebaseReferences.eventsForTeamLiveDataForValueListener(teamKey: String): LiveData<List<TeamEventData>> = teamEventsReference(teamKey).objectsLiveDataForValueListener()
+fun FirebaseReferences.eventsForTeamLiveDataForValueListener(teamKey: String): LiveData<List<EventData>> = teamEventsReference(teamKey).objectsLiveDataForValueListener()

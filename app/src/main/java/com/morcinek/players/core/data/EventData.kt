@@ -10,7 +10,7 @@ import java.util.*
 
 @IgnoreExtraProperties
 @Parcelize
-data class TeamEventData(
+data class EventData(
     @get:Exclude override var key: String = "",
     var dateInMillis: Long = 0,
     var type: String = "",
