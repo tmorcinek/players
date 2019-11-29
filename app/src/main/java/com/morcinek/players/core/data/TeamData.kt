@@ -9,10 +9,8 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @IgnoreExtraProperties
 data class TeamData(
-    @Exclude override var key: String = "",
+    @get:Exclude override var key: String = "",
     var name: String = ""
-//    var category: String,
-//    var year: Int
 ) : HasKey, HasToMap, Parcelable {
     override fun toMap() = mapOf("name" to name)
 

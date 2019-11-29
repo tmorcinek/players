@@ -10,7 +10,7 @@ import java.util.*
 @IgnoreExtraProperties
 @Parcelize
 data class PlayerData(
-    @Exclude override var key: String = "",
+    @get:Exclude override var key: String = "",
     var name: String = "",
     var surname: String = "",
     var birthDateInMillis: Long = 0,

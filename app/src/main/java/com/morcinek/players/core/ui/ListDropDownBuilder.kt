@@ -10,6 +10,7 @@ import android.widget.PopupWindow
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
 import androidx.core.widget.PopupWindowCompat
+import com.morcinek.players.R
 
 class ListDropDownBuilder(private val context: Context, width: Int = ViewGroup.LayoutParams.MATCH_PARENT, height: Int = ViewGroup.LayoutParams.WRAP_CONTENT) {
 
@@ -35,18 +36,22 @@ class ListDropDownBuilder(private val context: Context, width: Int = ViewGroup.L
         }
     }
 
-    fun showAsDropDown(anchor: View) {
-        PopupWindowCompat.showAsDropDown(window, anchor, 0, 0, Gravity.CENTER_HORIZONTAL)
+    fun showAsDropDown(anchor: View) = PopupWindowCompat.showAsDropDown(window, anchor, 0, 0, Gravity.CENTER_HORIZONTAL)
+}
+
+fun View.showDropDown(
+    width: Int = this.width,
+    height: Int = ViewGroup.LayoutParams.WRAP_CONTENT,
+    function: ListDropDownBuilder.() -> Unit) {
+    ListDropDownBuilder(context, width, height).apply {
+        function(this)
+        showAsDropDown(this@showDropDown)
     }
 }
 
-fun showDropDown(
-    view: View,
-    width: Int = view.width,
-    height: Int = ViewGroup.LayoutParams.WRAP_CONTENT,
-    function: ListDropDownBuilder.() -> Unit) {
-    ListDropDownBuilder(view.context, width, height).apply {
-        function(this)
-        showAsDropDown(view)
+fun <T> View.showStandardDropDown(@LayoutRes itemLayoutRes: Int, items: List<T>, onItemSelected: (T) -> Unit){
+    showDropDown {
+        setBackgroundDrawable(R.drawable.dropdown_background)
+        setAdapter(itemLayoutRes, items, onItemSelected)
     }
 }

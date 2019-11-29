@@ -19,6 +19,7 @@
     <string name="menu_create_team">Create Team</string>
     <string name="menu_add_players_to_team">Add Players to Team</string>
     <string name="menu_player_details">Player Details</string>
+    <string name="menu_create_event">Event</string>
 
     <string name="team_title">Team</string>
     <string name="player_title">Player</string>
@@ -31,6 +32,8 @@
     <string name="surname_hint">Surname</string>
     <string name="birth_date">Birth date</string>
     <string name="team">Team</string>
+    <string name="date">Date</string>
+    <string name="type">Type</string>
     <string name="value_not_set">Not set</string>
     <string name="logout_message">Are you sure you want to logout?</string>
     <string name="logout">Logout</string>

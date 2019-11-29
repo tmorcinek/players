@@ -33,7 +33,7 @@ class TeamDetailsFragment : BaseFragment() {
 
     private val navController: NavController by lazyNavController()
 
-    override val fabConfiguration = FabConfiguration({ navController.navigate(R.id.nav_add_players_to_team, viewModel.teamData.toBundle()) }, R.drawable.ic_group_add)
+    override val fabConfiguration = FabConfiguration({ navController.navigate(R.id.nav_create_event, viewModel.teamData.toBundle()) }, R.drawable.ic_group_add)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

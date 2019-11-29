@@ -36,7 +36,6 @@
             app:layout_constraintTop_toBottomOf="@id/category"
             tools:text="2019" />
 
-
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"

@@ -19,7 +19,7 @@ import com.morcinek.players.core.extensions.calendar
 import com.morcinek.players.core.extensions.showDatePickerDialog
 import com.morcinek.players.core.extensions.toStandardString
 import com.morcinek.players.core.extensions.year
-import com.morcinek.players.core.ui.showDropDown
+import com.morcinek.players.core.ui.showStandardDropDown
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_create_player.view.*
 import kotlinx.android.synthetic.main.header_button.view.*
@@ -56,12 +56,9 @@ class CreatePlayerFragment : BaseFragment() {
             value.setText(R.string.value_not_set)
             setOnClickListener {
                 viewModel.teams.observe(this@CreatePlayerFragment) {
-                    showDropDown(this) {
-                        setBackgroundDrawable(R.drawable.button)
-                        setAdapter(android.R.layout.simple_dropdown_item_1line, it) {
-                            viewModel.updateValue { teamKey = it.key }
-                            value.text = it.name
-                        }
+                    showStandardDropDown(android.R.layout.simple_dropdown_item_1line, it) {
+                        viewModel.updateValue { teamKey = it.key }
+                        value.text = it.name
                     }
                 }
             }
