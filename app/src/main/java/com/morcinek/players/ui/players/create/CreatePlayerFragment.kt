@@ -16,7 +16,7 @@ import com.morcinek.players.core.database.map
 import com.morcinek.players.core.database.observe
 import com.morcinek.players.core.database.teamsLiveDataForSingleValueListener
 import com.morcinek.players.core.extensions.calendar
-import com.morcinek.players.core.extensions.showDatePickerDialog
+import com.morcinek.players.core.extensions.showYearFirstDatePickerDialog
 import com.morcinek.players.core.extensions.toStandardString
 import com.morcinek.players.core.extensions.year
 import com.morcinek.players.core.ui.showStandardDropDown
@@ -72,7 +72,7 @@ class CreatePlayerFragment : BaseFragment() {
     }
 
     private fun startDatePicker(timeInMillis: Long, updatedDate: (Calendar) -> Unit) =
-        requireContext().showDatePickerDialog(calendar(timeInMillis) ?: Calendar.getInstance().apply { year = 2009 }, updatedDate)
+        showYearFirstDatePickerDialog(calendar(timeInMillis) ?: Calendar.getInstance().apply { year = 2009 }, updatedDate)
 }
 
 val createPlayerModule = module {

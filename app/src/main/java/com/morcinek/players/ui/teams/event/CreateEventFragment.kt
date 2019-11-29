@@ -15,7 +15,6 @@ import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.data.TeamEventData
 import com.morcinek.players.core.database.FirebaseReferences
-import com.morcinek.players.core.database.map
 import com.morcinek.players.core.database.observe
 import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.getParcelable
@@ -24,7 +23,6 @@ import com.morcinek.players.core.extensions.toStandardString
 import com.morcinek.players.core.extensions.viewModelWithFragment
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.core.selectableListAdapter
-import com.morcinek.players.core.ui.showDropDown
 import com.morcinek.players.core.ui.showStandardDropDown
 import com.morcinek.players.ui.lazyNavController
 import com.morcinek.players.ui.teams.addPlayers.updateSelectedItem
@@ -48,8 +46,11 @@ class CreateEventFragment : BaseFragment() {
         view.apply {
             typeLayout.header.setText(R.string.type)
             typeLayout.value.setText(R.string.value_not_set)
+            typeLayout.apply {
+                header.text = "TYPEX"
+            }
             typeLayout.setOnClickListener {
-                it.showStandardDropDown(android.R.layout.simple_dropdown_item_1line, listOf("Training", "Game", "Tournament")) {
+                it.showStandardDropDown(android.R.layout.simple_dropdown_item_1line, listOf("Training", "Game", "Tournament", "Friendly")) {
                     viewModel.updateValue { type = it }
                     typeLayout.value.text = it
                 }

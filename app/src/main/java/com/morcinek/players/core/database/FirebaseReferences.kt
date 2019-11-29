@@ -7,6 +7,7 @@ import com.google.firebase.database.*
 import com.morcinek.players.core.HasKey
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
+import com.morcinek.players.core.data.TeamEventData
 
 class FirebaseReferences(private val auth: FirebaseAuth, val database: FirebaseDatabase) {
 
@@ -35,12 +36,12 @@ inline fun <reified T> DataSnapshot.getList(): List<Pair<String, T>> = children.
 
 inline fun <reified T : HasKey> DataSnapshot.getHasKeyObjects(): List<T> = getList<T>().map { it.second.apply { key = it.first } }
 
-inline fun <reified T : HasKey> Query.objectsLiveDataForValueListener(function: Query.(ValueEventListener) -> Any): LiveData<List<T>> = MutableLiveData<List<T>>().apply {
+inline fun <reified T : HasKey> Query.objectsLiveDataForValueEventListener(function: Query.(ValueEventListener) -> Any): LiveData<List<T>> = MutableLiveData<List<T>>().apply {
     function(valueEventListener { postValue(it.getHasKeyObjects()) })
 }
 
-inline fun <reified T : HasKey> Query.objectsLiveDataForValueListener(): LiveData<List<T>> = objectsLiveDataForValueListener{ addValueEventListener(it)}
-inline fun <reified T : HasKey> Query.objectsLiveDataForSingleValueListener(): LiveData<List<T>> = objectsLiveDataForValueListener{ addListenerForSingleValueEvent(it)}
+inline fun <reified T : HasKey> Query.objectsLiveDataForValueListener(): LiveData<List<T>> = objectsLiveDataForValueEventListener{ addValueEventListener(it)}
+inline fun <reified T : HasKey> Query.objectsLiveDataForSingleValueListener(): LiveData<List<T>> = objectsLiveDataForValueEventListener{ addListenerForSingleValueEvent(it)}
 
 fun FirebaseReferences.playersLiveDataForValueListener(): LiveData<List<PlayerData>> = playersReference().objectsLiveDataForValueListener()
 fun FirebaseReferences.playersWithoutTeamLiveDataForValueListener(): LiveData<List<PlayerData>> = playersReference().orderByChild("teamKey").equalTo(null).objectsLiveDataForValueListener()
@@ -49,3 +50,4 @@ fun FirebaseReferences.playersForTeamLiveDataForValueListener(teamKey: String): 
 fun FirebaseReferences.teamsLiveDataForValueListener(): LiveData<List<TeamData>> = teamsReference().objectsLiveDataForValueListener()
 fun FirebaseReferences.teamsLiveDataForSingleValueListener(): LiveData<List<TeamData>> = teamsReference().objectsLiveDataForSingleValueListener()
 
+fun FirebaseReferences.eventsForTeamLiveDataForValueListener(teamKey: String): LiveData<List<TeamEventData>> = teamEventsReference(teamKey).objectsLiveDataForValueListener()

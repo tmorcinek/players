@@ -9,13 +9,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.FabConfiguration
-import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
+import com.morcinek.players.core.data.TeamEventData
 import com.morcinek.players.core.database.FirebaseReferences
+import com.morcinek.players.core.database.eventsForTeamLiveDataForValueListener
 import com.morcinek.players.core.database.observe
 import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.toBundle
+import com.morcinek.players.core.extensions.toStandardString
 import com.morcinek.players.core.extensions.viewModelWithFragment
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.core.simpleListAdapter
@@ -41,11 +43,18 @@ class TeamDetailsFragment : BaseFragment() {
             title.text = viewModel.teamData.name
             recyclerView.apply {
                 recyclerView.layoutManager = LinearLayoutManager(activity)
-                recyclerView.adapter = simpleListAdapter<PlayerData>(R.layout.vh_player, itemCallback()) { item, view ->
-                    view.name.text = item.toString()
+                recyclerView.adapter = simpleListAdapter<TeamEventData>(R.layout.vh_player, itemCallback()) { item, view ->
+                    view.name.text = item.type
+                    view.date.text = item.getDate().toStandardString()
+                    view.subtitle.text = "${item.players.size} players"
                 }.apply {
-                    viewModel.players.observe(this@TeamDetailsFragment) { submitList(it) }
+                    viewModel.events.observe(this@TeamDetailsFragment) { submitList(it) }
                 }
+//                recyclerView.adapter = simpleListAdapter<PlayerData>(R.layout.vh_player, itemCallback()) { item, view ->
+//                    view.name.text = item.toString()
+//                }.apply {
+//                    viewModel.players.observe(this@TeamDetailsFragment) { submitList(it) }
+//                }
             }
         }
     }
@@ -58,4 +67,6 @@ val teamDetailsModule = module {
 class TeamDetailsViewModel(references: FirebaseReferences, val teamData: TeamData) : ViewModel() {
 
     val players = references.playersForTeamLiveDataForValueListener(teamData.key)
+
+    val events = references.eventsForTeamLiveDataForValueListener(teamData.key)
 }

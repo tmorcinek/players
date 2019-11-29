@@ -6,21 +6,22 @@ import androidx.fragment.app.Fragment
 import java.util.*
 
 
-fun Context.showDatePickerDialog(calendar: Calendar, updatedDate: (Calendar) -> Unit) {
-    DatePickerDialog(
-        this,
-        DatePickerDialog.OnDateSetListener { _, updatedYear, updatedMonth, updatedDayOfMonth ->
-            updatedDate(Calendar.getInstance().apply {
-                year = updatedYear
-                month = updatedMonth
-                dayOfMonth = updatedDayOfMonth
-            })
-        },
-        calendar.year,
-        calendar.month,
-        calendar.dayOfMonth
-    ).show()
+fun Context.datePickerDialog(calendar: Calendar, updatedDate: (Calendar) -> Unit) = DatePickerDialog(
+    this,
+    DatePickerDialog.OnDateSetListener { _, updatedYear, updatedMonth, updatedDayOfMonth ->
+        updatedDate(Calendar.getInstance().apply {
+            year = updatedYear
+            month = updatedMonth
+            dayOfMonth = updatedDayOfMonth
+        })
+    },
+    calendar.year,
+    calendar.month,
+    calendar.dayOfMonth
+)
 
-}
+fun Fragment.showDatePickerDialog(calendar: Calendar, updatedDate: (Calendar) -> Unit) =
+    requireContext().datePickerDialog(calendar, updatedDate).show()
 
-fun Fragment.showDatePickerDialog(calendar: Calendar, updatedDate: (Calendar) -> Unit) = requireContext().showDatePickerDialog(calendar, updatedDate)
+fun Fragment.showYearFirstDatePickerDialog(calendar: Calendar, updatedDate: (Calendar) -> Unit) =
+    requireContext().datePickerDialog(calendar, updatedDate).apply { datePicker.touchables[0].performClick() }.show()
