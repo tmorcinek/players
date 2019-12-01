@@ -5,16 +5,16 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
+import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
-import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.database.FirebaseReferences
+import com.morcinek.players.core.database.map
 import com.morcinek.players.core.database.observe
 import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.getParcelable
@@ -46,9 +46,6 @@ class CreateEventFragment : BaseFragment() {
         view.apply {
             typeLayout.header.setText(R.string.type)
             typeLayout.value.setText(R.string.value_not_set)
-            typeLayout.apply {
-                header.text = "TYPEX"
-            }
             typeLayout.setOnClickListener {
                 it.showStandardDropDown(android.R.layout.simple_dropdown_item_1line, listOf("Training", "Game", "Tournament", "Friendly")) {
                     viewModel.updateValue { type = it }
@@ -56,7 +53,7 @@ class CreateEventFragment : BaseFragment() {
                 }
             }
             dateLayout.header.setText(R.string.date)
-            viewModel.event.value?.let { event ->
+            viewModel.event.let { event ->
                 dateLayout.value.text = event.getDate().toStandardString()
                 dateLayout.setOnClickListener {
                     showDatePickerDialog(event.getDate()) {
@@ -66,8 +63,8 @@ class CreateEventFragment : BaseFragment() {
                 }
             }
             recyclerView.apply {
-                recyclerView.layoutManager = LinearLayoutManager(activity)
-                recyclerView.adapter = selectableListAdapter<PlayerData>(R.layout.vh_selectable_player, itemCallback()) { item, view ->
+                layoutManager = LinearLayoutManager(activity)
+                adapter = selectableListAdapter<PlayerData>(R.layout.vh_selectable_player, itemCallback()) { item, view ->
                     view.name.text = item.toString()
                 }.apply {
                     observe(viewModel.players) { submitList(it) }
@@ -90,26 +87,26 @@ val createEventModule = module {
     viewModel { (fragment: Fragment) -> TeamDetailsViewModel(get(), fragment.getParcelable()) }
 }
 
-class TeamDetailsViewModel(private val references: FirebaseReferences, private val teamData: TeamData) : ViewModel() {
+private class TeamDetailsViewModel(private val references: FirebaseReferences, private val teamData: TeamData) : ViewModel() {
 
-    val event: LiveData<EventData> = MutableLiveData<EventData>().apply { value = EventData().apply { setDate(Calendar.getInstance()) } }
+    val event = EventData().apply { setDate(Calendar.getInstance()) }
 
     val players = references.playersForTeamLiveDataForValueListener(teamData.key)
 
     val selectedPlayers: LiveData<Set<PlayerData>> = MutableLiveData<Set<PlayerData>>().apply { value = setOf() }
 
-    val isNextEnabled: LiveData<Boolean> = Transformations.map(selectedPlayers) { it.isNotEmpty() }
+    val isNextEnabled: LiveData<Boolean> = selectedPlayers.map { players -> players.isNotEmpty() && event.type.isNotEmpty() && event.dateInMillis > 0 }
 
     fun select(player: PlayerData) = (selectedPlayers as MutableLiveData).apply {
         postValue(updateSelectedItem(player))
     }
 
     fun updateValue(function: EventData.() -> Unit) {
-        (event as MutableLiveData).postValue(event.value?.apply(function))
+        event.function()
     }
 
     fun addPlayersToTeam(doOnComplete: () -> Unit) {
-        val value = event.value!!.apply { players = selectedPlayers.value!!.map { it.key } }
-        references.teamEventsReference(teamData.key).push().setValue(value).addOnCompleteListener { doOnComplete() }
+        event.apply { players = selectedPlayers.value!!.map { it.key } }
+        references.teamEventsReference(teamData.key).push().setValue(event).addOnCompleteListener { doOnComplete() }
     }
 }

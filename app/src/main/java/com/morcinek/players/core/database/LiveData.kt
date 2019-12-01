@@ -31,4 +31,4 @@ fun <T, R> combine(sourceA: LiveData<T>, sourceB: LiveData<R>): LiveData<Pair<T,
 fun <T, R, Y> combine(sourceA: LiveData<T>, sourceB: LiveData<R>, mapFunction: (T, R) -> (Y)): LiveData<Y> =
     combine(sourceA, sourceB).map { mapFunction(it.first, it.second) }
 
-fun <T, R> LiveData<T>.combineWith(source: LiveData<R>): LiveData<Pair<T, R>> = combine(this, source)
+fun <T, R, Y> LiveData<T>.combineWith(source: LiveData<R>, mapFunction: (T, R) -> (Y)): LiveData<Y> = combine(this, source).map { mapFunction(it.first, it.second) }
