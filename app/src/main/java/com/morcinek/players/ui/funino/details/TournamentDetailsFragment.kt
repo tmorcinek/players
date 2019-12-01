@@ -1,6 +1,7 @@
 package com.morcinek.players.ui.funino.details
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.View
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -8,12 +9,14 @@ import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
-import com.morcinek.players.core.ClickableListAdapter
+import com.morcinek.players.core.clickableListAdapter
 import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.setDrawableColor
 import com.morcinek.players.core.extensions.viewModelWithFragment
 import com.morcinek.players.core.itemCallback
+import com.morcinek.players.ui.funino.TournamentData
 import com.morcinek.players.ui.funino.TournamentGameData
+import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.fragment_tournament_details.*
 import kotlinx.android.synthetic.main.vh_game.view.*
 import kotlinx.android.synthetic.main.vh_player.view.*
@@ -37,41 +40,39 @@ class TournamentDetailsFragment : BaseFragment() {
                     isFinished.visibility = View.VISIBLE
                 }
                 recyclerView.layoutManager = LinearLayoutManager(activity)
-                recyclerView.adapter = GamesAdapter().apply { submitList(details.tournamentGames) }
+                recyclerView.adapter = clickableListAdapter(R.layout.vh_game, itemCallback()) { position, item: TournamentGameData, view ->
+                    view.apply {
+                        gameNumber.text = "Game ${position + 1}"
+                        item.homeTeamData.let {
+                            homeColor.setDrawableColor(it.color)
+                            homeTeam.removeAllViews()
+                            it.players.forEach { player ->
+                                homeTeam.addView(TextView(context).apply { text = "${player.name} ${player.surname}" })
+                            }
+                        }
+                        item.awayTeamData.let {
+                            awayColor.setDrawableColor(it.color)
+                            awayTeam.removeAllViews()
+                            it.players.forEach { player ->
+                                awayTeam.addView(TextView(context).apply { text = "${player.name} ${player.surname}" })
+                            }
+                        }
+                        item.scoreData?.let {
+                            homeScore.text = "${it.homeTeamScore}"
+                            awayScore.text = "${it.awayTeamScore}"
+                        }
+                    }
+                }.apply { submitList(details.tournamentGames) }
             }
         }
     }
 }
 
-private class GamesAdapter : ClickableListAdapter<TournamentGameData>(R.layout.vh_game, itemCallback()) {
-
-    override fun onBindViewHolder(position: Int, item: TournamentGameData, view: View) {
-        super.onBindViewHolder(position, item, view)
-        view.apply {
-            item.homeTeamData.let {
-                homeColor.setDrawableColor(it.color)
-                homeTeam.removeAllViews()
-                it.players.forEach { player ->
-                    homeTeam.addView(TextView(context).apply { text = "${player.name} ${player.surname}" })
-                }
-            }
-            item.awayTeamData.let {
-                awayColor.setDrawableColor(it.color)
-                awayTeam.removeAllViews()
-                it.players.forEach { player ->
-                    awayTeam.addView(TextView(context).apply { text = "${player.name} ${player.surname}" })
-                }
-            }
-            item.scoreData?.let {
-                homeScore.text = "${it.homeTeamScore}"
-                awayScore.text = "${it.awayTeamScore}"
-            }
-        }
-    }
-}
-
-class TournamentDetailsViewModel(val tournamentDetailsData: TournamentDetailsData) : ViewModel()
+private class TournamentDetailsViewModel(val tournamentDetailsData: TournamentDetailsData) : ViewModel()
 
 val tournamentDetailsModule = module {
     viewModel { (fragment: Fragment) -> TournamentDetailsViewModel(fragment.getParcelable()) }
 }
+
+@Parcelize
+class TournamentDetailsData(val tournamentData: TournamentData, val tournamentGames: List<TournamentGameData>) : Parcelable

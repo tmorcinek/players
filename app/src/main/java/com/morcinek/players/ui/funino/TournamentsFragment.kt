@@ -1,11 +1,15 @@
 package com.morcinek.players.ui.funino
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
 import androidx.core.view.isVisible
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
@@ -15,6 +19,7 @@ import com.morcinek.players.core.FabConfiguration
 import com.morcinek.players.core.extensions.toBundle
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.ui.lazyNavController
+import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.fragment_list.view.*
 import kotlinx.android.synthetic.main.vh_tournament.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -64,3 +69,9 @@ class TournamentAdapter : ClickableListAdapter<TournamentData>(R.layout.vh_tourn
 val funinoModule = module {
     viewModel { TournamentsViewModel() }
 }
+
+private class TournamentsViewModel : ViewModel() {
+
+    val players: LiveData<List<TournamentData>> = MutableLiveData<List<TournamentData>>()
+}
+

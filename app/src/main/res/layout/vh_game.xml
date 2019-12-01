@@ -13,6 +13,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+        <TextView
+                android:id="@+id/gameNumber"
+                style="@style/ItemSubtitle.Accent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/half_margin"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Game 9" />
+
         <ImageView
                 android:id="@+id/homeColor"
                 android:layout_width="@dimen/team_color_height"

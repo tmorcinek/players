@@ -77,9 +77,6 @@ class WhatColorsFragment : BaseFragment() {
                     }
                 }
             }
-            MediatorLiveData<Pair<PlayerData,TeamData>>().apply {
-//                addSource(references)
-            }
 
             val tournamentDetailsData = TournamentDetailsData(TournamentData(1, "Tuesday 12 Listopada", "12 players", "Not Finished", true), list)
             navController.navigate(R.id.nav_tournament_details, tournamentDetailsData.toBundle())
