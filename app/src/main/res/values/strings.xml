@@ -40,6 +40,10 @@
     <string name="logout">Logout</string>
     <string name="add_players">Add Players</string>
 
+    <string name="page_events">Events</string>
+    <string name="page_stats">Stats</string>
+    <string name="page_players">Players</string>
+
     <string name="action_delete">Delete</string>
     <string name="action_edit">Edit</string>
 

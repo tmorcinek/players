@@ -36,28 +36,34 @@ class TeamDetailsFragment : BaseFragment() {
             title.text = viewModel.teamData.name
             tabLayout.setupWithViewPager(viewPager)
             viewPager.adapter = recyclerViewPagerAdapter(
-                "Events" to clickableListAdapter<EventData>(R.layout.vh_player, itemCallback()) { item, view ->
-                    view.name.text = item.type
-                    view.date.text = item.getDate().toStandardString()
-                    view.subtitle.text = "${item.players.size} players"
-                }.apply {
-                    observe(viewModel.events) { submitList(it) }
-                    onItemClickListener { navController.navigate(R.id.nav_event_details, bundle(it, viewModel.teamData)) }
-                },
-                "Stats" to clickableListAdapter<PlayerStat>(R.layout.vh_stat, itemCallback()) { item, view ->
-                    view.name.text = item.name
-                    view.attendance.text = item.attended.toString()
-                    view.missed.text = item.missed.toString()
-                }.apply {
-                    observe(viewModel.playersStats) { submitList(it) }
-                },
-                "Players" to  simpleListAdapter<PlayerData>(R.layout.vh_player, itemCallback()) { item, view ->
-                    view.name.text = item.toString()
-                }.apply {
-                    observe(viewModel.players) { submitList(it) }
-                }
+                R.string.page_events to eventAdapter(),
+                R.string.page_stats to statsAdapter(),
+                R.string.page_players to playersAdapter()
             )
         }
+    }
+
+    private fun eventAdapter() = clickableListAdapter<EventData>(R.layout.vh_player, itemCallback()) { item, view ->
+        view.name.text = item.type
+        view.date.text = item.getDate().toStandardString()
+        view.subtitle.text = "${item.players.size} players"
+    }.apply {
+        observe(viewModel.events) { submitList(it) }
+        onItemClickListener { navController.navigate(R.id.nav_event_details, bundle(it, viewModel.teamData)) }
+    }
+
+    private fun statsAdapter() = clickableListAdapter<PlayerStat>(R.layout.vh_stat, itemCallback()) { item, view ->
+        view.name.text = item.name
+        view.attendance.text = item.attended.toString()
+        view.missed.text = item.missed.toString()
+    }.apply {
+        observe(viewModel.playersStats) { submitList(it) }
+    }
+
+    private fun playersAdapter() = simpleListAdapter<PlayerData>(R.layout.vh_player, itemCallback()) { item, view ->
+        view.name.text = item.toString()
+    }.apply {
+        observe(viewModel.players) { submitList(it) }
     }
 }
 
