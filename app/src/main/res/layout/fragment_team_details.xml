@@ -10,39 +10,34 @@
             style="@style/TitleText"
             android:layout_marginStart="@dimen/margin"
             android:layout_marginTop="@dimen/double_margin"
+            android:layout_marginBottom="@dimen/double_margin"
             android:layout_marginEnd="@dimen/margin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Zaki 2019" />
 
-    <TextView
-            android:id="@+id/category"
-            style="@style/SubtitleText"
-            android:layout_marginStart="@dimen/margin"
-            android:layout_marginTop="@dimen/double_margin"
-            android:layout_marginEnd="@dimen/margin"
-            app:layout_constraintStart_toStartOf="parent"
+    <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewPager"
             app:layout_constraintTop_toBottomOf="@id/title"
-            tools:text="Zaki" />
-
-    <TextView
-            android:id="@+id/year"
-            style="@style/SubtitleText"
-            android:layout_marginStart="@dimen/margin"
-            android:layout_marginTop="@dimen/double_margin"
-            android:layout_marginEnd="@dimen/margin"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/category"
-            tools:text="2019" />
-
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="@dimen/double_margin"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/year" />
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+
+        <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+    </androidx.viewpager.widget.ViewPager>
+
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--            android:id="@+id/recyclerView"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_marginTop="@dimen/double_margin"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/year" />-->
 </androidx.constraintlayout.widget.ConstraintLayout>
