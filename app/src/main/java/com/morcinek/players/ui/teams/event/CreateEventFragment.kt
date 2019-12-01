@@ -13,10 +13,7 @@ import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
-import com.morcinek.players.core.database.FirebaseReferences
-import com.morcinek.players.core.database.map
-import com.morcinek.players.core.database.observe
-import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
+import com.morcinek.players.core.database.*
 import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.showDatePickerDialog
 import com.morcinek.players.core.extensions.toStandardString
@@ -89,20 +86,23 @@ val createEventModule = module {
 
 private class TeamDetailsViewModel(private val references: FirebaseReferences, private val teamData: TeamData) : ViewModel() {
 
-    val event = EventData().apply { setDate(Calendar.getInstance()) }
+    private val eventData = MutableLiveData<EventData>().apply { value = EventData().apply { setDate(Calendar.getInstance()) } }
+
+    val event : EventData
+        get() = eventData.value!!
 
     val players = references.playersForTeamLiveDataForValueListener(teamData.key)
 
     val selectedPlayers: LiveData<Set<PlayerData>> = MutableLiveData<Set<PlayerData>>().apply { value = setOf() }
 
-    val isNextEnabled: LiveData<Boolean> = selectedPlayers.map { players -> players.isNotEmpty() && event.type.isNotEmpty() && event.dateInMillis > 0 }
+    val isNextEnabled: LiveData<Boolean> = selectedPlayers.combineWith(eventData) { players, event -> players.isNotEmpty() && event.type.isNotEmpty() && event.dateInMillis > 0 }
 
     fun select(player: PlayerData) = (selectedPlayers as MutableLiveData).apply {
         postValue(updateSelectedItem(player))
     }
 
     fun updateValue(function: EventData.() -> Unit) {
-        event.function()
+        eventData.postValue(event.apply(function))
     }
 
     fun addPlayersToTeam(doOnComplete: () -> Unit) {
