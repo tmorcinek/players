@@ -55,8 +55,8 @@ private class HowManyGamesAdapter : ClickableListAdapter<GamesNumber>(R.layout.v
 
     var selectedItem: GamesNumber? = null
 
-    override fun onBindViewHolder(item: GamesNumber, view: View) {
-        super.onBindViewHolder(item, view)
+    override fun onBindViewHolder(position: Int, item: GamesNumber, view: View) {
+        super.onBindViewHolder(position, item, view)
         view.text.text = item.numberOfGames.toString()
         view.text.isSelected = item == selectedItem
     }

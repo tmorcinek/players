@@ -37,7 +37,7 @@ class TeamsFragment : BaseFragment() {
         view.progressBar.show()
         view.apply {
             recyclerView.layoutManager = LinearLayoutManager(activity)
-            recyclerView.adapter = clickableListAdapter<TeamData>(R.layout.vh_team, itemCallback()) { item, view ->
+            recyclerView.adapter = clickableListAdapter<TeamData>(R.layout.vh_team, itemCallback()) { _, item, view ->
                 view.name.text = item.name
             }.apply {
                 observe(viewModel.teams) {

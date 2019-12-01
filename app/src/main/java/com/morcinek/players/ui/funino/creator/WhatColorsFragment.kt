@@ -93,8 +93,8 @@ private class WhatColorsAdapter : ClickableListAdapter<Color>(R.layout.vh_color,
 
     var selectedItems: Set<Color> = setOf()
 
-    override fun onBindViewHolder(item: Color, view: View) {
-        super.onBindViewHolder(item, view)
+    override fun onBindViewHolder(position: Int, item: Color, view: View) {
+        super.onBindViewHolder(position, item, view)
         view.isSelected = item in selectedItems
         view.text.text = item.name
         view.image.setDrawableColor(item.code)
@@ -104,7 +104,7 @@ private class WhatColorsAdapter : ClickableListAdapter<Color>(R.layout.vh_color,
 private class SelectedColorsAdapter : SimpleListAdapter<Color>(R.layout.vh_color_selected, itemCallback {
     areItemsTheSame { oldItem, newItem -> oldItem.code == newItem.code }
 }) {
-    override fun onBindViewHolder(item: Color, view: View) {
+    override fun onBindViewHolder(position: Int, item: Color, view: View) {
         view.text.text = item.name
         view.image.setDrawableColor(item.code)
     }

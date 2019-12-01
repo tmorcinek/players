@@ -43,7 +43,7 @@ class AddPlayersFragment : BaseFragment() {
         }
         view.recyclerView.apply {
             layoutManager = LinearLayoutManager(activity)
-            adapter = selectableListAdapter<PlayerData>(R.layout.vh_selectable_player, itemCallback()) { item, view ->
+            adapter = selectableListAdapter<PlayerData>(R.layout.vh_selectable_player, itemCallback()) { _, item, view ->
                 view.name.text = "$item"
             }.apply {
                 viewModel.players.observe(this@AddPlayersFragment) { submitList(it) }

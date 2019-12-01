@@ -41,12 +41,12 @@ class ItemCallback<T> : DiffUtil.ItemCallback<T>() {
 
 abstract class SimpleListAdapter<T>(private val vhResourceId: Int, diffCallback: ItemCallback<T>) : ListAdapter<T, ViewHolder>(diffCallback) {
 
-    protected abstract fun onBindViewHolder(item: T, view: View)
+    protected abstract fun onBindViewHolder(position: Int, item: T, view: View)
 
     final override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder(LayoutInflater.from(parent.context).inflate(vhResourceId, parent, false))
 
-    final override fun onBindViewHolder(holder: ViewHolder, position: Int) = onBindViewHolder(getItem(position), holder.itemView)
+    final override fun onBindViewHolder(holder: ViewHolder, position: Int) = onBindViewHolder(position, getItem(position), holder.itemView)
 }
 
 abstract class ClickableListAdapter<T>(vhResourceId: Int, diffCallback: ItemCallback<T>) : SimpleListAdapter<T>(vhResourceId, diffCallback) {
@@ -58,11 +58,11 @@ abstract class ClickableListAdapter<T>(vhResourceId: Int, diffCallback: ItemCall
     }
 
     fun onItemClickListener(function: (T) -> Unit) {
-        _onClickListener = { _, item -> function(item)}
+        _onClickListener = { _, item -> function(item) }
     }
 
     @CallSuper
-    override fun onBindViewHolder(item: T, view: View) {
+    override fun onBindViewHolder(position: Int, item: T, view: View) {
         view.setOnClickListener { _onClickListener(it, item) }
     }
 }
@@ -76,29 +76,32 @@ abstract class SelectableListAdapter<T>(vhResourceId: Int, diffCallback: ItemCal
         }
 
     @CallSuper
-    override fun onBindViewHolder(item: T, view: View) {
-        super.onBindViewHolder(item, view)
+    override fun onBindViewHolder(position: Int, item: T, view: View) {
+        super.onBindViewHolder(position, item, view)
         view.isSelected = item in selectedItems
     }
 }
 
-fun <T> simpleListAdapter(vhResourceId: Int, diffCallback: ItemCallback<T>, onBindView: (item: T, view: View) -> Unit) = object : SimpleListAdapter<T>(vhResourceId, diffCallback) {
-    override fun onBindViewHolder(item: T, view: View) = onBindView(item, view)
-}
-
-fun <T> clickableListAdapter(vhResourceId: Int, diffCallback: ItemCallback<T>, onBindView: (item: T, view: View) -> Unit) = object : ClickableListAdapter<T>(vhResourceId, diffCallback) {
-
-    override fun onBindViewHolder(item: T, view: View) {
-        super.onBindViewHolder(item, view)
-        onBindView(item, view)
+fun <T> simpleListAdapter(vhResourceId: Int, diffCallback: ItemCallback<T>, onBindView: (position: Int, item: T, view: View) -> Unit) =
+    object : SimpleListAdapter<T>(vhResourceId, diffCallback) {
+        override fun onBindViewHolder(position: Int, item: T, view: View) = onBindView(position, item, view)
     }
-}
 
-fun <T> selectableListAdapter(vhResourceId: Int, diffCallback: ItemCallback<T>, onBindView: (item: T, view: View) -> Unit) = object : SelectableListAdapter<T>(vhResourceId, diffCallback) {
+fun <T> clickableListAdapter(vhResourceId: Int, diffCallback: ItemCallback<T>, onBindView: (position: Int, item: T, view: View) -> Unit) =
+    object : ClickableListAdapter<T>(vhResourceId, diffCallback) {
 
-    override fun onBindViewHolder(item: T, view: View) {
-        super.onBindViewHolder(item, view)
-        onBindView(item, view)
+        override fun onBindViewHolder(position: Int, item: T, view: View) {
+            super.onBindViewHolder(position, item, view)
+            onBindView(position, item, view)
+        }
     }
-}
+
+fun <T> selectableListAdapter(vhResourceId: Int, diffCallback: ItemCallback<T>, onBindView: (position: Int, item: T, view: View) -> Unit) =
+    object : SelectableListAdapter<T>(vhResourceId, diffCallback) {
+
+        override fun onBindViewHolder(position: Int, item: T, view: View) {
+            super.onBindViewHolder(position, item, view)
+            onBindView(position, item, view)
+        }
+    }
 

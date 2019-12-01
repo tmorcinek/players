@@ -48,8 +48,8 @@ class WhichPlayersFragment : BaseFragment() {
 
 class WhichPlayersAdapter : SelectableListAdapter<PlayerData>(R.layout.vh_selectable_player, itemCallback()) {
 
-    override fun onBindViewHolder(item: PlayerData, view: View) {
-        super.onBindViewHolder(item, view)
+    override fun onBindViewHolder(position: Int, item: PlayerData, view: View) {
+        super.onBindViewHolder(position, item, view)
         view.name.text = "$item"
     }
 }

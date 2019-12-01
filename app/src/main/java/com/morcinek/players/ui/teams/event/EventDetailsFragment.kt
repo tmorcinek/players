@@ -34,7 +34,7 @@ class EventDetailsFragment : BaseFragment() {
             year.text = viewModel.eventData.getDate().toStandardString()
             recyclerView.apply {
                 recyclerView.layoutManager = LinearLayoutManager(activity)
-                recyclerView.adapter = simpleListAdapter<PlayerData>(R.layout.vh_text, itemCallback()) { item, view ->
+                recyclerView.adapter = simpleListAdapter<PlayerData>(R.layout.vh_text, itemCallback()) { _, item, view ->
                     view.name.text = item.toString()
                 }.apply {
                     viewModel.players.observe(this@EventDetailsFragment) { submitList(it) }

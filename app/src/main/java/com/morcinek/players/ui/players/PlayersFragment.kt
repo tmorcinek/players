@@ -33,7 +33,7 @@ class PlayersFragment : BaseFragment() {
         view.progressBar.show()
         view.apply {
             recyclerView.layoutManager = LinearLayoutManager(activity)
-            recyclerView.adapter = clickableListAdapter(R.layout.vh_player, itemCallback()) { item: PlayerItem, view ->
+            recyclerView.adapter = clickableListAdapter(R.layout.vh_player, itemCallback()) { _, item: PlayerItem, view ->
                 view.name.text = item.name
                 view.subtitle.text = item.subtitle
                 view.date.text = item.date

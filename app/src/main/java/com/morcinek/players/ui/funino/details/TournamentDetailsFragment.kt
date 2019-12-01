@@ -45,8 +45,8 @@ class TournamentDetailsFragment : BaseFragment() {
 
 private class GamesAdapter : ClickableListAdapter<TournamentGameData>(R.layout.vh_game, itemCallback()) {
 
-    override fun onBindViewHolder(item: TournamentGameData, view: View) {
-        super.onBindViewHolder(item, view)
+    override fun onBindViewHolder(position: Int, item: TournamentGameData, view: View) {
+        super.onBindViewHolder(position, item, view)
         view.apply {
             item.homeTeamData.let {
                 homeColor.setDrawableColor(it.color)

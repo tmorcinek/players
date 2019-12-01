@@ -43,7 +43,7 @@ class TeamDetailsFragment : BaseFragment() {
         }
     }
 
-    private fun eventAdapter() = clickableListAdapter<EventData>(R.layout.vh_player, itemCallback()) { item, view ->
+    private fun eventAdapter() = clickableListAdapter<EventData>(R.layout.vh_player, itemCallback()) { _, item, view ->
         view.name.text = item.type
         view.date.text = item.getDate().toStandardString()
         view.subtitle.text = "${item.players.size} players"
@@ -52,18 +52,19 @@ class TeamDetailsFragment : BaseFragment() {
         onItemClickListener { navController.navigate(R.id.nav_event_details, bundle(it, viewModel.teamData)) }
     }
 
-    private fun statsAdapter() = clickableListAdapter<PlayerStat>(R.layout.vh_stat, itemCallback()) { item, view ->
-        view.name.text = item.name
+    private fun statsAdapter() = clickableListAdapter<PlayerStat>(R.layout.vh_stat, itemCallback()) { position, item, view ->
+        view.name.text = "${position + 1}. ${item.name}"
         view.attendance.text = item.attended.toString()
         view.missed.text = item.missed.toString()
     }.apply {
         observe(viewModel.playersStats) { submitList(it) }
     }
 
-    private fun playersAdapter() = simpleListAdapter<PlayerData>(R.layout.vh_player, itemCallback()) { item, view ->
+    private fun playersAdapter() = clickableListAdapter<PlayerData>(R.layout.vh_player, itemCallback()) { _, item, view ->
         view.name.text = item.toString()
     }.apply {
         observe(viewModel.players) { submitList(it) }
+        onItemClickListener { navController.navigate(R.id.nav_player_details, bundle(it)) }
     }
 }
 
@@ -78,7 +79,7 @@ private class TeamDetailsViewModel(references: FirebaseReferences, val teamData:
     val events = references.eventsForTeamLiveDataForValueListener(teamData.key).map { it.sortedByDescending { it.dateInMillis } }
 
     val playersStats = combine(players, events) { player, events ->
-        player.map { player -> PlayerStat(player.name, events.count { player.key in it.players }, events.count { player.key !in it.players }, player) }
+        player.map { player -> PlayerStat(player.toString(), events.count { player.key in it.players }, events.count { player.key !in it.players }, player) }
             .sortedByDescending { it.attended }
     }
 }

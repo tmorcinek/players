@@ -50,8 +50,8 @@ class TournamentAdapter : ClickableListAdapter<TournamentData>(R.layout.vh_tourn
     areItemsTheSame { oldItem, newItem -> oldItem.id == newItem.id }
 }) {
 
-    override fun onBindViewHolder(item: TournamentData, view: View) {
-        super.onBindViewHolder(item, view)
+    override fun onBindViewHolder(position: Int, item: TournamentData, view: View) {
+        super.onBindViewHolder(position, item, view)
         view.apply {
             title.text = item.title
             subtitle.text = item.subtitle
