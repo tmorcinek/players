@@ -6,16 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
-import com.morcinek.players.core.BaseFragment
-import com.morcinek.players.core.FabConfiguration
-import com.morcinek.players.core.clickableListAdapter
+import com.morcinek.players.core.*
 import com.morcinek.players.core.data.PlayerData
-import com.morcinek.players.core.database.FirebaseReferences
-import com.morcinek.players.core.database.observe
-import com.morcinek.players.core.database.playersLiveDataForValueListener
+import com.morcinek.players.core.database.*
 import com.morcinek.players.core.extensions.toBundle
 import com.morcinek.players.core.extensions.toStandardString
-import com.morcinek.players.core.itemCallback
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_list.view.*
 import kotlinx.android.synthetic.main.vh_player.view.*
@@ -38,25 +33,29 @@ class PlayersFragment : BaseFragment() {
         view.progressBar.show()
         view.apply {
             recyclerView.layoutManager = LinearLayoutManager(activity)
-            recyclerView.adapter = clickableListAdapter(R.layout.vh_player, itemCallback()) { item: PlayerData, view ->
-                view.name.text = item.toString()
-                view.subtitle.text = item.teamKey
-                view.date.text = item.getBirthDate().toStandardString()
+            recyclerView.adapter = clickableListAdapter(R.layout.vh_player, itemCallback()) { item: PlayerItem, view ->
+                view.name.text = item.name
+                view.subtitle.text = item.subtitle
+                view.date.text = item.date
             }.apply {
-                viewModel.players.observe(this@PlayersFragment) {
-                    submitList(it.sortedBy(PlayerData::teamKey))
+                observe(viewModel.players) {
+                    submitList(it)
                     view.progressBar.hide()
                 }
-                onClickListener { _, playerData -> navController.navigate(R.id.nav_player_details, playerData.toBundle()) }
+                onClickListener { _, playerView -> navController.navigate(R.id.nav_player_details, playerView.data.toBundle()) }
             }
         }
     }
 }
 
-class PlayersViewModel(references: FirebaseReferences) : ViewModel() {
+private class PlayersViewModel(references: FirebaseReferences) : ViewModel() {
 
-    val players = references.playersLiveDataForValueListener()
+    val players = combine(references.playersLiveDataForValueListener(), references.teamsLiveDataForValueListener()) { player, team ->
+        player.map { PlayerItem(it.name, team.find { team -> team.key == it.teamKey }?.name ?: "", it.getBirthDate().toStandardString(), it) }.sortedBy { it.data.teamKey }
+    }
 }
+
+private class PlayerItem(val name: String, val subtitle: String, val date: String, val data: PlayerData) : HasKey by data
 
 val playersModule = module {
     viewModel { PlayersViewModel(get()) }

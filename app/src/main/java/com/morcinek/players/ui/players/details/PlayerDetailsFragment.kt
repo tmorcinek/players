@@ -62,9 +62,7 @@ val playerDetailsModule = module {
 
 class PlayerDetailsViewModel(private val references: FirebaseReferences, val playerData: PlayerData) : ViewModel() {
 
-    private val teams = references.teamsLiveDataForValueListener()
-
-    val playerTeam = teams.map { it.find { it.key == playerData.teamKey } }
+    val playerTeam = references.teamsLiveDataForValueListener().map { it.find { it.key == playerData.teamKey } }
 
     fun deletePlayer(doOnComplete: () -> Unit) = references.playersReference().child(playerData.key).removeValue().addOnCompleteListener { doOnComplete() }
 }

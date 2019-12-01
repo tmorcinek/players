@@ -3,7 +3,6 @@ package com.morcinek.players.ui.teams.event
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
@@ -11,9 +10,7 @@ import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
-import com.morcinek.players.core.database.FirebaseReferences
-import com.morcinek.players.core.database.observe
-import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
+import com.morcinek.players.core.database.*
 import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.toStandardString
 import com.morcinek.players.core.extensions.viewModelWithFragment
@@ -40,7 +37,7 @@ class EventDetailsFragment : BaseFragment() {
                 recyclerView.adapter = simpleListAdapter<PlayerData>(R.layout.vh_text, itemCallback()) { item, view ->
                     view.name.text = item.toString()
                 }.apply {
-                    viewModel.books.observe(this@EventDetailsFragment) { submitList(it) }
+                    viewModel.players.observe(this@EventDetailsFragment) { submitList(it) }
                 }
             }
         }
@@ -53,9 +50,5 @@ val eventDetailsModule = module {
 
 class EventDetailsViewModel(references: FirebaseReferences, teamData: TeamData, val eventData: EventData) : ViewModel() {
 
-    val books = MediatorLiveData<List<PlayerData>>()
-
-    init {
-        books.addSource(references.playersForTeamLiveDataForValueListener(teamData.key)) { books.value = it.filter { it.key in eventData.players } }
-    }
+    val players = references.playersForTeamLiveDataForValueListener(teamData.key).map { it.filter { it.key in eventData.players } }
 }

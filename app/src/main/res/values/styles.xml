@@ -29,6 +29,13 @@
         <item name="android:textColor">@color/textSecondary</item>
         <item name="android:textSize">@dimen/font_small</item>
     </style>
+    <style name="ItemSubtitle.Vertical">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingStart">@dimen/margin</item>
+        <item name="android:paddingEnd">@dimen/margin</item>
+    </style>
 
     <style name="ItemSpecial">
         <item name="android:textColor">@color/colorPrimaryDark</item>

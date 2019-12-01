@@ -8,16 +8,15 @@ import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.*
+import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
-import com.morcinek.players.core.data.EventData
-import com.morcinek.players.core.database.FirebaseReferences
-import com.morcinek.players.core.database.eventsForTeamLiveDataForValueListener
-import com.morcinek.players.core.database.observe
-import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
-import com.morcinek.players.core.extensions.*
+import com.morcinek.players.core.database.*
+import com.morcinek.players.core.extensions.getParcelable
+import com.morcinek.players.core.extensions.toBundle
+import com.morcinek.players.core.extensions.viewModelWithFragment
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_team_details.view.*
-import kotlinx.android.synthetic.main.vh_player.view.*
+import kotlinx.android.synthetic.main.vh_stat.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -37,14 +36,22 @@ class TeamDetailsFragment : BaseFragment() {
             title.text = viewModel.teamData.name
             recyclerView.apply {
                 recyclerView.layoutManager = LinearLayoutManager(activity)
-                recyclerView.adapter = clickableListAdapter<EventData>(R.layout.vh_player, itemCallback()) { item, view ->
-                    view.name.text = item.type
-                    view.date.text = item.getDate().toStandardString()
-                    view.subtitle.text = "${item.players.size} players"
+                recyclerView.adapter = clickableListAdapter<PlayerStat>(R.layout.vh_stat, itemCallback()) { item, view ->
+                    view.name.text = item.name
+                    view.attendance.text = item.attended.toString()
+                    view.missed.text = item.missed.toString()
                 }.apply {
-                    viewModel.events.observe(this@TeamDetailsFragment) { submitList(it) }
-                    onItemClickListener { navController.navigate(R.id.nav_event_details, bundle(it, viewModel.teamData)) }
+                    viewModel.playersStats.observe(this@TeamDetailsFragment) { submitList(it) }
+//                    onItemClickListener { navController.navigate(R.id.nav_event_details, bundle(it, viewModel.teamData)) }
                 }
+//                recyclerView.adapter = clickableListAdapter<EventData>(R.layout.vh_player, itemCallback()) { item, view ->
+//                    view.name.text = item.type
+//                    view.date.text = item.getDate().toStandardString()
+//                    view.subtitle.text = "${item.players.size} players"
+//                }.apply {
+//                    viewModel.events.observe(this@TeamDetailsFragment) { submitList(it) }
+//                    onItemClickListener { navController.navigate(R.id.nav_event_details, bundle(it, viewModel.teamData)) }
+//                }
 //                recyclerView.adapter = simpleListAdapter<PlayerData>(R.layout.vh_player, itemCallback()) { item, view ->
 //                    view.name.text = item.toString()
 //                }.apply {
@@ -59,9 +66,15 @@ val teamDetailsModule = module {
     viewModel { (fragment: Fragment) -> TeamDetailsViewModel(get(), fragment.getParcelable()) }
 }
 
-class TeamDetailsViewModel(references: FirebaseReferences, val teamData: TeamData) : ViewModel() {
+private class TeamDetailsViewModel(references: FirebaseReferences, val teamData: TeamData) : ViewModel() {
 
     val players = references.playersForTeamLiveDataForValueListener(teamData.key)
 
     val events = references.eventsForTeamLiveDataForValueListener(teamData.key)
+
+    val playersStats = combine(players, events) { player, events ->
+        player.map { player -> PlayerStat(player.name, events.count { player.key in it.players  }, events.count { player.key !in  it.players}, player) }.sortedByDescending { it.attended }
+    }
 }
+
+private class PlayerStat(val name: String, val attended: Int, val missed: Int, val data: PlayerData) : HasKey by data
