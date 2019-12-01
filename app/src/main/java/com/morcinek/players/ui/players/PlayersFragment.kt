@@ -9,6 +9,7 @@ import com.morcinek.players.R
 import com.morcinek.players.core.*
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.database.*
+import com.morcinek.players.core.extensions.standardDateFormat
 import com.morcinek.players.core.extensions.toBundle
 import com.morcinek.players.core.extensions.toStandardString
 import com.morcinek.players.ui.lazyNavController
@@ -50,8 +51,10 @@ class PlayersFragment : BaseFragment() {
 
 private class PlayersViewModel(references: FirebaseReferences) : ViewModel() {
 
+    private val dateFormat = standardDateFormat()
+
     val players = combine(references.playersLiveDataForValueListener(), references.teamsLiveDataForValueListener()) { player, team ->
-        player.map { PlayerItem(it.name, team.find { team -> team.key == it.teamKey }?.name ?: "", it.getBirthDate().toStandardString(), it) }.sortedBy { it.data.teamKey }
+        player.map { PlayerItem(it.name, team.find { team -> team.key == it.teamKey }?.name ?: "", dateFormat.format(it.getBirthDate().time), it) }.sortedBy { it.data.teamKey }
     }
 }
 

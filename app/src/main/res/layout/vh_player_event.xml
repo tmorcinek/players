@@ -7,18 +7,19 @@
         android:padding="@dimen/margin">
 
     <TextView
+            android:id="@+id/date"
+            style="@style/ItemTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Monday 21.03.2009" />
+
+    <TextView
             android:id="@+id/name"
             style="@style/ItemTitle.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            tools:text="Name Surname" />
+            tools:text="Event Type" />
 
-    <TextView
-            android:id="@+id/date"
-            style="@style/ItemTitle.Bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="Monday 21.03.2009" />
 </RelativeLayout>
