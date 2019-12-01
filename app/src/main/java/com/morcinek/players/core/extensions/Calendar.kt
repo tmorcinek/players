@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 fun Calendar.toStandardString() = standardDateFormat().format(time)
+fun Calendar.toSimpleString() = simpleDateFormat().format(time)
 
 var Calendar.month: Int
     get() = get(Calendar.MONTH)
@@ -30,5 +31,6 @@ var Calendar.dayOfMonth: Int
 
 fun calendar(time: Long) = Calendar.getInstance().apply { timeInMillis = time }
 
+fun simpleDateFormat() = SimpleDateFormat("ddMMyy", Locale.US)
 fun standardDateFormat() = SimpleDateFormat("dd.MM.yyyy", Locale.US)
 fun dayOfWeekDateFormat() = SimpleDateFormat("EEEE dd.MM.yyyy", Locale.US)

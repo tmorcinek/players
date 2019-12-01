@@ -15,10 +15,7 @@ import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.map
 import com.morcinek.players.core.database.observe
 import com.morcinek.players.core.database.teamsLiveDataForSingleValueListener
-import com.morcinek.players.core.extensions.calendar
-import com.morcinek.players.core.extensions.showYearFirstDatePickerDialog
-import com.morcinek.players.core.extensions.toStandardString
-import com.morcinek.players.core.extensions.year
+import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.ui.showStandardDropDown
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_create_player.view.*
@@ -47,7 +44,7 @@ class CreatePlayerFragment : BaseFragment() {
             setOnClickListener {
                 startDatePicker(viewModel.dateInMillis) {
                     viewModel.updateValue { birthDateInMillis = it.timeInMillis }
-                    value.text = it.toStandardString()
+                    value.text = it.toSimpleString()
                 }
             }
         }

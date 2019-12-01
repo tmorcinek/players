@@ -54,7 +54,7 @@ private class PlayersViewModel(references: FirebaseReferences) : ViewModel() {
     private val dateFormat = standardDateFormat()
 
     val players = combine(references.playersLiveDataForValueListener(), references.teamsLiveDataForValueListener()) { player, team ->
-        player.map { PlayerItem(it.name, team.find { team -> team.key == it.teamKey }?.name ?: "", dateFormat.format(it.getBirthDate().time), it) }.sortedBy { it.data.teamKey }
+        player.map { PlayerItem(it.toString(), team.find { team -> team.key == it.teamKey }?.name ?: "", dateFormat.format(it.getBirthDate().time), it) }.sortedBy { it.data.teamKey }
     }
 }
 
