@@ -40,7 +40,7 @@ class TeamsFragment : BaseFragment() {
             recyclerView.adapter = clickableListAdapter<TeamData>(R.layout.vh_team, itemCallback()) { item, view ->
                 view.name.text = item.name
             }.apply {
-                viewModel.teams.observe(this@TeamsFragment) {
+                observe(viewModel.teams) {
                     submitList(it)
                     view.progressBar.hide()
                 }

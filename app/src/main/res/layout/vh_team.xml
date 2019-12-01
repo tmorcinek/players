@@ -5,26 +5,13 @@
         style="@style/StandardCardView"
         card_view:cardCornerRadius="8dp">
 
-    <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/margin">
-
         <TextView
                 android:id="@+id/name"
-                style="@style/ItemTitle"
+                style="@style/ItemSingleTitle"
+                android:padding="@dimen/margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin"
-                tools:text="Name Surname" />
+                tools:text="Team Name" />
 
-        <TextView
-                android:id="@+id/date"
-                style="@style/ItemSpecial"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                tools:text="21.03.2009" />
-    </RelativeLayout>
 </androidx.cardview.widget.CardView>

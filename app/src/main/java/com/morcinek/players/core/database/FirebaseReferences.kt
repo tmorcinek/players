@@ -44,6 +44,7 @@ inline fun <reified T : HasKey> Query.objectsLiveDataForValueListener(): LiveDat
 inline fun <reified T : HasKey> Query.objectsLiveDataForSingleValueListener(): LiveData<List<T>> = objectsLiveDataForValueEventListener{ addListenerForSingleValueEvent(it)}
 
 fun FirebaseReferences.playersLiveDataForValueListener(): LiveData<List<PlayerData>> = playersReference().objectsLiveDataForValueListener()
+fun FirebaseReferences.playersLiveDataForSingleValueListener(): LiveData<List<PlayerData>> = playersReference().objectsLiveDataForSingleValueListener()
 fun FirebaseReferences.playersWithoutTeamLiveDataForValueListener(): LiveData<List<PlayerData>> = playersReference().orderByChild("teamKey").equalTo(null).objectsLiveDataForValueListener()
 fun FirebaseReferences.playersForTeamLiveDataForValueListener(teamKey: String): LiveData<List<PlayerData>> = playersReference().orderByChild("teamKey").equalTo(teamKey).objectsLiveDataForValueListener()
 

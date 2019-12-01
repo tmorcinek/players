@@ -3,6 +3,7 @@
 
     <dimen name="font_std">14sp</dimen>
     <dimen name="font_big">18sp</dimen>
+    <dimen name="font_bigger">20sp</dimen>
     <dimen name="font_medium">16sp</dimen>
     <dimen name="font_small">12sp</dimen>
     <dimen name="font_tiny">9sp</dimen>
