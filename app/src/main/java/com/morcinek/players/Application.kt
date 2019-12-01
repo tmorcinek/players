@@ -18,6 +18,7 @@ import com.morcinek.players.ui.teams.create.createTeamModule
 import com.morcinek.players.ui.teams.details.teamDetailsModule
 import com.morcinek.players.ui.teams.event.createEventModule
 import com.morcinek.players.ui.teams.event.eventDetailsModule
+import com.morcinek.players.ui.teams.stats.playerStatsModule
 import com.morcinek.players.ui.teams.teamsModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -35,7 +36,7 @@ class Application : Application() {
                 appModule, navModule,
                 teamsModule, teamDetailsModule, createTeamModule, addPlayersModule,
                 createEventModule, eventDetailsModule,
-                playersModule, playerDetailsModule, createPlayerModule,
+                playersModule, playerDetailsModule, createPlayerModule, playerStatsModule,
                 funinoModule, tournamentDetailsModule,
                 whichPlayersModule, howManyGamesModule, whatColorsModule
             )

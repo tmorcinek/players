@@ -13,6 +13,7 @@ import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.database.*
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.ui.lazyNavController
+import com.morcinek.players.ui.teams.stats.PlayerStatsView
 import kotlinx.android.synthetic.main.fragment_team_details.view.*
 import kotlinx.android.synthetic.main.vh_player.view.*
 import kotlinx.android.synthetic.main.vh_stat.view.*
@@ -58,6 +59,7 @@ class TeamDetailsFragment : BaseFragment() {
         view.missed.text = item.missed.toString()
     }.apply {
         observe(viewModel.playersStats) { submitList(it) }
+        onItemClickListener { navController.navigate(R.id.nav_player_stats, bundle(PlayerStatsView(it.data, viewModel.events.value!!))) }
     }
 
     private fun playersAdapter() = clickableListAdapter<PlayerData>(R.layout.vh_player, itemCallback()) { _, item, view ->

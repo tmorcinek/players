@@ -21,6 +21,7 @@
     <string name="menu_player_details">Player Details</string>
     <string name="menu_create_event">Event</string>
     <string name="menu_event_details">Event Details</string>
+    <string name="menu_player_stats">Player Stats</string>
 
     <string name="team_title">Team</string>
     <string name="player_title">Player</string>

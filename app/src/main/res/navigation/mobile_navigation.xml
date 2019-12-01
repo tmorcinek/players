@@ -3,7 +3,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/mobile_navigation"
-        app:startDestination="@+id/nav_players">
+        app:startDestination="@+id/nav_teams">
 
     <fragment
             android:id="@+id/nav_players"
@@ -96,4 +96,10 @@
             android:name="com.morcinek.players.ui.teams.event.EventDetailsFragment"
             android:label="@string/menu_event_details"
             tools:layout="@layout/fragment_event_details" />
+
+    <fragment
+            android:id="@+id/nav_player_stats"
+            android:name="com.morcinek.players.ui.teams.stats.PlayerStatsFragment"
+            android:label="@string/menu_player_stats"
+            tools:layout="@layout/fragment_player_stats" />
 </navigation>

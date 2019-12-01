@@ -32,6 +32,9 @@
         <item name="android:textColor">@color/textPrimary</item>
         <item name="android:textSize">@dimen/font_medium</item>
     </style>
+    <style name="ItemTitle.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
 
     <style name="ItemSubtitle">
         <item name="android:textColor">@color/textSecondary</item>

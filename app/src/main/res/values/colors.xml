@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#DD519548</color>
     <color name="colorAccent">@color/lipstick</color>
     <color name="colorAccent30">#4cda1c55</color>
+    <color name="colorPrimary30">#4c519548</color>
 
     <color name="disabledBackground">#EAFDE6</color>
     <color name="dreamBase">#EAFDE6</color>
