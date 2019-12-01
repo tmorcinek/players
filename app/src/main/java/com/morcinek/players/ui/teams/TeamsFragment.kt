@@ -50,7 +50,7 @@ class TeamsFragment : BaseFragment() {
     }
 }
 
-class TeamsViewModel(references: FirebaseReferences) : ViewModel() {
+private class TeamsViewModel(references: FirebaseReferences) : ViewModel() {
 
     val teams = references.teamsLiveDataForValueListener()
 }

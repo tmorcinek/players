@@ -9,6 +9,7 @@ import com.morcinek.players.ui.funino.creator.whatColorsModule
 import com.morcinek.players.ui.funino.creator.whichPlayersModule
 import com.morcinek.players.ui.funino.details.tournamentDetailsModule
 import com.morcinek.players.ui.funino.funinoModule
+import com.morcinek.players.ui.navModule
 import com.morcinek.players.ui.players.create.createPlayerModule
 import com.morcinek.players.ui.players.details.playerDetailsModule
 import com.morcinek.players.ui.players.playersModule
@@ -31,7 +32,7 @@ class Application : Application() {
             androidLogger()
             androidContext(this@Application)
             modules(
-                appModule,
+                appModule, navModule,
                 teamsModule, teamDetailsModule, createTeamModule, addPlayersModule,
                 createEventModule, eventDetailsModule,
                 playersModule, playerDetailsModule, createPlayerModule,

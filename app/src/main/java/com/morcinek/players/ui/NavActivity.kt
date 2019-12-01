@@ -7,8 +7,8 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -16,20 +16,25 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.morcinek.players.R
+import com.morcinek.players.core.database.FirebaseReferences
+import com.morcinek.players.core.database.observe
+import com.morcinek.players.core.database.teamsLiveDataForValueListener
+import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.extensions.alert.alert
 import com.morcinek.players.core.extensions.alert.noButton
 import com.morcinek.players.core.extensions.alert.yesButton
-import com.morcinek.players.core.extensions.startActivityForResult
-import com.morcinek.players.core.extensions.startNewActivityFinishCurrent
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.nav_header_main.view.*
-import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.dsl.module
 
 class NavActivity : AppCompatActivity() {
 
-    private val auth by inject<FirebaseAuth>()
+    private val viewModel by viewModel<NavViewModel>()
 
     private val appBarConfiguration by lazy {
         AppBarConfiguration(
@@ -46,7 +51,7 @@ class NavActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        auth.currentUser?.let { currentUser ->
+        viewModel.user.let { currentUser ->
             headerView.apply {
                 if (currentUser.isAnonymous) {
                     navHeaderTitle.setText(R.string.nav_header_title)
@@ -79,7 +84,7 @@ class NavActivity : AppCompatActivity() {
                     setOnClickListener {
                         alert(R.string.logout_message) {
                             yesButton {
-                                auth.signOut()
+                                viewModel.signOut()
                                 startNewActivityFinishCurrent<SplashActivity>()
                             }
                             noButton {}
@@ -93,10 +98,16 @@ class NavActivity : AppCompatActivity() {
             setupActionBarWithNavController(navController, appBarConfiguration)
             navigationView.apply {
                 setupWithNavController(navController)
-                menu.findItem(R.id.teams).subMenu.add("Skrzaty").setOnMenuItemClickListener {
-                    navController.navigate(R.id.nav_players, Bundle(), NavOptions.Builder().setLaunchSingleTop(true).build())
-                    drawerLayout.closeDrawers()
-                    true
+                menu.findItem(R.id.teams).subMenu.let { menu ->
+                    menu.clear()
+                    observe(viewModel.teams) {
+                        it.forEach { team ->
+                            menu.add(team.name, R.drawable.ic_menu_players) {
+                                navController.navigateSingleTop(R.id.nav_team_details, team.toBundle())
+                                drawerLayout.closeDrawers()
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -115,3 +126,19 @@ class NavActivity : AppCompatActivity() {
 fun Fragment.findNavController(): NavController = requireActivity().findNavController(R.id.navHostFragment)
 
 fun Fragment.lazyNavController() = lazy { findNavController() }
+
+private class NavViewModel(references: FirebaseReferences, val auth: FirebaseAuth) : ViewModel() {
+
+    val teams = references.teamsLiveDataForValueListener()
+
+    val user: FirebaseUser
+        get() = auth.currentUser!!
+
+    fun signOut() {
+        auth.signOut()
+    }
+}
+
+val navModule = module {
+    viewModel { NavViewModel(get(), get()) }
+}
