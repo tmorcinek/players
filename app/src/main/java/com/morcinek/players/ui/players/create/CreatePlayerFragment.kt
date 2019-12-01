@@ -42,7 +42,7 @@ class CreatePlayerFragment : BaseFragment() {
             header.setText(R.string.birth_date)
             value.setText(R.string.value_not_set)
             setOnClickListener {
-                startDatePicker(viewModel.dateInMillis) {
+                startDatePicker(viewModel.dateInMillis()) {
                     viewModel.updateValue { birthDateInMillis = it.timeInMillis }
                     value.text = it.toSimpleString()
                 }
@@ -84,7 +84,7 @@ private class CreatePlayerViewModel(val references: FirebaseReferences) : ViewMo
 
     val player: LiveData<PlayerData> = MutableLiveData<PlayerData>().apply { value = PlayerData() }
 
-    val dateInMillis = player.value!!.birthDateInMillis.takeIf { it > 0 } ?: DefaultDate
+    fun dateInMillis() = player.value!!.birthDateInMillis.takeIf { it > 0 } ?: DefaultDate
 
     val isNextEnabled: LiveData<Boolean> = player.map { it.isValid() }
 

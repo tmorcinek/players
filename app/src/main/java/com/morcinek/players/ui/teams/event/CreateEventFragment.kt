@@ -13,7 +13,10 @@ import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
-import com.morcinek.players.core.database.*
+import com.morcinek.players.core.database.FirebaseReferences
+import com.morcinek.players.core.database.combineWith
+import com.morcinek.players.core.database.observe
+import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.showDatePickerDialog
 import com.morcinek.players.core.extensions.toStandardString
@@ -69,6 +72,7 @@ class CreateEventFragment : BaseFragment() {
                     onClickListener { _, item -> viewModel.select(item) }
                 }
             }
+            observe(viewModel.selectedPlayers) { selectedPlayersNumber.text = "${it.size} selected" }
             nextButton.apply {
                 viewModel.isNextEnabled.observe(this@CreateEventFragment) { isEnabled = it }
                 setOnClickListener {
@@ -88,14 +92,15 @@ private class TeamDetailsViewModel(private val references: FirebaseReferences, p
 
     private val eventData = MutableLiveData<EventData>().apply { value = EventData().apply { setDate(Calendar.getInstance()) } }
 
-    val event : EventData
+    val event: EventData
         get() = eventData.value!!
 
     val players = references.playersForTeamLiveDataForValueListener(teamData.key)
 
     val selectedPlayers: LiveData<Set<PlayerData>> = MutableLiveData<Set<PlayerData>>().apply { value = setOf() }
 
-    val isNextEnabled: LiveData<Boolean> = selectedPlayers.combineWith(eventData) { players, event -> players.isNotEmpty() && event.type.isNotEmpty() && event.dateInMillis > 0 }
+    val isNextEnabled: LiveData<Boolean> =
+        selectedPlayers.combineWith(eventData) { players, event -> players.isNotEmpty() && event.type.isNotEmpty() && event.dateInMillis > 0 }
 
     fun select(player: PlayerData) = (selectedPlayers as MutableLiveData).apply {
         postValue(updateSelectedItem(player))
