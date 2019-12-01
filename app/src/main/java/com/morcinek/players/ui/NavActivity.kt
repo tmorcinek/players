@@ -99,8 +99,8 @@ class NavActivity : AppCompatActivity() {
             navigationView.apply {
                 setupWithNavController(navController)
                 menu.findItem(R.id.teams).subMenu.let { menu ->
-                    menu.clear()
                     observe(viewModel.teams) {
+                        menu.clear()
                         it.forEach { team ->
                             menu.add(team.name, R.drawable.ic_menu_players) {
                                 navController.navigateSingleTop(R.id.nav_team_details, team.toBundle())
