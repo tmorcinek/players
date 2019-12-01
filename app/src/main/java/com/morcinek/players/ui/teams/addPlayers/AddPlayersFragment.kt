@@ -7,18 +7,22 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
+import com.morcinek.players.core.createMenuConfiguration
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.observe
 import com.morcinek.players.core.database.playersWithoutTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.getParcelable
+import com.morcinek.players.core.extensions.toBundle
 import com.morcinek.players.core.extensions.viewModelWithFragment
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.core.selectableListAdapter
+import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_add_players.view.*
 import kotlinx.android.synthetic.main.vh_selectable_player.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -29,6 +33,13 @@ class AddPlayersFragment : BaseFragment() {
     override val layoutResourceId = R.layout.fragment_add_players
 
     private val viewModel by viewModelWithFragment<AddPlayersViewModel>()
+
+    private val navController: NavController by lazyNavController()
+
+
+    override val menuConfiguration = createMenuConfiguration(R.menu.team_details) {
+        addAction(R.id.add_players) { navController.navigate(R.id.nav_create_player) }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
