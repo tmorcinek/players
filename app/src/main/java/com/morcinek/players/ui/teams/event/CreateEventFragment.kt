@@ -25,7 +25,7 @@ import com.morcinek.players.core.itemCallback
 import com.morcinek.players.core.selectableListAdapter
 import com.morcinek.players.core.ui.showStandardDropDown
 import com.morcinek.players.ui.lazyNavController
-import com.morcinek.players.ui.teams.addPlayers.updateSelectedItem
+import com.morcinek.players.ui.teams.updateSelectedItem
 import kotlinx.android.synthetic.main.fragment_create_event.*
 import kotlinx.android.synthetic.main.header_button.view.*
 import kotlinx.android.synthetic.main.vh_player.view.*

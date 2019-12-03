@@ -1,4 +1,4 @@
-package com.morcinek.players.ui.teams.create
+package com.morcinek.players.ui.teams
 
 import android.os.Bundle
 import android.view.View
@@ -15,9 +15,8 @@ import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.observe
-import com.morcinek.players.core.database.playersLiveDataForValueListener
 import com.morcinek.players.core.database.playersWithoutTeamLiveDataForValueListener
-import com.morcinek.players.ui.funino.creator.WhichPlayersAdapter
+import com.morcinek.players.ui.funino.create.WhichPlayersAdapter
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_create_player.view.*
 import kotlinx.android.synthetic.main.fragment_create_player.view.nextButton

@@ -1,4 +1,4 @@
-package com.morcinek.players.ui.funino.creator
+package com.morcinek.players.ui.funino.create
 
 import android.os.Bundle
 import android.view.View

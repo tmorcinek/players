@@ -1,4 +1,4 @@
-package com.morcinek.players.ui.teams.addPlayers
+package com.morcinek.players.ui.teams
 
 import android.os.Bundle
 import android.view.View
@@ -18,7 +18,6 @@ import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.observe
 import com.morcinek.players.core.database.playersWithoutTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.getParcelable
-import com.morcinek.players.core.extensions.toBundle
 import com.morcinek.players.core.extensions.viewModelWithFragment
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.core.selectableListAdapter

@@ -1,4 +1,4 @@
-package com.morcinek.players.ui.funino.details
+package com.morcinek.players.ui.funino
 
 import android.os.Bundle
 import android.os.Parcelable
@@ -14,8 +14,6 @@ import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.setDrawableColor
 import com.morcinek.players.core.extensions.viewModelWithFragment
 import com.morcinek.players.core.itemCallback
-import com.morcinek.players.ui.funino.TournamentData
-import com.morcinek.players.ui.funino.TournamentGameData
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.fragment_tournament_details.*
 import kotlinx.android.synthetic.main.vh_game.view.*

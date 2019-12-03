@@ -1,4 +1,4 @@
-package com.morcinek.players.ui.funino.creator
+package com.morcinek.players.ui.funino.create
 
 import android.os.Bundle
 import android.os.Parcelable
@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.morcinek.players.R
 import com.morcinek.players.core.*
-import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.setDrawableColor
@@ -20,7 +19,7 @@ import com.morcinek.players.core.extensions.viewModelWithFragment
 import com.morcinek.players.ui.funino.TeamData
 import com.morcinek.players.ui.funino.TournamentData
 import com.morcinek.players.ui.funino.TournamentGameData
-import com.morcinek.players.ui.funino.details.TournamentDetailsData
+import com.morcinek.players.ui.funino.TournamentDetailsData
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.fragment_number_games.view.nextButton
@@ -78,7 +77,8 @@ class WhatColorsFragment : BaseFragment() {
                 }
             }
 
-            val tournamentDetailsData = TournamentDetailsData(TournamentData(1, "Tuesday 12 Listopada", "12 players", "Not Finished", true), list)
+            val tournamentDetailsData =
+                TournamentDetailsData(TournamentData(1, "Tuesday 12 Listopada", "12 players", "Not Finished", true), list)
             navController.navigate(R.id.nav_tournament_details, tournamentDetailsData.toBundle())
         }
     }

@@ -1,4 +1,4 @@
-package com.morcinek.players.ui.players.details
+package com.morcinek.players.ui.players
 
 import android.os.Bundle
 import android.view.View
@@ -35,12 +35,12 @@ class PlayerDetailsFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.apply {
-            view.name.text = playerData.toString()
-            view.birthDate.text = playerData.getBirthDate().toStandardString()
-            playerTeam.observe(this@PlayerDetailsFragment) {
-                view.team.text = it?.name ?: "-"
-            }
+        viewModel.playerData.let {
+            view.name.text = it.toString()
+            view.birthDate.text = it.getBirthDate().toStandardString()
+        }
+        observe(viewModel.playerTeam) {
+            view.team.text = it?.name ?: "-"
         }
     }
 

@@ -1,4 +1,4 @@
-package com.morcinek.players.ui.teams.details
+package com.morcinek.players.ui.teams
 
 import android.os.Bundle
 import android.view.View
@@ -85,7 +85,11 @@ private class TeamDetailsViewModel(references: FirebaseReferences, val teamData:
     val events = references.eventsForTeamLiveDataForValueListener(teamData.key).map { it.sortedByDescending { it.dateInMillis } }
 
     val playersStats = combine(players, events) { player, events ->
-        player.map { player -> PlayerStat(player.toString(), events.count { player.key in it.players }, events.count { player.key !in it.players }, player) }
+        player.map { player ->
+            PlayerStat(
+                player.toString(), events.count { player.key in it.players }, events.count { player.key !in it.players }, player
+            )
+        }
             .sortedByDescending { it.attended }
     }
 }

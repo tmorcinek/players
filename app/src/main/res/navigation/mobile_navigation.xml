@@ -33,55 +33,55 @@
 
     <fragment
             android:id="@+id/nav_tournament_details"
-            android:name="com.morcinek.players.ui.funino.details.TournamentDetailsFragment"
+            android:name="com.morcinek.players.ui.funino.TournamentDetailsFragment"
             android:label="@string/menu_tournament_details"
             tools:layout="@layout/fragment_tournament_details" />
 
     <fragment
             android:id="@+id/nav_team_details"
-            android:name="com.morcinek.players.ui.teams.details.TeamDetailsFragment"
+            android:name="com.morcinek.players.ui.teams.TeamDetailsFragment"
             android:label="@string/menu_team_details"
             tools:layout="@layout/fragment_team_details" />
 
     <fragment
             android:id="@+id/nav_how_many_players"
-            android:name="com.morcinek.players.ui.funino.creator.WhichPlayersFragment"
+            android:name="com.morcinek.players.ui.funino.create.WhichPlayersFragment"
             android:label="@string/menu_how_many_players"
             tools:layout="@layout/fragment_which_players" />
 
     <fragment
             android:id="@+id/nav_how_many_games"
-            android:name="com.morcinek.players.ui.funino.creator.HowManyGamesFragment"
+            android:name="com.morcinek.players.ui.funino.create.HowManyGamesFragment"
             android:label="@string/menu_how_many_games"
             tools:layout="@layout/fragment_number_games" />
 
     <fragment
             android:id="@+id/nav_what_colors"
-            android:name="com.morcinek.players.ui.funino.creator.WhatColorsFragment"
+            android:name="com.morcinek.players.ui.funino.create.WhatColorsFragment"
             android:label="@string/menu_what_colors"
             tools:layout="@layout/fragment_number_games" />
 
     <fragment
             android:id="@+id/nav_create_player"
-            android:name="com.morcinek.players.ui.players.create.CreatePlayerFragment"
+            android:name="com.morcinek.players.ui.players.CreatePlayerFragment"
             android:label="@string/menu_create_player"
             tools:layout="@layout/fragment_create_player" />
 
     <fragment
             android:id="@+id/nav_create_team"
-            android:name="com.morcinek.players.ui.teams.create.CreateTeamFragment"
+            android:name="com.morcinek.players.ui.teams.CreateTeamFragment"
             android:label="@string/menu_create_team"
             tools:layout="@layout/fragment_create_team" />
 
     <fragment
             android:id="@+id/nav_add_players_to_team"
-            android:name="com.morcinek.players.ui.teams.addPlayers.AddPlayersFragment"
+            android:name="com.morcinek.players.ui.teams.AddPlayersFragment"
             android:label="@string/menu_add_players_to_team"
             tools:layout="@layout/fragment_add_players" />
 
     <fragment
             android:id="@+id/nav_player_details"
-            android:name="com.morcinek.players.ui.players.details.PlayerDetailsFragment"
+            android:name="com.morcinek.players.ui.players.PlayerDetailsFragment"
             android:label="@string/menu_player_details"
             tools:layout="@layout/fragment_player" />
 
