@@ -48,9 +48,11 @@ class TeamDetailsFragment : BaseFragment() {
         }
     }
 
+
+    private val dateFormatter = dayOfWeekDateFormat()
     private fun eventAdapter() = clickableListAdapter<EventData>(R.layout.vh_player, itemCallback()) { _, item, view ->
         view.name.text = item.type
-        view.date.text = item.getDate().toStandardString()
+        view.date.text = dateFormatter.format(item.getDate().time)
         view.subtitle.text = "${item.players.size} players"
     }.apply {
         observe(viewModel.events) { submitList(it) }

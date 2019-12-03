@@ -3,6 +3,7 @@ package com.morcinek.players.core.extensions
 import java.text.SimpleDateFormat
 import java.util.*
 
+fun Calendar.toDayOfWeekDateFormat() = dayOfWeekDateFormat().format(time)
 fun Calendar.toStandardString() = standardDateFormat().format(time)
 fun Calendar.toSimpleString() = simpleDateFormat().format(time)
 

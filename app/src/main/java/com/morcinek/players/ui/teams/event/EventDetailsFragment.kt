@@ -10,9 +10,12 @@ import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
-import com.morcinek.players.core.database.*
+import com.morcinek.players.core.database.FirebaseReferences
+import com.morcinek.players.core.database.map
+import com.morcinek.players.core.database.observe
+import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.getParcelable
-import com.morcinek.players.core.extensions.toStandardString
+import com.morcinek.players.core.extensions.toDayOfWeekDateFormat
 import com.morcinek.players.core.extensions.viewModelWithFragment
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.core.simpleListAdapter
@@ -31,7 +34,7 @@ class EventDetailsFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         view.apply {
             title.text = viewModel.eventData.type
-            year.text = viewModel.eventData.getDate().toStandardString()
+            year.text = viewModel.eventData.getDate().toDayOfWeekDateFormat()
             recyclerView.apply {
                 recyclerView.layoutManager = LinearLayoutManager(activity)
                 recyclerView.adapter = simpleListAdapter<PlayerData>(R.layout.vh_text, itemCallback()) { _, item, view ->
