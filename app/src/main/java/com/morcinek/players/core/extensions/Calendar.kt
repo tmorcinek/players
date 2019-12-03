@@ -1,5 +1,6 @@
 package com.morcinek.players.core.extensions
 
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -35,3 +36,5 @@ fun calendar(time: Long) = Calendar.getInstance().apply { timeInMillis = time }
 fun simpleDateFormat() = SimpleDateFormat("ddMMyy", Locale.US)
 fun standardDateFormat() = SimpleDateFormat("dd.MM.yyyy", Locale.US)
 fun dayOfWeekDateFormat() = SimpleDateFormat("EEEE dd.MM.yyyy", Locale.US)
+
+fun DateFormat.formatCalendar(calendar: Calendar): String = format(calendar.time)

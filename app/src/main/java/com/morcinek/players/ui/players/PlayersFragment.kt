@@ -9,9 +9,9 @@ import com.morcinek.players.R
 import com.morcinek.players.core.*
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.database.*
+import com.morcinek.players.core.extensions.formatCalendar
 import com.morcinek.players.core.extensions.standardDateFormat
 import com.morcinek.players.core.extensions.toBundle
-import com.morcinek.players.core.extensions.toStandardString
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_list.view.*
 import kotlinx.android.synthetic.main.vh_player.view.*
@@ -54,7 +54,7 @@ private class PlayersViewModel(references: FirebaseReferences) : ViewModel() {
     private val dateFormat = standardDateFormat()
 
     val players = combine(references.playersLiveDataForValueListener(), references.teamsLiveDataForValueListener()) { player, team ->
-        player.map { PlayerItem(it.toString(), team.find { team -> team.key == it.teamKey }?.name ?: "", dateFormat.format(it.getBirthDate().time), it) }.sortedBy { it.data.teamKey }
+        player.map { PlayerItem(it.toString(), team.find { team -> team.key == it.teamKey }?.name ?: "", dateFormat.formatCalendar(it.getBirthDate()), it) }.sortedBy { it.data.teamKey }
     }
 }
 

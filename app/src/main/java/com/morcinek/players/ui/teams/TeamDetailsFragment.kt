@@ -41,7 +41,7 @@ class TeamDetailsFragment : BaseFragment() {
             title.text = viewModel.teamData.name
             tabLayout.setupWithViewPager(viewPager)
             viewPager.adapter = recyclerViewPagerAdapter(
-                R.string.page_events to eventAdapter(),
+                R.string.page_events to eventsAdapter(),
                 R.string.page_stats to statsAdapter(),
                 R.string.page_players to playersAdapter()
             )
@@ -49,10 +49,10 @@ class TeamDetailsFragment : BaseFragment() {
     }
 
 
-    private val dateFormatter = dayOfWeekDateFormat()
-    private fun eventAdapter() = clickableListAdapter<EventData>(R.layout.vh_player, itemCallback()) { _, item, view ->
+    private val eventsFormatter = dayOfWeekDateFormat()
+    private fun eventsAdapter() = clickableListAdapter<EventData>(R.layout.vh_player, itemCallback()) { _, item, view ->
         view.name.text = item.type
-        view.date.text = dateFormatter.format(item.getDate().time)
+        view.date.text = eventsFormatter.formatCalendar(item.getDate())
         view.subtitle.text = "${item.players.size} players"
     }.apply {
         observe(viewModel.events) { submitList(it) }
@@ -68,8 +68,10 @@ class TeamDetailsFragment : BaseFragment() {
         onItemClickListener { navController.navigate(R.id.nav_player_stats, bundle(PlayerStatsView(it.data, viewModel.events.value!!))) }
     }
 
+    private val playersFormatter = standardDateFormat()
     private fun playersAdapter() = clickableListAdapter<PlayerData>(R.layout.vh_player, itemCallback()) { _, item, view ->
         view.name.text = item.toString()
+        view.date.text = playersFormatter.formatCalendar(item.getBirthDate())
     }.apply {
         observe(viewModel.players) { submitList(it) }
         onItemClickListener { navController.navigate(R.id.nav_player_details, bundle(it)) }

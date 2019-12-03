@@ -12,6 +12,7 @@ import com.morcinek.players.core.HasKey
 import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.extensions.dayOfWeekDateFormat
+import com.morcinek.players.core.extensions.formatCalendar
 import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.viewModelWithFragment
 import com.morcinek.players.core.itemCallback
@@ -57,7 +58,7 @@ private class PlayerStatsViewModel(val playerStatsView: PlayerStatsView) : ViewM
     fun title() =
         "${playerStatsView.playerData} (${playerStatsView.events.count { playerStatsView.playerData.key in it.players }}/${playerStatsView.events.size})"
 
-    fun events() = playerStatsView.events.map { PlayerEvent(it.type, dateFormat.format(it.getDate().time), playerStatsView.playerData.key in it.players, it.key) }
+    fun events() = playerStatsView.events.map { PlayerEvent(it.type, dateFormat.formatCalendar(it.getDate()), playerStatsView.playerData.key in it.players, it.key) }
 }
 
 @Parcelize
