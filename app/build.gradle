@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 androidExtensions {
     experimental = true
@@ -70,6 +71,12 @@ dependencies {
 //    implementation "com.google.firebase:firebase-crash:$versions.firebase"
 //    implementation "com.google.firebase:firebase-storage:$versions.firebase"
 //    implementation "com.google.firebase:firebase-config:17.0.0"
+
+    //Glide
+    kapt 'com.github.bumptech.glide:compiler:4.9.0'
+    implementation('com.github.bumptech.glide:okhttp3-integration:4.9.0') {
+        exclude group: 'glide-parent'
+    }
 
     testImplementation 'junit:junit:4.12'
 }

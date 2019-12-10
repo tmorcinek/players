@@ -14,6 +14,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -57,7 +59,10 @@ class NavActivity : AppCompatActivity() {
                     navHeaderTitle.setText(R.string.nav_header_title)
                     navHeaderSubtitle.setText(R.string.nav_header_subtitle)
                 } else {
-                    imageView.setImageURI(currentUser.photoUrl)
+                    Glide.with(this)
+                        .load(currentUser.photoUrl)
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(imageView)
                     navHeaderTitle.text = currentUser.displayName
                     navHeaderSubtitle.text = currentUser.email
                 }
