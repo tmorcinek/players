@@ -31,7 +31,7 @@ class TeamDetailsFragment : BaseFragment() {
 
     override val fabConfiguration = FabConfiguration({ navController.navigate(R.id.nav_create_event, viewModel.teamData.toBundle()) }, R.drawable.ic_group_add)
 
-    override val menuConfiguration = createMenuConfiguration(R.menu.team_details) {
+    override val menuConfiguration = createMenuConfiguration(R.menu.edit) {
         addAction(R.id.add_players) { navController.navigate(R.id.nav_add_players_to_team, viewModel.teamData.toBundle()) }
     }
 

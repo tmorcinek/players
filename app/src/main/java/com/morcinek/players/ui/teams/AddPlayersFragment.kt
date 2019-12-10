@@ -36,7 +36,7 @@ class AddPlayersFragment : BaseFragment() {
     private val navController: NavController by lazyNavController()
 
 
-    override val menuConfiguration = createMenuConfiguration(R.menu.team_details) {
+    override val menuConfiguration = createMenuConfiguration(R.menu.edit) {
         addAction(R.id.add_players) { navController.navigate(R.id.nav_create_player) }
     }
 

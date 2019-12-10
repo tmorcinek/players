@@ -44,7 +44,7 @@ class PlayerDetailsFragment : BaseFragment() {
         }
     }
 
-    override val menuConfiguration = createMenuConfiguration(R.menu.player_details) {
+    override val menuConfiguration = createMenuConfiguration(R.menu.delete_edit) {
         addAction(R.id.delete) {
             alert(R.string.player_delete_message) {
                 yesButton { viewModel.deletePlayer { navController.popBackStack() } }
