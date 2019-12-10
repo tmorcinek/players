@@ -38,7 +38,7 @@ class PlayerStatsFragment : BaseFragment() {
                 recyclerView.adapter = simpleListAdapter<PlayerEvent>(R.layout.vh_player_event, itemCallback()) { _, item, view ->
                     view.name.text = item.name
                     view.date.text = item.date
-                    view.setBackgroundResource(if (item.present) R.color.colorPrimary30 else R.color.colorAccent30)
+                    view.setBackgroundResource(item.statusColor)
                 }.apply {
                     submitList(viewModel.events())
                 }
@@ -51,17 +51,23 @@ val playerStatsModule = module {
     viewModel { (fragment: Fragment) -> PlayerStatsViewModel(fragment.getParcelable()) }
 }
 
-private class PlayerStatsViewModel(val playerStatsView: PlayerStatsView) : ViewModel() {
+private class PlayerStatsViewModel(val playerStatsDetails: PlayerStatsDetails) : ViewModel() {
 
     private val dateFormat = dayOfWeekDateFormat()
 
     fun title() =
-        "${playerStatsView.playerData} (${playerStatsView.events.count { playerStatsView.playerData.key in it.players }}/${playerStatsView.events.size})"
+        "${playerStatsDetails.playerData} (${playerStatsDetails.events.count { playerStatsDetails.playerData.key in it.players }}/${playerStatsDetails.events.size})"
 
-    fun events() = playerStatsView.events.filter { !it.optional || playerStatsView.playerData.key in it.players}.map { PlayerEvent(it.type, dateFormat.formatCalendar(it.getDate()), playerStatsView.playerData.key in it.players, it.key) }
+    fun events() = playerStatsDetails.events.map { PlayerEvent(it.type, dateFormat.formatCalendar(it.getDate()), eventStatus(it), it.key) }
+
+    private fun eventStatus(it: EventData) = when{
+       it.optional -> R.color.dark_indigo_30
+        playerStatsDetails.playerData.key in it.players -> R.color.colorPrimary30
+        else -> R.color.colorAccent30
+    }
 }
 
 @Parcelize
-class PlayerStatsView(val playerData: PlayerData, val events: List<EventData>) : Parcelable
+class PlayerStatsDetails(val playerData: PlayerData, val events: List<EventData>) : Parcelable
 
-private class PlayerEvent(val name: String, val date: String, val present: Boolean, override var key: String) : HasKey
+private class PlayerEvent(val name: String, val date: String, val statusColor: Int, override var key: String) : HasKey

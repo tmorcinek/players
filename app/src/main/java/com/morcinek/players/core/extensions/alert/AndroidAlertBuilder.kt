@@ -40,6 +40,12 @@ internal class AndroidAlertBuilder(override val ctx: Context) : AlertBuilder<Ale
             builder.setCancelable(value)
         }
 
+    override var customView: Int
+        @Deprecated(NO_GETTER, level = DeprecationLevel.ERROR) get() = noGetter()
+        set(value) {
+            builder.setView(value)
+        }
+
     override fun onCancelled(handler: (DialogInterface) -> Unit) {
         builder.setOnCancelListener(handler)
     }

@@ -21,6 +21,8 @@ class FirebaseReferences(private val auth: FirebaseAuth, val database: FirebaseD
     fun teamsReference() = rootReference().child("teams")
 
     fun teamEventsReference(teamKey: String) = rootReference().child("teams").child(teamKey).child("events")
+
+    fun teamEventReference(teamKey: String, eventKey: String) = rootReference().child("teams").child(teamKey).child("events").child(eventKey)
 }
 
 inline fun valueEventListener(crossinline function: (DataSnapshot) -> Unit) = object : ValueEventListener {

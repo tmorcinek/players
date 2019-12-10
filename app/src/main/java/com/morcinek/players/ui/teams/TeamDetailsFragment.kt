@@ -13,7 +13,7 @@ import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.database.*
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.ui.lazyNavController
-import com.morcinek.players.ui.teams.stats.PlayerStatsView
+import com.morcinek.players.ui.teams.stats.PlayerStatsDetails
 import kotlinx.android.synthetic.main.fragment_team_details.view.*
 import kotlinx.android.synthetic.main.vh_player.view.*
 import kotlinx.android.synthetic.main.vh_stat.view.*
@@ -59,13 +59,13 @@ class TeamDetailsFragment : BaseFragment() {
         onItemClickListener { navController.navigate(R.id.nav_event_details, bundle(it, viewModel.teamData)) }
     }
 
-    private fun statsAdapter() = clickableListAdapter<PlayerStat>(R.layout.vh_stat, itemCallback()) { position, item, view ->
+    private fun statsAdapter() = clickableListAdapter<PlayerStats>(R.layout.vh_stat, itemCallback()) { position, item, view ->
         view.name.text = "${position + 1}. ${item.name}"
         view.attendance.text = item.attended.toString()
         view.missed.text = item.missed.toString()
     }.apply {
         observe(viewModel.playersStats) { submitList(it) }
-        onItemClickListener { navController.navigate(R.id.nav_player_stats, bundle(PlayerStatsView(it.data, viewModel.events.value!!))) }
+        onItemClickListener { navController.navigate(R.id.nav_player_stats, bundle(PlayerStatsDetails(it.data, viewModel.playerEvents(it.data)))) }
     }
 
     private val playersFormatter = standardDateFormat()
@@ -88,14 +88,15 @@ private class TeamDetailsViewModel(references: FirebaseReferences, val teamData:
 
     val events = references.eventsForTeamLiveDataForValueListener(teamData.key).map { it.sortedByDescending { it.dateInMillis } }
 
+    fun playerEvents(player: PlayerData) = events.value!!.filter { !it.optional || player.key in it.players }
+
     val playersStats = combine(players, events) { player, events ->
         player.map { player ->
-            PlayerStat(
-                player.toString(), events.count { player.key in it.players }, events.count { player.key !in it.players }, player
+            PlayerStats(
+                player.toString(), events.count { player.key in it.players }, events.count { !it.optional && player.key !in it.players }, player
             )
-        }
-            .sortedByDescending { it.attended }
+        }.sortedByDescending { it.attended }
     }
 }
 
-private class PlayerStat(val name: String, val attended: Int, val missed: Int, val data: PlayerData) : HasKey by data
+private class PlayerStats(val name: String, val attended: Int, val missed: Int, val data: PlayerData) : HasKey by data
