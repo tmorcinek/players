@@ -26,6 +26,16 @@
             app:layout_constraintTop_toBottomOf="@id/title"
             tools:text="2019" />
 
+    <TextView
+            android:id="@+id/status"
+            style="@style/AccentText"
+            android:layout_marginStart="@dimen/margin"
+            android:layout_marginTop="@dimen/double_margin"
+            android:layout_marginEnd="@dimen/margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            tools:text="Mandatory" />
+
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"

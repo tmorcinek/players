@@ -35,6 +35,8 @@ class EventDetailsFragment : BaseFragment() {
         view.apply {
             title.text = viewModel.eventData.type
             year.text = viewModel.eventData.getDate().toDayOfWeekDateFormat()
+            status.setText(viewModel.statusText)
+            status.setTextColor(resources.getColor(viewModel.statusColor))
             recyclerView.apply {
                 recyclerView.layoutManager = LinearLayoutManager(activity)
                 recyclerView.adapter = simpleListAdapter<PlayerData>(R.layout.vh_text, itemCallback()) { _, item, view ->
@@ -54,4 +56,7 @@ val eventDetailsModule = module {
 class EventDetailsViewModel(references: FirebaseReferences, teamData: TeamData, val eventData: EventData) : ViewModel() {
 
     val players = references.playersForTeamLiveDataForValueListener(teamData.key).map { it.filter { it.key in eventData.players } }
+
+    val statusText = if (eventData.optional) R.string.optional else R.string.mandatory
+    val statusColor = if (eventData.optional) R.color.colorPrimary else R.color.colorAccent
 }

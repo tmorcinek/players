@@ -14,6 +14,7 @@ data class EventData(
     @get:Exclude override var key: String = "",
     var dateInMillis: Long = 0,
     var type: String = "",
+    var optional: Boolean = false,
     var players: List<String> = listOf()
 ) : Parcelable, HasKey {
 

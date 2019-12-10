@@ -21,6 +21,16 @@
             android:layout_margin="@dimen/double_margin"
             app:layout_constraintTop_toBottomOf="@id/typeLayout" />
 
+    <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/mandatorySwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/double_margin"
+            android:paddingTop="@dimen/half_margin"
+            android:paddingBottom="@dimen/half_margin"
+            android:checked="true"
+            android:text="@string/mandatory"
+            app:layout_constraintTop_toBottomOf="@id/dateLayout" />
 
     <LinearLayout
             android:layout_width="match_parent"
@@ -31,7 +41,7 @@
             app:layout_constraintBottom_toTopOf="@id/nextButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/dateLayout">
+            app:layout_constraintTop_toBottomOf="@id/mandatorySwitch">
 
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"

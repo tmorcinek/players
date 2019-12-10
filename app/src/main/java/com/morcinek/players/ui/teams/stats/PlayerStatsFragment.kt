@@ -58,7 +58,7 @@ private class PlayerStatsViewModel(val playerStatsView: PlayerStatsView) : ViewM
     fun title() =
         "${playerStatsView.playerData} (${playerStatsView.events.count { playerStatsView.playerData.key in it.players }}/${playerStatsView.events.size})"
 
-    fun events() = playerStatsView.events.map { PlayerEvent(it.type, dateFormat.formatCalendar(it.getDate()), playerStatsView.playerData.key in it.players, it.key) }
+    fun events() = playerStatsView.events.filter { !it.optional || playerStatsView.playerData.key in it.players}.map { PlayerEvent(it.type, dateFormat.formatCalendar(it.getDate()), playerStatsView.playerData.key in it.players, it.key) }
 }
 
 @Parcelize

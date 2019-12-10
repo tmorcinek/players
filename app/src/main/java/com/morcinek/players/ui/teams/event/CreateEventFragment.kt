@@ -62,6 +62,9 @@ class CreateEventFragment : BaseFragment() {
                     }
                 }
             }
+            mandatorySwitch.apply {
+                setOnCheckedChangeListener { _, isChecked -> viewModel.updateValue { optional = !isChecked } }
+            }
             recyclerView.apply {
                 layoutManager = LinearLayoutManager(activity)
                 adapter = selectableListAdapter<PlayerData>(R.layout.vh_selectable_player, itemCallback()) { _, item, view ->
