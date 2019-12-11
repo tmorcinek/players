@@ -23,9 +23,7 @@ import kotlinx.android.synthetic.main.vh_player_event.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-class PlayerStatsFragment : BaseFragment() {
-
-    override val layoutResourceId = R.layout.fragment_player_stats
+class PlayerStatsFragment : BaseFragment(R.layout.fragment_player_stats) {
 
     private val viewModel by viewModelWithFragment<PlayerStatsViewModel>()
 

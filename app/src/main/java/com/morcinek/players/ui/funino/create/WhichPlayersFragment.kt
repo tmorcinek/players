@@ -20,9 +20,7 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.dsl.module
 
-class WhichPlayersFragment : BaseFragment() {
-
-    override val layoutResourceId = R.layout.fragment_which_players
+class WhichPlayersFragment : BaseFragment(R.layout.fragment_which_players) {
 
     private val navController: NavController by lazyNavController()
 

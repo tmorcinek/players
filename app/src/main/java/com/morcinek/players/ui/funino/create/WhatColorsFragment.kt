@@ -10,32 +10,30 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.morcinek.players.R
-import com.morcinek.players.core.*
-import com.morcinek.players.core.database.FirebaseReferences
+import com.morcinek.players.core.BaseFragment
+import com.morcinek.players.core.ClickableListAdapter
+import com.morcinek.players.core.SimpleListAdapter
 import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.setDrawableColor
 import com.morcinek.players.core.extensions.toBundle
 import com.morcinek.players.core.extensions.viewModelWithFragment
+import com.morcinek.players.core.itemCallback
 import com.morcinek.players.ui.funino.TeamData
 import com.morcinek.players.ui.funino.TournamentData
-import com.morcinek.players.ui.funino.TournamentGameData
 import com.morcinek.players.ui.funino.TournamentDetailsData
+import com.morcinek.players.ui.funino.TournamentGameData
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.fragment_number_games.view.nextButton
 import kotlinx.android.synthetic.main.fragment_number_games.view.recyclerView
 import kotlinx.android.synthetic.main.fragment_select_colors.view.*
 import kotlinx.android.synthetic.main.vh_color.view.*
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-class WhatColorsFragment : BaseFragment() {
-
-    override val layoutResourceId = R.layout.fragment_select_colors
+class WhatColorsFragment : BaseFragment(R.layout.fragment_select_colors) {
 
     private val navController: NavController by lazyNavController()
-    private val references by inject<FirebaseReferences>()
 
     private val viewModel by viewModelWithFragment<WhatColorsViewModel>()
 

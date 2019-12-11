@@ -33,9 +33,7 @@ import kotlinx.android.synthetic.main.vh_text.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-class EventDetailsFragment : BaseFragment() {
-
-    override val layoutResourceId = R.layout.fragment_event_details
+class EventDetailsFragment : BaseFragment(R.layout.fragment_event_details) {
 
     private val viewModel by viewModelWithFragment<EventDetailsViewModel>()
 

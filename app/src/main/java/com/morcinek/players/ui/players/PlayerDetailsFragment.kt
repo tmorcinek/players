@@ -26,9 +26,7 @@ import kotlinx.android.synthetic.main.fragment_player.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-class PlayerDetailsFragment : BaseFragment() {
-
-    override val layoutResourceId = R.layout.fragment_player
+class PlayerDetailsFragment : BaseFragment(R.layout.fragment_player) {
 
     private val viewModel by viewModelWithFragment<PlayerDetailsViewModel>()
 

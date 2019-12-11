@@ -20,9 +20,7 @@ import kotlinx.android.synthetic.main.vh_games_number.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-class HowManyGamesFragment : BaseFragment() {
-
-    override val layoutResourceId = R.layout.fragment_number_games
+class HowManyGamesFragment : BaseFragment(R.layout.fragment_number_games) {
 
     private val navController: NavController by lazyNavController()
 

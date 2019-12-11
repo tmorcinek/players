@@ -33,9 +33,7 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import java.util.*
 
-class CreateEventFragment : BaseFragment() {
-
-    override val layoutResourceId = R.layout.fragment_create_event
+class CreateEventFragment : BaseFragment(R.layout.fragment_create_event) {
 
     private val viewModel by viewModelWithFragment<TeamDetailsViewModel>()
 

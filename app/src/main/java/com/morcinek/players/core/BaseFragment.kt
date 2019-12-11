@@ -6,11 +6,10 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.morcinek.players.R
 import com.morcinek.players.core.extensions.hide
+import com.morcinek.players.core.extensions.safeLet
 import kotlinx.android.synthetic.main.app_bar_main.*
 
-abstract class BaseFragment : Fragment() {
-
-    protected abstract val layoutResourceId: Int
+abstract class BaseFragment(private val layoutResourceId: Int) : Fragment() {
 
     open val menuConfiguration: MenuConfiguration? = null
     open val fabConfiguration: FabConfiguration? = null
@@ -54,20 +53,16 @@ abstract class BaseFragment : Fragment() {
         } ?: return false
     }
 
-    final override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        menuConfiguration?.let { inflater.inflate(it.menuResourceId, menu) }
-    }
+    final override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) = menuConfiguration.safeLet { inflater.inflate(it.menuResourceId, menu) }
 
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        menuConfiguration?.let { it.prepare.forEach { entry -> entry.value(menu.findItem(entry.key))  } }
-    }
+    override fun onPrepareOptionsMenu(menu: Menu) = menuConfiguration.safeLet { it.prepare.forEach { entry -> entry.value(menu.findItem(entry.key))  } }
 }
 
 class FabConfiguration(val fabActon: (View) -> Unit, val fabIcon: Int = R.drawable.ic_add)
 
 class MenuConfiguration(val menuResourceId: Int) {
-    internal var actions = mutableMapOf<Int, () -> Any>()
-    internal var prepare = mutableMapOf<Int, (MenuItem) -> Unit>()
+    internal val actions = mutableMapOf<Int, () -> Any>()
+    internal val prepare = mutableMapOf<Int, (MenuItem) -> Unit>()
 
     fun addAction(itemId: Int, action: () -> Any) {
         actions[itemId] = action
@@ -78,4 +73,4 @@ class MenuConfiguration(val menuResourceId: Int) {
     }
 }
 
-fun BaseFragment.createMenuConfiguration(menuResourceId: Int, function: MenuConfiguration.() -> Unit = {}) = MenuConfiguration(menuResourceId).apply(function)
+fun createMenuConfiguration(menuResourceId: Int, function: MenuConfiguration.() -> Unit = {}) = MenuConfiguration(menuResourceId).apply(function)

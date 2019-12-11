@@ -27,9 +27,7 @@ import kotlinx.android.synthetic.main.vh_selectable_player.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-class AddPlayersFragment : BaseFragment() {
-
-    override val layoutResourceId = R.layout.fragment_add_players
+class AddPlayersFragment : BaseFragment(R.layout.fragment_add_players) {
 
     private val viewModel by viewModelWithFragment<AddPlayersViewModel>()
 

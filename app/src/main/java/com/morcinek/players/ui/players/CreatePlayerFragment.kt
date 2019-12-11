@@ -25,9 +25,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.dsl.module
 import java.util.*
 
-class CreatePlayerFragment : BaseFragment() {
-
-    override val layoutResourceId = R.layout.fragment_create_player
+class CreatePlayerFragment : BaseFragment(R.layout.fragment_create_player) {
 
     private val viewModel by viewModel<CreatePlayerViewModel>()
 

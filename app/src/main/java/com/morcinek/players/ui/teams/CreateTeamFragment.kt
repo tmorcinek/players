@@ -25,9 +25,7 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.dsl.module
 
-class CreateTeamFragment : BaseFragment() {
-
-    override val layoutResourceId = R.layout.fragment_create_team
+class CreateTeamFragment : BaseFragment(R.layout.fragment_create_team) {
 
     private val viewModel by viewModel<CreateTeamViewModel>()
 

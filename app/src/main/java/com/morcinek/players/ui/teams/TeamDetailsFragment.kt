@@ -21,9 +21,7 @@ import kotlinx.android.synthetic.main.vh_stat.view.name
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-class TeamDetailsFragment : BaseFragment() {
-
-    override val layoutResourceId = R.layout.fragment_team_details
+class TeamDetailsFragment : BaseFragment(R.layout.fragment_team_details) {
 
     private val viewModel by viewModelWithFragment<TeamDetailsViewModel>()
 
