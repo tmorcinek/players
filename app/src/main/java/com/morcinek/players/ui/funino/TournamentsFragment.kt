@@ -1,7 +1,6 @@
 package com.morcinek.players.ui.funino
 
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
@@ -19,7 +18,6 @@ import com.morcinek.players.core.FabConfiguration
 import com.morcinek.players.core.extensions.toBundle
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.ui.lazyNavController
-import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.fragment_list.view.*
 import kotlinx.android.synthetic.main.vh_tournament.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel

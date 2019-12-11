@@ -51,8 +51,10 @@ class EventDetailsFragment : BaseFragment() {
         view.apply {
             title.text = viewModel.eventData.type
             year.text = viewModel.eventData.getDate().toDayOfWeekDateFormat()
-            status.setText(viewModel.statusText)
-            status.setTextColor(resources.getColor(viewModel.statusColor))
+            status.apply {
+                setText(viewModel.statusText)
+                setTextColor(resources.getColor(viewModel.statusColor))
+            }
             recyclerView.apply {
                 layoutManager = LinearLayoutManager(activity)
                 adapter = simpleListAdapter<PlayerData>(R.layout.vh_text, itemCallback()) { _, item, view ->
@@ -72,7 +74,6 @@ class EventDetailsFragment : BaseFragment() {
             }.show()
         }
     }
-
 }
 
 val eventDetailsModule = module {

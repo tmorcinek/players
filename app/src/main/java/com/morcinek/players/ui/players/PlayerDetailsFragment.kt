@@ -41,12 +41,14 @@ class PlayerDetailsFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.playerData.let {
-            view.name.text = it.toString()
-            view.birthDate.text = it.getBirthDate().toStandardString()
-        }
-        observe(viewModel.playerTeam) {
-            view.team.text = it?.name ?: "-"
+        view.apply {
+            viewModel.playerData.let {
+                name.text = it.toString()
+                birthDate.text = it.getBirthDate().toStandardString()
+            }
+            observe(viewModel.playerTeam) {
+                team.text = it?.name ?: "-"
+            }
         }
     }
 

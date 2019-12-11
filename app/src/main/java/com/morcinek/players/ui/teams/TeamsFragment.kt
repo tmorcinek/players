@@ -36,15 +36,17 @@ class TeamsFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         view.apply {
             progressBar.show()
-            recyclerView.layoutManager = LinearLayoutManager(activity)
-            recyclerView.adapter = clickableListAdapter<TeamData>(R.layout.vh_team, itemCallback()) { _, item, view ->
-                view.name.text = item.name
-            }.apply {
-                observe(viewModel.teams) {
-                    submitList(it)
-                    progressBar.hide()
+            recyclerView.apply {
+                layoutManager = LinearLayoutManager(activity)
+                adapter = clickableListAdapter<TeamData>(R.layout.vh_team, itemCallback()) { _, item, view ->
+                    view.name.text = item.name
+                }.apply {
+                    observe(viewModel.teams) {
+                        submitList(it)
+                        view.progressBar.hide()
+                    }
+                    onClickListener { _, teamData -> navController.navigate(R.id.nav_team_details, teamData.toBundle()) }
                 }
-                onClickListener { _, teamData -> navController.navigate(R.id.nav_team_details, teamData.toBundle()) }
             }
         }
     }
