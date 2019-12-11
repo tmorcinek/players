@@ -9,9 +9,7 @@ import com.morcinek.players.R
 import com.morcinek.players.core.*
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.database.*
-import com.morcinek.players.core.extensions.formatCalendar
-import com.morcinek.players.core.extensions.standardDateFormat
-import com.morcinek.players.core.extensions.toBundle
+import com.morcinek.players.core.extensions.*
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_list.view.*
 import kotlinx.android.synthetic.main.vh_player.view.*
@@ -31,8 +29,8 @@ class PlayersFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.progressBar.show()
         view.apply {
+            progressBar.show()
             recyclerView.layoutManager = LinearLayoutManager(activity)
             recyclerView.adapter = clickableListAdapter(R.layout.vh_player, itemCallback()) { _, item: PlayerItem, view ->
                 view.name.text = item.name
@@ -41,11 +39,14 @@ class PlayersFragment : BaseFragment() {
             }.apply {
                 observe(viewModel.players) {
                     submitList(it)
-                    view.progressBar.hide()
+                    progressBar.hide()
                 }
-                onClickListener { _, playerView -> navController.navigate(R.id.nav_player_details, playerView.data.toBundle()) }
+                onClickListener { view, item ->
+                    navController.navigate(R.id.nav_player_details, item.data.toBundle(), null, FragmentNavigatorExtras(view.name, view.subtitle, view.date))
+                }
             }
         }
+        exitTransition = moveTransition()
     }
 }
 
@@ -54,7 +55,8 @@ private class PlayersViewModel(references: FirebaseReferences) : ViewModel() {
     private val dateFormat = standardDateFormat()
 
     val players = combine(references.playersLiveDataForValueListener(), references.teamsLiveDataForValueListener()) { player, team ->
-        player.map { PlayerItem(it.toString(), team.find { team -> team.key == it.teamKey }?.name ?: "", dateFormat.formatCalendar(it.getBirthDate()), it) }.sortedBy { it.data.teamKey }
+        player.map { PlayerItem(it.toString(), team.find { team -> team.key == it.teamKey }?.name ?: "", dateFormat.formatCalendar(it.getBirthDate()), it) }
+            .sortedBy { it.data.teamKey }
     }
 }
 

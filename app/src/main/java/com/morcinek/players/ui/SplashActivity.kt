@@ -7,8 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.morcinek.players.R
-import com.morcinek.players.core.extensions.startActivity
 import com.morcinek.players.core.extensions.startActivityForResult
+import com.morcinek.players.core.extensions.startNewActivityFinishCurrent
 import org.koin.android.ext.android.inject
 
 class SplashActivity : AppCompatActivity() {
@@ -20,7 +20,7 @@ class SplashActivity : AppCompatActivity() {
 
         when (auth.currentUser) {
             null -> startSignInActivity()
-            else -> finishAndStartNextActivity()
+            else -> startNewActivityFinishCurrent<NavActivity>()
         }
     }
 
@@ -38,17 +38,13 @@ class SplashActivity : AppCompatActivity() {
             .build()
     )
 
-    private fun finishAndStartNextActivity() {
-        startActivity<NavActivity>()
-        finish()
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
-            finishAndStartNextActivity()
+            startNewActivityFinishCurrent<NavActivity>()
         } else {
             finish()
         }
     }
+
 }

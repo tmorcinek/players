@@ -46,6 +46,7 @@ class TeamDetailsFragment : BaseFragment() {
                 R.string.page_players to playersAdapter()
             )
         }
+        exitTransition = moveTransition()
     }
 
 
@@ -56,7 +57,9 @@ class TeamDetailsFragment : BaseFragment() {
         view.subtitle.text = "${item.players.size} players"
     }.apply {
         observe(viewModel.events) { submitList(it) }
-        onItemClickListener { navController.navigate(R.id.nav_event_details, bundle(it, viewModel.teamData)) }
+        onClickListener { view, it ->
+            navController.navigate(R.id.nav_event_details, bundle(it, viewModel.teamData), null, FragmentNavigatorExtras(view.name, view.date))
+        }
     }
 
     private fun statsAdapter() = clickableListAdapter<PlayerStats>(R.layout.vh_stat, itemCallback()) { position, item, view ->

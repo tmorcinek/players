@@ -44,7 +44,6 @@ class AddPlayersFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         view.title.text = viewModel.teamData.name
-
         view.nextButton.apply {
             viewModel.isNextEnabled.observe(this@AddPlayersFragment) { isEnabled = it }
             setOnClickListener {

@@ -9,11 +9,14 @@
     <TextView
             android:id="@+id/name"
             style="@style/TitleText"
-            android:layout_width="match_parent"
+            android:transitionName="name"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/double_margin"
             android:layout_marginBottom="@dimen/double_margin"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             tools:text="Tomasz Morcinek" />
 
     <TextView
@@ -35,6 +38,7 @@
             android:layout_marginStart="100dp"
             android:layout_marginTop="@dimen/quad_margin"
             android:layout_marginBottom="8dp"
+            android:transitionName="date"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/name"
             tools:text="20.10.2009" />
@@ -58,6 +62,7 @@
             android:layout_marginStart="100dp"
             android:layout_marginTop="@dimen/double_margin"
             android:layout_marginBottom="8dp"
+            android:transitionName="subtitle"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/birthDate"
             tools:text="Orliki" />

@@ -1,5 +1,6 @@
 package com.morcinek.players.ui.teams.event
 
+
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -20,6 +21,7 @@ import com.morcinek.players.core.extensions.alert.alert
 import com.morcinek.players.core.extensions.alert.noButton
 import com.morcinek.players.core.extensions.alert.yesButton
 import com.morcinek.players.core.extensions.getParcelable
+import com.morcinek.players.core.extensions.moveTransition
 import com.morcinek.players.core.extensions.toDayOfWeekDateFormat
 import com.morcinek.players.core.extensions.viewModelWithFragment
 import com.morcinek.players.core.itemCallback
@@ -39,6 +41,10 @@ class EventDetailsFragment : BaseFragment() {
 
     private val navController: NavController by lazyNavController()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedElementEnterTransition = moveTransition()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -48,8 +54,8 @@ class EventDetailsFragment : BaseFragment() {
             status.setText(viewModel.statusText)
             status.setTextColor(resources.getColor(viewModel.statusColor))
             recyclerView.apply {
-                recyclerView.layoutManager = LinearLayoutManager(activity)
-                recyclerView.adapter = simpleListAdapter<PlayerData>(R.layout.vh_text, itemCallback()) { _, item, view ->
+                layoutManager = LinearLayoutManager(activity)
+                adapter = simpleListAdapter<PlayerData>(R.layout.vh_text, itemCallback()) { _, item, view ->
                     view.name.text = item.toString()
                 }.apply {
                     viewModel.players.observe(this@EventDetailsFragment) { submitList(it) }
@@ -82,5 +88,4 @@ class EventDetailsViewModel(val references: FirebaseReferences, val teamData: Te
 
     fun deleteEvent(doOnComplete: () -> Unit) =
         references.teamEventReference(teamData.key, eventData.key).removeValue().addOnCompleteListener { doOnComplete() }
-
 }

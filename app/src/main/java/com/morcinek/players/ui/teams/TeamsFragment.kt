@@ -34,15 +34,15 @@ class TeamsFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.progressBar.show()
         view.apply {
+            progressBar.show()
             recyclerView.layoutManager = LinearLayoutManager(activity)
             recyclerView.adapter = clickableListAdapter<TeamData>(R.layout.vh_team, itemCallback()) { _, item, view ->
                 view.name.text = item.name
             }.apply {
                 observe(viewModel.teams) {
                     submitList(it)
-                    view.progressBar.hide()
+                    progressBar.hide()
                 }
                 onClickListener { _, teamData -> navController.navigate(R.id.nav_team_details, teamData.toBundle()) }
             }

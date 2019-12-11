@@ -8,6 +8,7 @@
     <TextView
             android:id="@+id/title"
             style="@style/TitleText"
+            android:transitionName="name"
             android:layout_marginStart="@dimen/margin"
             android:layout_marginTop="@dimen/double_margin"
             android:layout_marginEnd="@dimen/margin"
@@ -18,6 +19,7 @@
 
     <TextView
             android:id="@+id/year"
+            android:transitionName="date"
             style="@style/SubtitleText"
             android:layout_marginStart="@dimen/margin"
             android:layout_marginTop="@dimen/double_margin"

@@ -34,8 +34,8 @@ class PlayerStatsFragment : BaseFragment() {
         view.apply {
             title.text = viewModel.title()
             recyclerView.apply {
-                recyclerView.layoutManager = LinearLayoutManager(activity)
-                recyclerView.adapter = simpleListAdapter<PlayerEvent>(R.layout.vh_player_event, itemCallback()) { _, item, view ->
+                layoutManager = LinearLayoutManager(activity)
+                adapter = simpleListAdapter<PlayerEvent>(R.layout.vh_player_event, itemCallback()) { _, item, view ->
                     view.name.text = item.name
                     view.date.text = item.date
                     view.setBackgroundResource(item.statusColor)
@@ -70,4 +70,4 @@ private class PlayerStatsViewModel(val playerStatsDetails: PlayerStatsDetails) :
 @Parcelize
 class PlayerStatsDetails(val playerData: PlayerData, val events: List<EventData>) : Parcelable
 
-private class PlayerEvent(val name: String, val date: String, val statusColor: Int, override var key: String) : HasKey
+private data class PlayerEvent(val name: String, val date: String, val statusColor: Int, override var key: String) : HasKey

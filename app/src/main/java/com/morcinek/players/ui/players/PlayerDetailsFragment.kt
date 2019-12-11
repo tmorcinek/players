@@ -18,6 +18,7 @@ import com.morcinek.players.core.extensions.alert.alert
 import com.morcinek.players.core.extensions.alert.noButton
 import com.morcinek.players.core.extensions.alert.yesButton
 import com.morcinek.players.core.extensions.getParcelable
+import com.morcinek.players.core.extensions.moveTransition
 import com.morcinek.players.core.extensions.toStandardString
 import com.morcinek.players.core.extensions.viewModelWithFragment
 import com.morcinek.players.ui.lazyNavController
@@ -32,6 +33,11 @@ class PlayerDetailsFragment : BaseFragment() {
     private val viewModel by viewModelWithFragment<PlayerDetailsViewModel>()
 
     private val navController: NavController by lazyNavController()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedElementEnterTransition = moveTransition()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

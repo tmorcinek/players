@@ -13,7 +13,8 @@
         <TextView
                 android:id="@+id/name"
                 style="@style/ItemTitle"
-                android:layout_width="match_parent"
+                android:transitionName="name"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin"
                 tools:text="Name Surname" />
@@ -24,11 +25,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/name"
+                android:transitionName="subtitle"
                 tools:text="subtitle" />
 
         <TextView
                 android:id="@+id/date"
                 style="@style/ItemSpecial"
+                android:transitionName="date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
