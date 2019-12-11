@@ -11,10 +11,7 @@ import androidx.navigation.NavController
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.data.PlayerData
-import com.morcinek.players.core.database.FirebaseReferences
-import com.morcinek.players.core.database.map
-import com.morcinek.players.core.database.observe
-import com.morcinek.players.core.database.teamsLiveDataForSingleValueListener
+import com.morcinek.players.core.database.*
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.ui.showStandardDropDown
 import com.morcinek.players.ui.lazyNavController
@@ -80,7 +77,7 @@ private class CreatePlayerViewModel(val references: FirebaseReferences) : ViewMo
 
     val teams = references.teamsLiveDataForSingleValueListener()
 
-    val player: LiveData<PlayerData> = MutableLiveData<PlayerData>().apply { value = PlayerData() }
+    val player = valueLiveData(PlayerData())
 
     fun dateInMillis() = player.value!!.birthDateInMillis.takeIf { it > 0 } ?: DefaultDate
 

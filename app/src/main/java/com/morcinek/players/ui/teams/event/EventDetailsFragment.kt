@@ -17,16 +17,13 @@ import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.map
 import com.morcinek.players.core.database.observe
 import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
-import com.morcinek.players.core.extensions.alert.alert
-import com.morcinek.players.core.extensions.alert.noButton
-import com.morcinek.players.core.extensions.alert.yesButton
 import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.moveTransition
 import com.morcinek.players.core.extensions.toDayOfWeekDateFormat
 import com.morcinek.players.core.extensions.viewModelWithFragment
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.core.simpleListAdapter
-import com.morcinek.players.core.ui.showCodeConfirmationDialog
+import com.morcinek.players.core.ui.showDeleteCodeConfirmationDialog
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_event_details.*
 import kotlinx.android.synthetic.main.vh_text.view.*
@@ -66,10 +63,9 @@ class EventDetailsFragment : BaseFragment(R.layout.fragment_event_details) {
 
     override val menuConfiguration = createMenuConfiguration(R.menu.delete) {
         addAction(R.id.delete) {
-            alert(R.string.delete_event_query) {
-                yesButton { showCodeConfirmationDialog(R.string.delete_event_message) { viewModel.deleteEvent { navController.popBackStack() } } }
-                noButton {}
-            }.show()
+            showDeleteCodeConfirmationDialog(R.string.delete_event_query, R.string.delete_event_message) {
+                viewModel.deleteEvent { navController.popBackStack() }
+            }
         }
     }
 }

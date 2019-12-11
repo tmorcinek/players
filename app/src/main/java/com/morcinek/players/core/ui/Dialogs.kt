@@ -5,6 +5,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import com.morcinek.players.R
+import com.morcinek.players.core.extensions.alert.alert
+import com.morcinek.players.core.extensions.alert.noButton
+import com.morcinek.players.core.extensions.alert.yesButton
 import com.morcinek.players.core.extensions.combineTwo
 import com.morcinek.players.core.extensions.inflate
 import com.morcinek.players.core.extensions.numericKeyboardTransformationMethod
@@ -31,3 +34,10 @@ fun Context.showCodeConfirmationDialog(message: Int, onSuccess: () -> Unit) =
                 }
             }.show()
     }
+
+
+fun Fragment.showDeleteCodeConfirmationDialog(query: Int, message: Int, onSuccess: () -> Unit) =
+    alert(query) {
+        yesButton { showCodeConfirmationDialog(message, onSuccess) }
+        noButton {}
+    }.show()

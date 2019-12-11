@@ -32,3 +32,6 @@ fun <T, R, Y> combine(sourceA: LiveData<T>, sourceB: LiveData<R>, mapFunction: (
     combine(sourceA, sourceB).map { mapFunction(it.first, it.second) }
 
 fun <T, R, Y> LiveData<T>.combineWith(source: LiveData<R>, mapFunction: (T, R) -> (Y)): LiveData<Y> = combine(this, source).map { mapFunction(it.first, it.second) }
+
+fun <T> mutableValueLiveData(value: T) = MutableLiveData<T>().apply { this.value = value }
+fun <T> valueLiveData(value: T) : LiveData<T> = mutableValueLiveData(value)

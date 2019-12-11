@@ -54,23 +54,16 @@ abstract class BaseFragment(private val layoutResourceId: Int) : Fragment() {
     }
 
     final override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) = menuConfiguration.safeLet { inflater.inflate(it.menuResourceId, menu) }
-
-    override fun onPrepareOptionsMenu(menu: Menu) = menuConfiguration.safeLet { it.prepare.forEach { entry -> entry.value(menu.findItem(entry.key))  } }
 }
 
 class FabConfiguration(val fabActon: (View) -> Unit, val fabIcon: Int = R.drawable.ic_add)
 
 class MenuConfiguration(val menuResourceId: Int) {
     internal val actions = mutableMapOf<Int, () -> Any>()
-    internal val prepare = mutableMapOf<Int, (MenuItem) -> Unit>()
 
     fun addAction(itemId: Int, action: () -> Any) {
         actions[itemId] = action
     }
-
-    fun addPrepare(itemId: Int, action: (MenuItem) -> Unit) {
-        prepare[itemId] = action
-    }
 }
 
-fun createMenuConfiguration(menuResourceId: Int, function: MenuConfiguration.() -> Unit = {}) = MenuConfiguration(menuResourceId).apply(function)
+inline fun createMenuConfiguration(menuResourceId: Int, function: MenuConfiguration.() -> Unit) = MenuConfiguration(menuResourceId).apply(function)

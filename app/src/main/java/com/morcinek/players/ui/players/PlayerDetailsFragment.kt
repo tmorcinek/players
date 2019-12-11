@@ -14,13 +14,11 @@ import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.map
 import com.morcinek.players.core.database.observe
 import com.morcinek.players.core.database.teamsLiveDataForValueListener
-import com.morcinek.players.core.extensions.alert.alert
-import com.morcinek.players.core.extensions.alert.noButton
-import com.morcinek.players.core.extensions.alert.yesButton
 import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.moveTransition
 import com.morcinek.players.core.extensions.toStandardString
 import com.morcinek.players.core.extensions.viewModelWithFragment
+import com.morcinek.players.core.ui.showDeleteCodeConfirmationDialog
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_player.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -50,16 +48,18 @@ class PlayerDetailsFragment : BaseFragment(R.layout.fragment_player) {
         }
     }
 
-    override val menuConfiguration = createMenuConfiguration(R.menu.delete_edit) {
-        addAction(R.id.delete) {
-            alert(R.string.player_delete_message) {
-                yesButton { viewModel.deletePlayer { navController.popBackStack() } }
-                noButton {}
-            }.show()
+    override val menuConfiguration by lazy {
+        createMenuConfiguration(menuResource()) {
+            addAction(R.id.delete) {
+                showDeleteCodeConfirmationDialog(R.string.player_delete_query, R.string.player_delete_message) {
+                    viewModel.deletePlayer { navController.popBackStack() }
+                }
+            }
+            addAction(R.id.edit) { Toast.makeText(requireContext(), "Edit", Toast.LENGTH_SHORT).show() }
         }
-        addAction(R.id.edit) { Toast.makeText(requireContext(), "Edit", Toast.LENGTH_SHORT).show() }
-        addPrepare(R.id.delete) { it.isVisible = viewModel.playerData.teamKey == null }
     }
+
+    private fun menuResource() = if (getParcelable<PlayerData>().teamKey == null) R.menu.delete_edit else R.menu.edit
 }
 
 val playerDetailsModule = module {

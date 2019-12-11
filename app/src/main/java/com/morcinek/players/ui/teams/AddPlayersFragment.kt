@@ -33,8 +33,7 @@ class AddPlayersFragment : BaseFragment(R.layout.fragment_add_players) {
 
     private val navController: NavController by lazyNavController()
 
-
-    override val menuConfiguration = createMenuConfiguration(R.menu.edit) {
+    override val menuConfiguration = createMenuConfiguration(R.menu.add) {
         addAction(R.id.add_players) { navController.navigate(R.id.nav_create_player) }
     }
 
