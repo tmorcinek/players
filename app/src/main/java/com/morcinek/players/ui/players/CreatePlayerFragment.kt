@@ -42,7 +42,7 @@ class CreatePlayerFragment : BaseFragment(R.layout.fragment_create_player) {
             setOnClickListener {
                 startDatePicker(viewModel.dateInMillis()) {
                     viewModel.updateValue { birthDateInMillis = it.timeInMillis }
-                    value.text = it.toSimpleString()
+                    value.text = it.toStandardString()
                 }
             }
         }
