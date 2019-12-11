@@ -7,16 +7,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
-import com.morcinek.players.core.BaseFragment
-import com.morcinek.players.core.HasKey
+import com.morcinek.players.core.*
 import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.extensions.dayOfWeekDateFormat
 import com.morcinek.players.core.extensions.formatCalendar
 import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.viewModelWithFragment
-import com.morcinek.players.core.itemCallback
-import com.morcinek.players.core.simpleListAdapter
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.fragment_player_stats.view.*
 import kotlinx.android.synthetic.main.vh_player_event.view.*
@@ -33,10 +30,10 @@ class PlayerStatsFragment : BaseFragment(R.layout.fragment_player_stats) {
             title.text = viewModel.title()
             recyclerView.apply {
                 layoutManager = LinearLayoutManager(activity)
-                adapter = simpleListAdapter<PlayerEvent>(R.layout.vh_player_event, itemCallback()) { _, item, view ->
-                    view.name.text = item.name
-                    view.date.text = item.date
-                    view.setBackgroundResource(item.statusColor)
+                adapter = listAdapter<PlayerEvent>(R.layout.vh_player_event, itemCallback()) { _, item ->
+                    name.text = item.name
+                    date.text = item.date
+                    setBackgroundResource(item.statusColor)
                 }.apply {
                     submitList(viewModel.events())
                 }

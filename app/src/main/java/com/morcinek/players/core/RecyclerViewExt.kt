@@ -17,6 +17,10 @@ fun <T : HasKey> itemCallback() = ItemCallback<T>().apply {
     areContentsTheSame { t, t2 -> t == t2 }
 }
 
+fun <T> immutableItemCallback() = itemCallback<T> {
+    areItemsTheSame { t, t2 -> t == t2 }
+}
+
 interface HasKey {
     var key: String
 }
@@ -82,11 +86,6 @@ abstract class SelectableListAdapter<T>(vhResourceId: Int, diffCallback: ItemCal
     }
 }
 
-fun <T> simpleListAdapter(vhResourceId: Int, diffCallback: ItemCallback<T>, onBindView: (position: Int, item: T, view: View) -> Unit) =
-    object : SimpleListAdapter<T>(vhResourceId, diffCallback) {
-        override fun onBindViewHolder(position: Int, item: T, view: View) = onBindView(position, item, view)
-    }
-
 fun <T> clickableListAdapter(vhResourceId: Int, diffCallback: ItemCallback<T>, onBindView: (position: Int, item: T, view: View) -> Unit) =
     object : ClickableListAdapter<T>(vhResourceId, diffCallback) {
 
@@ -105,3 +104,11 @@ fun <T> selectableListAdapter(vhResourceId: Int, diffCallback: ItemCallback<T>, 
         }
     }
 
+inline fun <T> listAdapter(vhResourceId: Int, diffCallback: ItemCallback<T>, crossinline onBindView: View.(position: Int, item: T) -> Unit) =
+    object : ListAdapter<T, ViewHolder>(diffCallback) {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+        ViewHolder(LayoutInflater.from(parent.context).inflate(vhResourceId, parent, false))
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.itemView.onBindView(position, getItem(position))
+}

@@ -8,8 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
-import com.morcinek.players.core.BaseFragment
-import com.morcinek.players.core.createMenuConfiguration
+import com.morcinek.players.core.*
 import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
@@ -21,8 +20,6 @@ import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.moveTransition
 import com.morcinek.players.core.extensions.toDayOfWeekDateFormat
 import com.morcinek.players.core.extensions.viewModelWithFragment
-import com.morcinek.players.core.itemCallback
-import com.morcinek.players.core.simpleListAdapter
 import com.morcinek.players.core.ui.showDeleteCodeConfirmationDialog
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_event_details.*
@@ -52,8 +49,8 @@ class EventDetailsFragment : BaseFragment(R.layout.fragment_event_details) {
             }
             recyclerView.apply {
                 layoutManager = LinearLayoutManager(activity)
-                adapter = simpleListAdapter<PlayerData>(R.layout.vh_text, itemCallback()) { _, item, view ->
-                    view.name.text = item.toString()
+                adapter = listAdapter<PlayerData>(R.layout.vh_text, itemCallback()) { _, item ->
+                    name.text = item.toString()
                 }.apply {
                     viewModel.players.observe(this@EventDetailsFragment) { submitList(it) }
                 }
