@@ -39,22 +39,21 @@ class AddPlayersFragment : BaseFragment(R.layout.fragment_add_players) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        view.title.text = viewModel.teamData.name
-        view.nextButton.apply {
-            viewModel.isNextEnabled.observe(this@AddPlayersFragment) { isEnabled = it }
-            setOnClickListener {
-                viewModel.addPlayersToTeam { viewModel.clearSelectedPlayer() }
+        view.apply {
+            title.text = viewModel.teamData.name
+            nextButton.apply {
+                observe(viewModel.isNextEnabled) { isEnabled = it }
+                setOnClickListener { viewModel.addPlayersToTeam { viewModel.clearSelectedPlayer() } }
             }
-        }
-        view.recyclerView.apply {
-            layoutManager = LinearLayoutManager(activity)
-            adapter = selectableListAdapter<PlayerData>(R.layout.vh_selectable_player, itemCallback()) { _, item, view ->
-                view.name.text = "$item"
-            }.apply {
-                viewModel.players.observe(this@AddPlayersFragment) { submitList(it) }
-                viewModel.selectedPlayers.observe(this@AddPlayersFragment) { selectedItems = it }
-                onClickListener { _, item -> viewModel.select(item) }
+            recyclerView.apply {
+                layoutManager = LinearLayoutManager(activity)
+                adapter = selectableListAdapter<PlayerData>(R.layout.vh_selectable_player, itemCallback()) { _, item, view ->
+                    view.name.text = "$item"
+                }.apply {
+                    observe(viewModel.players) { submitList(it) }
+                    observe(viewModel.selectedPlayers) { selectedItems = it }
+                    onClickListener { _, item -> viewModel.select(item) }
+                }
             }
         }
     }

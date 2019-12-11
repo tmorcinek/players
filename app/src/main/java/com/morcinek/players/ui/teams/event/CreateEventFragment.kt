@@ -39,27 +39,29 @@ class CreateEventFragment : BaseFragment(R.layout.fragment_create_event) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.apply {
-            typeLayout.header.setText(R.string.type)
-            typeLayout.value.setText(R.string.value_not_set)
-            typeLayout.setOnClickListener {
-                it.showStandardDropDown(android.R.layout.simple_dropdown_item_1line, listOf("Training", "Game", "Tournament", "Friendly")) {
-                    viewModel.updateValue { type = it }
-                    typeLayout.value.text = it
-                }
-            }
-            dateLayout.header.setText(R.string.date)
-            viewModel.event.let { event ->
-                dateLayout.value.text = event.getDate().toStandardString()
-                dateLayout.setOnClickListener {
-                    showDatePickerDialog(event.getDate()) {
-                        viewModel.updateValue { dateInMillis = it.timeInMillis }
-                        dateLayout.value.text = it.toStandardString()
+            typeLayout.apply {
+                header.setText(R.string.type)
+                value.setText(R.string.value_not_set)
+                setOnClickListener {
+                    it.showStandardDropDown(android.R.layout.simple_dropdown_item_1line, listOf("Training", "Game", "Tournament", "Friendly")) {
+                        viewModel.updateValue { type = it }
+                        value.text = it
                     }
                 }
             }
-            mandatorySwitch.apply {
-                setOnCheckedChangeListener { _, isChecked -> viewModel.updateValue { optional = !isChecked } }
+            dateLayout.apply {
+                header.setText(R.string.date)
+                viewModel.event.let { event ->
+                    value.text = event.getDate().toStandardString()
+                    setOnClickListener {
+                        showDatePickerDialog(event.getDate()) {
+                            viewModel.updateValue { dateInMillis = it.timeInMillis }
+                            value.text = it.toStandardString()
+                        }
+                    }
+                }
             }
+            mandatorySwitch.setOnCheckedChangeListener { _, isChecked -> viewModel.updateValue { optional = !isChecked } }
             recyclerView.apply {
                 layoutManager = LinearLayoutManager(activity)
                 adapter = selectableListAdapter<PlayerData>(R.layout.vh_selectable_player, itemCallback()) { _, item, view ->
