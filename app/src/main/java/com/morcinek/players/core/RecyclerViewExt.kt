@@ -42,49 +42,6 @@ class ItemCallback<T> : DiffUtil.ItemCallback<T>() {
     override fun areContentsTheSame(oldItem: T, newItem: T) = _areContentsTheSame(oldItem, newItem)
 }
 
-abstract class SimpleListAdapter<T>(private val vhResourceId: Int, diffCallback: ItemCallback<T>) : ListAdapter<T, ViewHolder>(diffCallback) {
-
-    protected abstract fun onBindViewHolder(position: Int, item: T, view: View)
-
-    final override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        ViewHolder(LayoutInflater.from(parent.context).inflate(vhResourceId, parent, false))
-
-    final override fun onBindViewHolder(holder: ViewHolder, position: Int) = onBindViewHolder(position, getItem(position), holder.itemView)
-}
-
-abstract class ClickableListAdapter<T>(vhResourceId: Int, diffCallback: ItemCallback<T>) : SimpleListAdapter<T>(vhResourceId, diffCallback) {
-
-    private var _onClickListener: ((View, T) -> Unit) = { _, _ -> }
-
-    fun onClickListener(function: (View, T) -> Unit) {
-        _onClickListener = function
-    }
-
-    fun onItemClickListener(function: (T) -> Unit) {
-        _onClickListener = { _, item -> function(item) }
-    }
-
-    @CallSuper
-    override fun onBindViewHolder(position: Int, item: T, view: View) {
-        view.setOnClickListener { _onClickListener(it, item) }
-    }
-}
-
-abstract class SelectableListAdapter<T>(vhResourceId: Int, diffCallback: ItemCallback<T>) : ClickableListAdapter<T>(vhResourceId, diffCallback) {
-
-    var selectedItems: Set<T> = setOf()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
-
-    @CallSuper
-    override fun onBindViewHolder(position: Int, item: T, view: View) {
-        super.onBindViewHolder(position, item, view)
-        view.isSelected = item in selectedItems
-    }
-}
-
 inline fun <T> listAdapter(vhResourceId: Int, diffCallback: ItemCallback<T>, crossinline onBindView: View.(position: Int, item: T) -> Unit) =
     object : ListAdapter<T, ViewHolder>(diffCallback) {
 
@@ -93,7 +50,7 @@ inline fun <T> listAdapter(vhResourceId: Int, diffCallback: ItemCallback<T>, cro
         override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.itemView.onBindView(position, getItem(position))
     }
 
-class SelectListAdapter<T>(private val vhResourceId: Int, diffCallback: ItemCallback<T>, private val onBindView: View.(position: Int, item: T) -> Unit) :
+class SelectionListAdapter<T>(private val vhResourceId: Int, diffCallback: ItemCallback<T>, private val selectionMode: SelectionMode = MultiSelect(), private val onBindView: View.(position: Int, item: T) -> Unit) :
     ListAdapter<T, ViewHolder>(diffCallback) {
 
     val selectedItems = valueLiveData(setOf<T>())
@@ -121,6 +78,19 @@ class SelectListAdapter<T>(private val vhResourceId: Int, diffCallback: ItemCall
     }
 
     private fun <T> LiveData<Set<T>>.updateSelectedItem(item: T) = value!!.let { selectedItems ->
-        if (item in selectedItems) selectedItems.minus(item) else selectedItems.plus(item)
+        if (item in selectedItems) {
+            selectedItems.minus(item)
+        } else when(selectionMode){
+            is SingleSelect -> setOf(item)
+            is MultiSelect -> when  {
+                selectionMode.limit == null-> selectedItems.plus(item)
+                selectionMode.limit > selectedItems.size -> selectedItems.plus(item)
+                else -> selectedItems
+            }
+        }
     }
 }
+
+sealed class SelectionMode
+object SingleSelect : SelectionMode()
+data class MultiSelect(val limit: Int? = null) : SelectionMode()

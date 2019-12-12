@@ -10,7 +10,7 @@ import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
-import com.morcinek.players.core.SelectListAdapter
+import com.morcinek.players.core.SelectionListAdapter
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.database.*
@@ -36,18 +36,16 @@ class CreateTeamFragment : BaseFragment(R.layout.fragment_create_team) {
             nameTextInputLayout.editText?.doOnTextChanged { text, _, _, _ -> viewModel.updateValue { name = text.toString() } }
             recyclerView.apply {
                 layoutManager = LinearLayoutManager(activity)
-                adapter = SelectListAdapter<PlayerData>(R.layout.vh_selectable_player, itemCallback()) { _, item ->
+                adapter = SelectionListAdapter<PlayerData>(R.layout.vh_selectable_player, itemCallback()) { _, item ->
                     name.text = "$item"
                 }.apply {
                     observe(viewModel.players) { submitList(it) }
-                    viewModel.selectedPlayers.setSingleSource(selectedItems)
+                    observe(selectedItems) { viewModel.selectedPlayers = it }
                 }
             }
             nextButton.apply {
                 observe(viewModel.isNextEnabled) { isEnabled = it }
-                setOnClickListener {
-                    viewModel.createTeam { navController.popBackStack() }
-                }
+                setOnClickListener { viewModel.createTeam { navController.popBackStack() } }
             }
         }
     }
@@ -55,9 +53,11 @@ class CreateTeamFragment : BaseFragment(R.layout.fragment_create_team) {
 
 private class CreateTeamViewModel(val references: FirebaseReferences) : ViewModel() {
 
-    val team = valueLiveData(TeamData())
+    private val team = valueLiveData(TeamData())
 
-    val isNextEnabled: LiveData<Boolean> = team.map { it.isValid() }
+    var selectedPlayers = setOf<PlayerData>()
+
+    val isNextEnabled: LiveData<Boolean> = team.map { it.name.isNotBlank() }
 
     fun updateValue(function: TeamData.() -> Unit) = (team as MutableLiveData).postValue(team.value?.apply(function))
 
@@ -65,7 +65,7 @@ private class CreateTeamViewModel(val references: FirebaseReferences) : ViewMode
         val childUpdates = HashMap<String, Any>()
         references.teamsReference().push().key!!.let { key ->
             childUpdates["/teams/$key"] = team.value!!.toMap()
-            selectedPlayers.value?.forEach {
+            selectedPlayers.forEach {
                 childUpdates["/players/${it.key}/teamKey"] = key
             }
         }
@@ -73,11 +73,7 @@ private class CreateTeamViewModel(val references: FirebaseReferences) : ViewMode
     }
 
     val players = references.playersWithoutTeamLiveDataForValueListener()
-
-    val selectedPlayers = SingleSourceMediator<Set<PlayerData>>()
 }
-
-private fun TeamData.isValid() = name.isNotBlank()
 
 val createTeamModule = module {
     viewModel { CreateTeamViewModel(get()) }

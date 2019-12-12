@@ -12,8 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.morcinek.players.R
-import com.morcinek.players.core.BaseFragment
-import com.morcinek.players.core.SelectListAdapter
+import com.morcinek.players.core.*
 import com.morcinek.players.core.database.SingleSourceMediator
 import com.morcinek.players.core.database.map
 import com.morcinek.players.core.database.observe
@@ -21,8 +20,6 @@ import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.setDrawableColor
 import com.morcinek.players.core.extensions.toBundle
 import com.morcinek.players.core.extensions.viewModelWithFragment
-import com.morcinek.players.core.itemCallback
-import com.morcinek.players.core.listAdapter
 import com.morcinek.players.ui.funino.TeamData
 import com.morcinek.players.ui.funino.TournamentData
 import com.morcinek.players.ui.funino.TournamentDetailsData
@@ -59,7 +56,7 @@ class WhatColorsFragment : BaseFragment(R.layout.fragment_select_colors) {
         super.onViewCreated(view, savedInstanceState)
         view.recyclerView.apply {
             layoutManager = GridLayoutManager(activity, 3)
-            adapter = SelectListAdapter<Color>(R.layout.vh_color, itemCallback { areItemsTheSame { i1, i2 -> i1.code == i2.code } }) { _, item ->
+            adapter = SelectionListAdapter<Color>(R.layout.vh_color, itemCallback { areItemsTheSame { i1, i2 -> i1.code == i2.code } }, MultiSelect(viewModel.requiredNumberOfColors)) { _, item ->
                 text.text = item.name
                 image.setDrawableColor(item.code)
             }.apply {
@@ -112,7 +109,7 @@ private class WhatColorsViewModel(val createTournamentData: CreateTournamentData
 
     val isNextEnabled: LiveData<Boolean> = selectedColors.map { it.size == requiredNumberOfColors }
 
-    private val requiredNumberOfColors: Int = if (createTournamentData.numberOfPlayers >= 12) 4 else 2
+    val requiredNumberOfColors: Int = if (createTournamentData.numberOfPlayers >= 12) 4 else 2
 
     val colors: LiveData<List<Color>> = MutableLiveData<List<Color>>().apply {
         value = listOf(

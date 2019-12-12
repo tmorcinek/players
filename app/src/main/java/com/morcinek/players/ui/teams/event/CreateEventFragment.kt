@@ -9,7 +9,7 @@ import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
-import com.morcinek.players.core.SelectListAdapter
+import com.morcinek.players.core.SelectionListAdapter
 import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
@@ -62,7 +62,7 @@ class CreateEventFragment : BaseFragment(R.layout.fragment_create_event) {
             mandatorySwitch.setOnCheckedChangeListener { _, isChecked -> viewModel.updateValue { optional = !isChecked } }
             recyclerView.apply {
                 layoutManager = LinearLayoutManager(activity)
-                adapter = SelectListAdapter<PlayerData>(R.layout.vh_selectable_player, itemCallback()) { _, item ->
+                adapter = SelectionListAdapter<PlayerData>(R.layout.vh_selectable_player, itemCallback()) { _, item ->
                     name.text = item.toString()
                 }.apply {
                     observe(viewModel.players) { submitList(it) }

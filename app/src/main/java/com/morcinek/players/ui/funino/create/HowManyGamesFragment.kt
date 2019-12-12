@@ -11,6 +11,9 @@ import androidx.navigation.NavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.*
+import com.morcinek.players.core.database.SingleSourceMediator
+import com.morcinek.players.core.database.map
+import com.morcinek.players.core.database.observe
 import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.toBundle
 import com.morcinek.players.core.extensions.viewModelWithFragment
@@ -30,13 +33,15 @@ class HowManyGamesFragment : BaseFragment(R.layout.fragment_number_games) {
         super.onViewCreated(view, savedInstanceState)
         view.recyclerView.apply {
             layoutManager = GridLayoutManager(activity, 3)
-            adapter = HowManyGamesAdapter().apply {
-                viewModel.gamesNumbers.observe(this@HowManyGamesFragment, Observer { submitList(it) })
-                viewModel.selectedGamesNumber.observe(this@HowManyGamesFragment, Observer {
-                    selectedItem = it
-                    notifyDataSetChanged()
-                })
-                onClickListener { _, item -> viewModel.select(item) }
+            adapter = SelectionListAdapter<GamesNumber>(R.layout.vh_games_number, itemCallback { areItemsTheSame { i1, i2 -> i1.numberOfGames == i2.numberOfGames } }, SingleSelect) { _, item ->
+                text.text = item.numberOfGames.toString()
+            }.apply {
+                observe(viewModel.gamesNumbers) { submitList(it) }
+                viewModel.selectedGamesNumber.setSingleSource(selectedItems.map { it.firstOrNull() })
+//                viewModel.selectedGamesNumber.observe(this@HowManyGamesFragment, Observer {
+//                    selectedItem = it
+//                    notifyDataSetChanged()
+//                })
             }
         }
         viewModel.selectedGamesNumber.observe(this, Observer {
@@ -44,19 +49,6 @@ class HowManyGamesFragment : BaseFragment(R.layout.fragment_number_games) {
             it?.score?.let { view.message.text = "Games difference is ${it.first}\nDispersion ratio is ${it.second}" }
         })
         view.nextButton.setOnClickListener { navController.navigate(R.id.nav_what_colors, viewModel.createTournamentData.toBundle()) }
-    }
-}
-
-private class HowManyGamesAdapter : ClickableListAdapter<GamesNumber>(R.layout.vh_games_number, itemCallback {
-    areItemsTheSame { oldItem, newItem -> oldItem.numberOfGames == newItem.numberOfGames }
-}) {
-
-    var selectedItem: GamesNumber? = null
-
-    override fun onBindViewHolder(position: Int, item: GamesNumber, view: View) {
-        super.onBindViewHolder(position, item, view)
-        view.text.text = item.numberOfGames.toString()
-        view.text.isSelected = item == selectedItem
     }
 }
 
@@ -71,10 +63,10 @@ class HowManyGamesViewModel(val createTournamentData: CreateTournamentData) : Vi
     private val teamsGenerator = TeamsGenerator()
     private val allGames = gamesCombination(createTournamentData.numberOfPlayers)
 
-    val selectedGamesNumber: LiveData<GamesNumber?> = MutableLiveData<GamesNumber?>().apply { value = null }
+    val selectedGamesNumber = SingleSourceMediator<GamesNumber?>()
 
     fun select(gamesNumber: GamesNumber){
-        (selectedGamesNumber as MutableLiveData).postValue(gamesNumber)
+//        (selectedGamesNumber as MutableLiveData).postValue(gamesNumber)
         createTournamentData.games = allGames.take(gamesNumber.numberOfGames)
     }
 

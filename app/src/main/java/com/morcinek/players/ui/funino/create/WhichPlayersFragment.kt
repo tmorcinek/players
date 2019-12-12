@@ -10,7 +10,7 @@ import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
-import com.morcinek.players.core.SelectListAdapter
+import com.morcinek.players.core.SelectionListAdapter
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.SingleSourceMediator
@@ -35,7 +35,7 @@ class WhichPlayersFragment : BaseFragment(R.layout.fragment_which_players) {
         super.onViewCreated(view, savedInstanceState)
         view.recyclerView.apply {
             layoutManager = LinearLayoutManager(activity)
-            adapter = SelectListAdapter<PlayerData>(R.layout.vh_selectable_player, itemCallback()) { _, item ->
+            adapter = SelectionListAdapter<PlayerData>(R.layout.vh_selectable_player, itemCallback()) { _, item ->
                 name.text = "$item"
             }.apply {
                 observe(viewModel.players) { submitList(it) }
