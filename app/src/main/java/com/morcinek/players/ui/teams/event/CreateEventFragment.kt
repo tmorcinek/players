@@ -4,12 +4,12 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
+import com.morcinek.players.core.SelectListAdapter
 import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
@@ -19,10 +19,8 @@ import com.morcinek.players.core.extensions.showDatePickerDialog
 import com.morcinek.players.core.extensions.toStandardString
 import com.morcinek.players.core.extensions.viewModelWithFragment
 import com.morcinek.players.core.itemCallback
-import com.morcinek.players.core.selectableListAdapter
 import com.morcinek.players.core.ui.showStandardDropDown
 import com.morcinek.players.ui.lazyNavController
-import com.morcinek.players.ui.teams.updateSelectedItem
 import kotlinx.android.synthetic.main.fragment_create_event.*
 import kotlinx.android.synthetic.main.header_button.view.*
 import kotlinx.android.synthetic.main.vh_player.view.*
@@ -64,12 +62,11 @@ class CreateEventFragment : BaseFragment(R.layout.fragment_create_event) {
             mandatorySwitch.setOnCheckedChangeListener { _, isChecked -> viewModel.updateValue { optional = !isChecked } }
             recyclerView.apply {
                 layoutManager = LinearLayoutManager(activity)
-                adapter = selectableListAdapter<PlayerData>(R.layout.vh_selectable_player, itemCallback()) { _, item, view ->
-                    view.name.text = item.toString()
+                adapter = SelectListAdapter<PlayerData>(R.layout.vh_selectable_player, itemCallback()) { _, item ->
+                    name.text = item.toString()
                 }.apply {
                     observe(viewModel.players) { submitList(it) }
-                    observe(viewModel.selectedPlayers) { selectedItems = it }
-                    onClickListener { _, item -> viewModel.select(item) }
+                    viewModel.selectedPlayers = selectedItems
                 }
             }
             observe(viewModel.selectedPlayers) { selectedPlayersNumber.text = "${it.size} selected" }
@@ -97,13 +94,10 @@ private class TeamDetailsViewModel(private val references: FirebaseReferences, p
 
     val players = references.playersForTeamLiveDataForValueListener(teamData.key)
 
-    val selectedPlayers = valueLiveData(setOf<PlayerData>())
+    lateinit var selectedPlayers : LiveData<Set<PlayerData>>
 
-    val isNextEnabled: LiveData<Boolean> =
+    val isNextEnabled: LiveData<Boolean> by lazy {
         selectedPlayers.combineWith(eventData) { players, event -> players.isNotEmpty() && event.type.isNotEmpty() && event.dateInMillis > 0 }
-
-    fun select(player: PlayerData) = (selectedPlayers as MutableLiveData).apply {
-        postValue(updateSelectedItem(player))
     }
 
     fun updateValue(function: EventData.() -> Unit) {

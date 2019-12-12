@@ -35,3 +35,4 @@ fun <T, R, Y> LiveData<T>.combineWith(source: LiveData<R>, mapFunction: (T, R) -
 
 fun <T> mutableValueLiveData(value: T) = MutableLiveData<T>().apply { this.value = value }
 fun <T> valueLiveData(value: T) : LiveData<T> = mutableValueLiveData(value)
+fun <T> emptyLiveData() : LiveData<T> = mutableValueLiveData(null)

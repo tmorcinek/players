@@ -31,22 +31,22 @@ class PlayersFragment : BaseFragment(R.layout.fragment_list) {
             progressBar.show()
             recyclerView.apply {
                 layoutManager = LinearLayoutManager(activity)
-                adapter = clickableListAdapter(R.layout.vh_player, itemCallback()) { _, item: PlayerItem, view ->
-                    view.name.text = item.name
-                    view.subtitle.text = item.subtitle
-                    view.date.text = item.date
-                }.apply {
-                    observe(viewModel.players) {
-                        submitList(it)
-                        view.progressBar.hide()
-                    }
-                    onClickListener { view, item ->
+                adapter = listAdapter(R.layout.vh_player, itemCallback()) { _, item: PlayerItem ->
+                    name.text = item.name
+                    subtitle.text = item.subtitle
+                    date.text = item.date
+                    setOnClickListener {
                         navController.navigate(
                             R.id.nav_player_details,
                             item.data.toBundle(),
                             null,
                             FragmentNavigatorExtras(view.name, view.subtitle, view.date)
                         )
+                    }
+                }.apply {
+                    observe(viewModel.players) {
+                        submitList(it)
+                        view.progressBar.hide()
                     }
                 }
             }

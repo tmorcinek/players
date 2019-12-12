@@ -49,33 +49,33 @@ class TeamDetailsFragment : BaseFragment(R.layout.fragment_team_details) {
 
 
     private val eventsFormatter = dayOfWeekDateFormat()
-    private fun eventsAdapter() = clickableListAdapter<EventData>(R.layout.vh_player, itemCallback()) { _, item, view ->
-        view.name.text = item.type
-        view.date.text = eventsFormatter.formatCalendar(item.getDate())
-        view.subtitle.text = "${item.players.size} players"
+    private fun eventsAdapter() = listAdapter<EventData>(R.layout.vh_player, itemCallback()) { _, item ->
+        name.text = item.type
+        date.text = eventsFormatter.formatCalendar(item.getDate())
+        subtitle.text = "${item.players.size} players"
+        setOnClickListener { view ->
+            navController.navigate(R.id.nav_event_details, bundle(item, viewModel.teamData), null, FragmentNavigatorExtras(view.name, view.date))
+        }
     }.apply {
         observe(viewModel.events) { submitList(it) }
-        onClickListener { view, it ->
-            navController.navigate(R.id.nav_event_details, bundle(it, viewModel.teamData), null, FragmentNavigatorExtras(view.name, view.date))
-        }
     }
 
-    private fun statsAdapter() = clickableListAdapter<PlayerStats>(R.layout.vh_stat, itemCallback()) { position, item, view ->
-        view.name.text = "${position + 1}. ${item.name}"
-        view.attendance.text = item.attended.toString()
-        view.missed.text = item.missed.toString()
+    private fun statsAdapter() = listAdapter<PlayerStats>(R.layout.vh_stat, itemCallback()) { position, item ->
+        name.text = "${position + 1}. ${item.name}"
+        attendance.text = item.attended.toString()
+        missed.text = item.missed.toString()
+        setOnClickListener { navController.navigate(R.id.nav_player_stats, bundle(PlayerStatsDetails(item.data, viewModel.playerEvents(item.data)))) }
     }.apply {
         observe(viewModel.playersStats) { submitList(it) }
-        onItemClickListener { navController.navigate(R.id.nav_player_stats, bundle(PlayerStatsDetails(it.data, viewModel.playerEvents(it.data)))) }
     }
 
     private val playersFormatter = standardDateFormat()
-    private fun playersAdapter() = clickableListAdapter<PlayerData>(R.layout.vh_player, itemCallback()) { _, item, view ->
-        view.name.text = item.toString()
-        view.date.text = playersFormatter.formatCalendar(item.getBirthDate())
+    private fun playersAdapter() = listAdapter<PlayerData>(R.layout.vh_player, itemCallback()) { _, item ->
+        name.text = item.toString()
+        date.text = playersFormatter.formatCalendar(item.getBirthDate())
+        setOnClickListener { navController.navigate(R.id.nav_player_details, bundle(item)) }
     }.apply {
         observe(viewModel.players) { submitList(it) }
-        onItemClickListener { navController.navigate(R.id.nav_player_details, bundle(it)) }
     }
 }
 

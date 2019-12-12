@@ -4,9 +4,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.morcinek.players.core.database.valueLiveData
 
 class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
@@ -15,10 +18,6 @@ fun <T> itemCallback(function: ItemCallback<T>.() -> Unit) = ItemCallback<T>().a
 fun <T : HasKey> itemCallback() = ItemCallback<T>().apply {
     areItemsTheSame { t, t2 -> t.key == t2.key }
     areContentsTheSame { t, t2 -> t == t2 }
-}
-
-fun <T> immutableItemCallback() = itemCallback<T> {
-    areItemsTheSame { t, t2 -> t == t2 }
 }
 
 interface HasKey {
@@ -86,29 +85,42 @@ abstract class SelectableListAdapter<T>(vhResourceId: Int, diffCallback: ItemCal
     }
 }
 
-fun <T> clickableListAdapter(vhResourceId: Int, diffCallback: ItemCallback<T>, onBindView: (position: Int, item: T, view: View) -> Unit) =
-    object : ClickableListAdapter<T>(vhResourceId, diffCallback) {
-
-        override fun onBindViewHolder(position: Int, item: T, view: View) {
-            super.onBindViewHolder(position, item, view)
-            onBindView(position, item, view)
-        }
-    }
-
-fun <T> selectableListAdapter(vhResourceId: Int, diffCallback: ItemCallback<T>, onBindView: (position: Int, item: T, view: View) -> Unit) =
-    object : SelectableListAdapter<T>(vhResourceId, diffCallback) {
-
-        override fun onBindViewHolder(position: Int, item: T, view: View) {
-            super.onBindViewHolder(position, item, view)
-            onBindView(position, item, view)
-        }
-    }
-
 inline fun <T> listAdapter(vhResourceId: Int, diffCallback: ItemCallback<T>, crossinline onBindView: View.(position: Int, item: T) -> Unit) =
     object : ListAdapter<T, ViewHolder>(diffCallback) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        ViewHolder(LayoutInflater.from(parent.context).inflate(vhResourceId, parent, false))
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(LayoutInflater.from(parent.context).inflate(vhResourceId, parent, false))
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.itemView.onBindView(position, getItem(position))
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.itemView.onBindView(position, getItem(position))
+    }
+
+class SelectListAdapter<T>(private val vhResourceId: Int, diffCallback: ItemCallback<T>, private val onBindView: View.(position: Int, item: T) -> Unit) :
+    ListAdapter<T, ViewHolder>(diffCallback) {
+
+    val selectedItems = valueLiveData(setOf<T>())
+
+    private val mutableSelectedItems = (selectedItems as MutableLiveData)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(LayoutInflater.from(parent.context).inflate(vhResourceId, parent, false))
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.itemView.run {
+        getItem(position).let { item ->
+            setOnClickListener { select(item) }
+            onBindView(position, item)
+            isSelected = item in selectedItems.value!!
+        }
+    }
+
+    override fun submitList(list: List<T>?) {
+        mutableSelectedItems.postValue(list?.intersect(selectedItems.value!!) ?: setOf())
+        super.submitList(list)
+    }
+
+    private fun select(item: T){
+        mutableSelectedItems.postValue(selectedItems.updateSelectedItem(item))
+        notifyDataSetChanged()
+    }
+
+    private fun <T> LiveData<Set<T>>.updateSelectedItem(item: T) = value!!.let { selectedItems ->
+        if (item in selectedItems) selectedItems.minus(item) else selectedItems.plus(item)
+    }
 }
