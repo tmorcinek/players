@@ -28,11 +28,22 @@ fun <T, R> combine(sourceA: LiveData<T>, sourceB: LiveData<R>): LiveData<Pair<T,
     }
 }
 
+class SingleSourceMediator<T> : MediatorLiveData<T>() {
+
+    var singleSource: LiveData<T>? = null
+
+    fun addSingleSource(source: LiveData<T>) {
+        singleSource?.let { removeSource(it) }
+        singleSource = source
+        addSource(source) { value = it }
+    }
+}
+
 fun <T, R, Y> combine(sourceA: LiveData<T>, sourceB: LiveData<R>, mapFunction: (T, R) -> (Y)): LiveData<Y> =
     combine(sourceA, sourceB).map { mapFunction(it.first, it.second) }
 
-fun <T, R, Y> LiveData<T>.combineWith(source: LiveData<R>, mapFunction: (T, R) -> (Y)): LiveData<Y> = combine(this, source).map { mapFunction(it.first, it.second) }
+fun <T, R, Y> LiveData<T>.combineWith(source: LiveData<R>, mapFunction: (T, R) -> (Y)): LiveData<Y> =
+    combine(this, source).map { mapFunction(it.first, it.second) }
 
 fun <T> mutableValueLiveData(value: T) = MutableLiveData<T>().apply { this.value = value }
-fun <T> valueLiveData(value: T) : LiveData<T> = mutableValueLiveData(value)
-fun <T> emptyLiveData() : LiveData<T> = mutableValueLiveData(null)
+fun <T> valueLiveData(value: T): LiveData<T> = mutableValueLiveData(value)

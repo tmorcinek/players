@@ -13,10 +13,7 @@ import com.morcinek.players.core.SelectListAdapter
 import com.morcinek.players.core.createMenuConfiguration
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
-import com.morcinek.players.core.database.FirebaseReferences
-import com.morcinek.players.core.database.map
-import com.morcinek.players.core.database.observe
-import com.morcinek.players.core.database.playersWithoutTeamLiveDataForValueListener
+import com.morcinek.players.core.database.*
 import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.viewModelWithFragment
 import com.morcinek.players.core.itemCallback
@@ -46,7 +43,7 @@ class AddPlayersFragment : BaseFragment(R.layout.fragment_add_players) {
                     name.text = "$item"
                 }.apply {
                     observe(viewModel.players) { submitList(it) }
-                    viewModel.selectedPlayers = selectedItems
+                    viewModel.selectedPlayers.addSingleSource(selectedItems)
                 }
             }
             nextButton.apply {
@@ -63,7 +60,7 @@ val addPlayersModule = module {
 
 private class AddPlayersViewModel(val references: FirebaseReferences, val teamData: TeamData) : ViewModel() {
 
-    lateinit var selectedPlayers: LiveData<Set<PlayerData>>
+    val selectedPlayers = SingleSourceMediator<Set<PlayerData>>()
 
     fun addPlayersToTeam(doOnComplete: () -> Unit) {
         val childUpdates = selectedPlayers.value!!.map { "${it.key}/teamKey" to teamData.key }.toMap()
@@ -72,9 +69,5 @@ private class AddPlayersViewModel(val references: FirebaseReferences, val teamDa
 
     val players = references.playersWithoutTeamLiveDataForValueListener()
 
-    val isNextEnabled: LiveData<Boolean> by lazy { selectedPlayers.map { it.isNotEmpty() } }
-}
-
-fun <T> LiveData<Set<T>>.updateSelectedItem(item: T) = value!!.let { selectedItems ->
-    if (item in selectedItems) selectedItems.minus(item) else selectedItems.plus(item)
+    val isNextEnabled: LiveData<Boolean> = selectedPlayers.map { it.isNotEmpty() }
 }

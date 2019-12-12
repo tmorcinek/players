@@ -66,7 +66,7 @@ class CreateEventFragment : BaseFragment(R.layout.fragment_create_event) {
                     name.text = item.toString()
                 }.apply {
                     observe(viewModel.players) { submitList(it) }
-                    viewModel.selectedPlayers = selectedItems
+                    viewModel.selectedPlayers.addSingleSource(selectedItems)
                 }
             }
             observe(viewModel.selectedPlayers) { selectedPlayersNumber.text = "${it.size} selected" }
@@ -94,11 +94,10 @@ private class TeamDetailsViewModel(private val references: FirebaseReferences, p
 
     val players = references.playersForTeamLiveDataForValueListener(teamData.key)
 
-    lateinit var selectedPlayers : LiveData<Set<PlayerData>>
+    val selectedPlayers = SingleSourceMediator<Set<PlayerData>>()
 
-    val isNextEnabled: LiveData<Boolean> by lazy {
+    val isNextEnabled: LiveData<Boolean> =
         selectedPlayers.combineWith(eventData) { players, event -> players.isNotEmpty() && event.type.isNotEmpty() && event.dateInMillis > 0 }
-    }
 
     fun updateValue(function: EventData.() -> Unit) {
         eventData.postValue(event.apply(function))
