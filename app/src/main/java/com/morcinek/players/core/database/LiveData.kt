@@ -30,9 +30,9 @@ fun <T, R> combine(sourceA: LiveData<T>, sourceB: LiveData<R>): LiveData<Pair<T,
 
 class SingleSourceMediator<T> : MediatorLiveData<T>() {
 
-    var singleSource: LiveData<T>? = null
+    private var singleSource: LiveData<T>? = null
 
-    fun addSingleSource(source: LiveData<T>) {
+    fun setSingleSource(source: LiveData<T>) {
         singleSource?.let { removeSource(it) }
         singleSource = source
         addSource(source) { value = it }

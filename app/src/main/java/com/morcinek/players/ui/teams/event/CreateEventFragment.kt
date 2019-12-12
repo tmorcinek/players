@@ -66,7 +66,7 @@ class CreateEventFragment : BaseFragment(R.layout.fragment_create_event) {
                     name.text = item.toString()
                 }.apply {
                     observe(viewModel.players) { submitList(it) }
-                    viewModel.selectedPlayers.addSingleSource(selectedItems)
+                    viewModel.selectedPlayers.setSingleSource(selectedItems)
                 }
             }
             observe(viewModel.selectedPlayers) { selectedPlayersNumber.text = "${it.size} selected" }

@@ -2,14 +2,19 @@ package com.morcinek.players.ui.funino.create
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
-import com.morcinek.players.core.SelectableListAdapter
+import com.morcinek.players.core.SelectListAdapter
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.database.FirebaseReferences
+import com.morcinek.players.core.database.SingleSourceMediator
+import com.morcinek.players.core.database.observe
 import com.morcinek.players.core.database.playersLiveDataForValueListener
 import com.morcinek.players.core.extensions.toBundle
 import com.morcinek.players.core.itemCallback
@@ -30,10 +35,11 @@ class WhichPlayersFragment : BaseFragment(R.layout.fragment_which_players) {
         super.onViewCreated(view, savedInstanceState)
         view.recyclerView.apply {
             layoutManager = LinearLayoutManager(activity)
-            adapter = WhichPlayersAdapter().apply {
-                viewModel.players.observe(this@WhichPlayersFragment, Observer { submitList(it) })
-                viewModel.selectedPlayers.observe(this@WhichPlayersFragment, Observer { selectedItems = it })
-                onClickListener { _, item -> viewModel.select(item) }
+            adapter = SelectListAdapter<PlayerData>(R.layout.vh_selectable_player, itemCallback()) { _, item ->
+                name.text = "$item"
+            }.apply {
+                observe(viewModel.players) { submitList(it) }
+                viewModel.selectedPlayers.setSingleSource(selectedItems)
             }
         }
         viewModel.selectedPlayersNumber.observe(this@WhichPlayersFragment, Observer { view.selectedPlayersText.text = "$it" })
@@ -44,29 +50,15 @@ class WhichPlayersFragment : BaseFragment(R.layout.fragment_which_players) {
     }
 }
 
-class WhichPlayersAdapter : SelectableListAdapter<PlayerData>(R.layout.vh_selectable_player, itemCallback()) {
+private class WhichPlayersViewModel(references: FirebaseReferences) : ViewModel() {
 
-    override fun onBindViewHolder(position: Int, item: PlayerData, view: View) {
-        super.onBindViewHolder(position, item, view)
-        view.name.text = "$item"
-    }
+    val selectedPlayers = SingleSourceMediator<Set<PlayerData>>()
+    val selectedPlayersNumber: LiveData<Int> = Transformations.map(selectedPlayers) { it.size }
+    val isNextEnabled: LiveData<Boolean> = Transformations.map(selectedPlayers) { it.size in 6..20 }
+
+    val players = references.playersLiveDataForValueListener()
 }
 
 val whichPlayersModule = module {
     viewModel { WhichPlayersViewModel(get()) }
-}
-
-private class WhichPlayersViewModel(references: FirebaseReferences) : ViewModel() {
-
-    val selectedPlayers: LiveData<Set<PlayerData>> = MutableLiveData<Set<PlayerData>>().apply { value = setOf() }
-    val selectedPlayersNumber: LiveData<Int> = Transformations.map(selectedPlayers) { it.size }
-    val isNextEnabled: LiveData<Boolean> = Transformations.map(selectedPlayers) { it.size in 6..20 }
-
-    fun select(player: PlayerData) = (selectedPlayers as MutableLiveData).postValue(updateSelectedPlayer(player))
-
-    private fun updateSelectedPlayer(color: PlayerData) = selectedPlayers.value!!.let { selectedColors ->
-        if (color in selectedColors) selectedColors.minus(color) else selectedColors.plus(color)
-    }
-
-    val players = references.playersLiveDataForValueListener()
 }

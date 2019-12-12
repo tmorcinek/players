@@ -43,7 +43,7 @@ class AddPlayersFragment : BaseFragment(R.layout.fragment_add_players) {
                     name.text = "$item"
                 }.apply {
                     observe(viewModel.players) { submitList(it) }
-                    viewModel.selectedPlayers.addSingleSource(selectedItems)
+                    viewModel.selectedPlayers.setSingleSource(selectedItems)
                 }
             }
             nextButton.apply {

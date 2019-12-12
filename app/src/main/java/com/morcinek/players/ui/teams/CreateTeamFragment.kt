@@ -10,14 +10,16 @@ import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
+import com.morcinek.players.core.SelectListAdapter
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.database.*
-import com.morcinek.players.ui.funino.create.WhichPlayersAdapter
+import com.morcinek.players.core.itemCallback
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_create_player.view.*
 import kotlinx.android.synthetic.main.fragment_create_player.view.nextButton
 import kotlinx.android.synthetic.main.fragment_which_players.view.*
+import kotlinx.android.synthetic.main.vh_selectable_player.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.dsl.module
@@ -32,26 +34,23 @@ class CreateTeamFragment : BaseFragment(R.layout.fragment_create_team) {
         super.onViewCreated(view, savedInstanceState)
         view.apply {
             nameTextInputLayout.editText?.doOnTextChanged { text, _, _, _ -> viewModel.updateValue { name = text.toString() } }
+            recyclerView.apply {
+                layoutManager = LinearLayoutManager(activity)
+                adapter = SelectListAdapter<PlayerData>(R.layout.vh_selectable_player, itemCallback()) { _, item ->
+                    name.text = "$item"
+                }.apply {
+                    observe(viewModel.players) { submitList(it) }
+                    viewModel.selectedPlayers.setSingleSource(selectedItems)
+                }
+            }
             nextButton.apply {
-                viewModel.isNextEnabled.observe(this@CreateTeamFragment) { isEnabled = it }
+                observe(viewModel.isNextEnabled) { isEnabled = it }
                 setOnClickListener {
                     viewModel.createTeam { navController.popBackStack() }
                 }
             }
-            recyclerView.apply {
-                layoutManager = LinearLayoutManager(activity)
-                adapter = WhichPlayersAdapter().apply {
-                    viewModel.players.observe(this@CreateTeamFragment) { submitList(it) }
-                    viewModel.selectedPlayers.observe(this@CreateTeamFragment) { selectedItems = it }
-                    onClickListener { _, item -> viewModel.select(item) }
-                }
-            }
         }
     }
-}
-
-val createTeamModule = module {
-    viewModel { CreateTeamViewModel(get()) }
 }
 
 private class CreateTeamViewModel(val references: FirebaseReferences) : ViewModel() {
@@ -75,13 +74,11 @@ private class CreateTeamViewModel(val references: FirebaseReferences) : ViewMode
 
     val players = references.playersWithoutTeamLiveDataForValueListener()
 
-    val selectedPlayers = valueLiveData(setOf<PlayerData>())
-
-    fun select(player: PlayerData) = (selectedPlayers as MutableLiveData).postValue(updateSelectedPlayer(player))
-
-    private fun updateSelectedPlayer(color: PlayerData) = selectedPlayers.value!!.let { selectedColors ->
-        if (color in selectedColors) selectedColors.minus(color) else selectedColors.plus(color)
-    }
+    val selectedPlayers = SingleSourceMediator<Set<PlayerData>>()
 }
 
 private fun TeamData.isValid() = name.isNotBlank()
+
+val createTeamModule = module {
+    viewModel { CreateTeamViewModel(get()) }
+}
