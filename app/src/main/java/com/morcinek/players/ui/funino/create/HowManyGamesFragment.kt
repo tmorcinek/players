@@ -10,13 +10,15 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.morcinek.players.R
-import com.morcinek.players.core.*
-import com.morcinek.players.core.database.SingleSourceMediator
-import com.morcinek.players.core.database.map
+import com.morcinek.players.core.BaseFragment
+import com.morcinek.players.core.SelectionListAdapter
+import com.morcinek.players.core.SingleSelect
+import com.morcinek.players.core.database.mutableValueLiveData
 import com.morcinek.players.core.database.observe
 import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.toBundle
 import com.morcinek.players.core.extensions.viewModelWithFragment
+import com.morcinek.players.core.itemCallback
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_number_games.view.*
 import kotlinx.android.synthetic.main.vh_games_number.view.*
@@ -33,16 +35,16 @@ class HowManyGamesFragment : BaseFragment(R.layout.fragment_number_games) {
         super.onViewCreated(view, savedInstanceState)
         view.recyclerView.apply {
             layoutManager = GridLayoutManager(activity, 3)
-            adapter = SelectionListAdapter<GamesNumber>(R.layout.vh_games_number, itemCallback { areItemsTheSame { i1, i2 -> i1.numberOfGames == i2.numberOfGames } }, SingleSelect) { _, item ->
-                text.text = item.numberOfGames.toString()
-            }.apply {
-                observe(viewModel.gamesNumbers) { submitList(it) }
-                viewModel.selectedGamesNumber.setSingleSource(selectedItems.map { it.firstOrNull() })
-//                viewModel.selectedGamesNumber.observe(this@HowManyGamesFragment, Observer {
-//                    selectedItem = it
-//                    notifyDataSetChanged()
-//                })
-            }
+            adapter =
+                SelectionListAdapter<GamesNumber>(
+                    R.layout.vh_games_number, itemCallback { areItemsTheSame { i1, i2 -> i1.numberOfGames == i2.numberOfGames } }, SingleSelect
+                ) { _, item ->
+                    text.text = item.numberOfGames.toString()
+                }.apply {
+                    selectedItems = viewModel.selectedGamesNumber.value?.let { setOf(it) } ?: setOf()
+                    observe(viewModel.gamesNumbers) { submitList(it) }
+                    onSelectedItemsChanged { viewModel.select(it.firstOrNull()) }
+                }
         }
         viewModel.selectedGamesNumber.observe(this, Observer {
             view.nextButton.isEnabled = it != null
@@ -63,11 +65,11 @@ class HowManyGamesViewModel(val createTournamentData: CreateTournamentData) : Vi
     private val teamsGenerator = TeamsGenerator()
     private val allGames = gamesCombination(createTournamentData.numberOfPlayers)
 
-    val selectedGamesNumber = SingleSourceMediator<GamesNumber?>()
+    val selectedGamesNumber = mutableValueLiveData<GamesNumber?>()
 
-    fun select(gamesNumber: GamesNumber){
-//        (selectedGamesNumber as MutableLiveData).postValue(gamesNumber)
-        createTournamentData.games = allGames.take(gamesNumber.numberOfGames)
+    fun select(gamesNumber: GamesNumber?) {
+        selectedGamesNumber.postValue(gamesNumber)
+        createTournamentData.games = gamesNumber?.let { allGames.take(it.numberOfGames) } ?: listOf()
     }
 
     val gamesNumbers: LiveData<List<GamesNumber>> = MutableLiveData<List<GamesNumber>>().apply {

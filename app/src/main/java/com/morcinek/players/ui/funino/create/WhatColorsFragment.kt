@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.morcinek.players.R
 import com.morcinek.players.core.*
-import com.morcinek.players.core.database.SingleSourceMediator
 import com.morcinek.players.core.database.map
+import com.morcinek.players.core.database.mutableSetValueLiveData
 import com.morcinek.players.core.database.observe
 import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.setDrawableColor
@@ -32,19 +32,7 @@ import kotlinx.android.synthetic.main.fragment_select_colors.view.*
 import kotlinx.android.synthetic.main.vh_color.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
-import kotlin.collections.List
-import kotlin.collections.Set
-import kotlin.collections.forEach
-import kotlin.collections.listOf
-import kotlin.collections.map
-import kotlin.collections.mapIndexed
 import kotlin.collections.set
-import kotlin.collections.sortedBy
-import kotlin.collections.take
-import kotlin.collections.toList
-import kotlin.collections.toMap
-import kotlin.collections.toMutableMap
-import kotlin.collections.toSet
 
 class WhatColorsFragment : BaseFragment(R.layout.fragment_select_colors) {
 
@@ -56,12 +44,15 @@ class WhatColorsFragment : BaseFragment(R.layout.fragment_select_colors) {
         super.onViewCreated(view, savedInstanceState)
         view.recyclerView.apply {
             layoutManager = GridLayoutManager(activity, 3)
-            adapter = SelectionListAdapter<Color>(R.layout.vh_color, itemCallback { areItemsTheSame { i1, i2 -> i1.code == i2.code } }, MultiSelect(viewModel.requiredNumberOfColors)) { _, item ->
+            adapter = SelectionListAdapter<Color>(R.layout.vh_color, itemCallback { areItemsTheSame { i1, i2 -> i1.code == i2.code } },
+                MultiSelect(viewModel.requiredNumberOfColors)
+            ) { _, item ->
                 text.text = item.name
                 image.setDrawableColor(item.code)
             }.apply {
+                selectedItems = viewModel.selectedColors.value!!
                 observe(viewModel.colors) { submitList(it) }
-                viewModel.selectedColors.setSingleSource(selectedItems)
+                onSelectedItemsChanged { viewModel.selectedColors.postValue(it) }
             }
         }
         view.selectedColorsRecyclerView.apply {
@@ -105,7 +96,7 @@ val whatColorsModule = module {
 
 private class WhatColorsViewModel(val createTournamentData: CreateTournamentData) : ViewModel() {
 
-    val selectedColors = SingleSourceMediator<Set<Color>>()
+    val selectedColors = mutableSetValueLiveData<Color>()
 
     val isNextEnabled: LiveData<Boolean> = selectedColors.map { it.size == requiredNumberOfColors }
 

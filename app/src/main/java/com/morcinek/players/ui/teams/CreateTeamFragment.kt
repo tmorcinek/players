@@ -39,8 +39,9 @@ class CreateTeamFragment : BaseFragment(R.layout.fragment_create_team) {
                 adapter = SelectionListAdapter<PlayerData>(R.layout.vh_selectable_player, itemCallback()) { _, item ->
                     name.text = "$item"
                 }.apply {
+                    selectedItems = viewModel.selectedPlayers
                     observe(viewModel.players) { submitList(it) }
-                    observe(selectedItems) { viewModel.selectedPlayers = it }
+                    onSelectedItemsChanged { viewModel.selectedPlayers = it }
                 }
             }
             nextButton.apply {

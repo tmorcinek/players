@@ -8,15 +8,12 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
-import com.morcinek.players.core.BaseFragment
-import com.morcinek.players.core.SelectionListAdapter
-import com.morcinek.players.core.createMenuConfiguration
+import com.morcinek.players.core.*
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.database.*
 import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.viewModelWithFragment
-import com.morcinek.players.core.itemCallback
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_add_players.view.*
 import kotlinx.android.synthetic.main.vh_selectable_player.view.*
@@ -42,8 +39,9 @@ class AddPlayersFragment : BaseFragment(R.layout.fragment_add_players) {
                 adapter = SelectionListAdapter<PlayerData>(R.layout.vh_selectable_player, itemCallback()) { _, item ->
                     name.text = "$item"
                 }.apply {
+                    selectedItems = viewModel.selectedPlayers.value!!
                     observe(viewModel.players) { submitList(it) }
-                    viewModel.selectedPlayers.setSingleSource(selectedItems)
+                    onSelectedItemsChanged { viewModel.selectedPlayers.postValue(it) }
                 }
             }
             nextButton.apply {
@@ -60,7 +58,7 @@ val addPlayersModule = module {
 
 private class AddPlayersViewModel(val references: FirebaseReferences, val teamData: TeamData) : ViewModel() {
 
-    val selectedPlayers = SingleSourceMediator<Set<PlayerData>>()
+    val selectedPlayers = mutableSetValueLiveData<PlayerData>()
 
     fun addPlayersToTeam(doOnComplete: () -> Unit) {
         val childUpdates = selectedPlayers.value!!.map { "${it.key}/teamKey" to teamData.key }.toMap()

@@ -3,13 +3,9 @@ package com.morcinek.players.core
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.CallSuper
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.morcinek.players.core.database.valueLiveData
 
 class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
@@ -50,12 +46,21 @@ inline fun <T> listAdapter(vhResourceId: Int, diffCallback: ItemCallback<T>, cro
         override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.itemView.onBindView(position, getItem(position))
     }
 
-class SelectionListAdapter<T>(private val vhResourceId: Int, diffCallback: ItemCallback<T>, private val selectionMode: SelectionMode = MultiSelect(), private val onBindView: View.(position: Int, item: T) -> Unit) :
-    ListAdapter<T, ViewHolder>(diffCallback) {
+class SelectionListAdapter<T>(private val vhResourceId: Int, diffCallback: ItemCallback<T>,
+                              private val selectionMode: SelectionMode = MultiSelect(),
+                              private val onBindView: View.(position: Int, item: T) -> Unit) : ListAdapter<T, ViewHolder>(diffCallback) {
 
-    val selectedItems = valueLiveData(setOf<T>())
+    private var _onSelectedItemsChanged: (Set<T>) -> Unit = {}
 
-    private val mutableSelectedItems = (selectedItems as MutableLiveData)
+    fun onSelectedItemsChanged(function: (Set<T>) -> Unit) {
+        _onSelectedItemsChanged = function
+    }
+
+    var selectedItems = setOf<T>()
+        set(value) {
+            _onSelectedItemsChanged(value)
+            field = value
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(LayoutInflater.from(parent.context).inflate(vhResourceId, parent, false))
 
@@ -63,32 +68,31 @@ class SelectionListAdapter<T>(private val vhResourceId: Int, diffCallback: ItemC
         getItem(position).let { item ->
             setOnClickListener { select(item) }
             onBindView(position, item)
-            isSelected = item in selectedItems.value!!
+            isSelected = item in selectedItems
         }
     }
 
     override fun submitList(list: List<T>?) {
-        mutableSelectedItems.postValue(list?.intersect(selectedItems.value!!) ?: setOf())
+        selectedItems = list?.intersect(selectedItems) ?: setOf()
         super.submitList(list)
     }
 
-    private fun select(item: T){
-        mutableSelectedItems.postValue(selectedItems.updateSelectedItem(item))
+    private fun select(item: T) {
+        selectedItems = updateSelectedItem(item)
         notifyDataSetChanged()
     }
 
-    private fun <T> LiveData<Set<T>>.updateSelectedItem(item: T) = value!!.let { selectedItems ->
+    private fun updateSelectedItem(item: T) =
         if (item in selectedItems) {
             selectedItems.minus(item)
-        } else when(selectionMode){
+        } else when (selectionMode) {
             is SingleSelect -> setOf(item)
-            is MultiSelect -> when  {
-                selectionMode.limit == null-> selectedItems.plus(item)
+            is MultiSelect -> when {
+                selectionMode.limit == null -> selectedItems.plus(item)
                 selectionMode.limit > selectedItems.size -> selectedItems.plus(item)
                 else -> selectedItems
             }
         }
-    }
 }
 
 sealed class SelectionMode

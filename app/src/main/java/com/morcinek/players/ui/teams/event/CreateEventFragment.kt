@@ -65,8 +65,9 @@ class CreateEventFragment : BaseFragment(R.layout.fragment_create_event) {
                 adapter = SelectionListAdapter<PlayerData>(R.layout.vh_selectable_player, itemCallback()) { _, item ->
                     name.text = item.toString()
                 }.apply {
+                    selectedItems = viewModel.selectedPlayers.value!!
                     observe(viewModel.players) { submitList(it) }
-                    viewModel.selectedPlayers.setSingleSource(selectedItems)
+                    onSelectedItemsChanged { viewModel.selectedPlayers.postValue(it) }
                 }
             }
             observe(viewModel.selectedPlayers) { selectedPlayersNumber.text = "${it.size} selected" }
@@ -94,7 +95,7 @@ private class TeamDetailsViewModel(private val references: FirebaseReferences, p
 
     val players = references.playersForTeamLiveDataForValueListener(teamData.key)
 
-    val selectedPlayers = SingleSourceMediator<Set<PlayerData>>()
+    val selectedPlayers = mutableSetValueLiveData<PlayerData>()
 
     val isNextEnabled: LiveData<Boolean> =
         selectedPlayers.combineWith(eventData) { players, event -> players.isNotEmpty() && event.type.isNotEmpty() && event.dateInMillis > 0 }

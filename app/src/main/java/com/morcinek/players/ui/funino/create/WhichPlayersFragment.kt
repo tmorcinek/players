@@ -12,10 +12,7 @@ import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.SelectionListAdapter
 import com.morcinek.players.core.data.PlayerData
-import com.morcinek.players.core.database.FirebaseReferences
-import com.morcinek.players.core.database.SingleSourceMediator
-import com.morcinek.players.core.database.observe
-import com.morcinek.players.core.database.playersLiveDataForValueListener
+import com.morcinek.players.core.database.*
 import com.morcinek.players.core.extensions.toBundle
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.ui.lazyNavController
@@ -38,8 +35,9 @@ class WhichPlayersFragment : BaseFragment(R.layout.fragment_which_players) {
             adapter = SelectionListAdapter<PlayerData>(R.layout.vh_selectable_player, itemCallback()) { _, item ->
                 name.text = "$item"
             }.apply {
+                selectedItems = viewModel.selectedPlayers.value!!
                 observe(viewModel.players) { submitList(it) }
-                viewModel.selectedPlayers.setSingleSource(selectedItems)
+                onSelectedItemsChanged { viewModel.selectedPlayers.postValue(it) }
             }
         }
         viewModel.selectedPlayersNumber.observe(this@WhichPlayersFragment, Observer { view.selectedPlayersText.text = "$it" })
@@ -52,7 +50,7 @@ class WhichPlayersFragment : BaseFragment(R.layout.fragment_which_players) {
 
 private class WhichPlayersViewModel(references: FirebaseReferences) : ViewModel() {
 
-    val selectedPlayers = SingleSourceMediator<Set<PlayerData>>()
+    val selectedPlayers = mutableSetValueLiveData<PlayerData>()
     val selectedPlayersNumber: LiveData<Int> = Transformations.map(selectedPlayers) { it.size }
     val isNextEnabled: LiveData<Boolean> = Transformations.map(selectedPlayers) { it.size in 6..20 }
 
