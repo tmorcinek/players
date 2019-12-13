@@ -12,8 +12,7 @@ import com.morcinek.players.core.*
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.database.*
-import com.morcinek.players.core.extensions.getParcelable
-import com.morcinek.players.core.extensions.viewModelWithFragment
+import com.morcinek.players.core.extensions.*
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_add_players.view.*
 import kotlinx.android.synthetic.main.vh_selectable_player.view.*

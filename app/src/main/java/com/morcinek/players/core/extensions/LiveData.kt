@@ -1,4 +1,4 @@
-package com.morcinek.players.core.database
+package com.morcinek.players.core.extensions
 
 import androidx.lifecycle.*
 

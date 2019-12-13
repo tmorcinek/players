@@ -21,7 +21,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.morcinek.players.R
 import com.morcinek.players.core.database.FirebaseReferences
-import com.morcinek.players.core.database.observe
+import com.morcinek.players.core.extensions.observe
 import com.morcinek.players.core.database.teamsLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.extensions.alert.alert

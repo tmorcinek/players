@@ -59,10 +59,11 @@ private class PlayersViewModel(references: FirebaseReferences) : ViewModel() {
 
     private val dateFormat = standardDateFormat()
 
-    val players = combine(references.playersLiveDataForValueListener(), references.teamsLiveDataForValueListener()) { player, team ->
-        player.map { PlayerItem(it.toString(), team.find { team -> team.key == it.teamKey }?.name ?: "", dateFormat.formatCalendar(it.getBirthDate()), it) }
-            .sortedBy { it.data.teamKey }
-    }
+    val players =
+        combine(references.playersLiveDataForValueListener(), references.teamsLiveDataForValueListener()) { player, team ->
+            player.map { PlayerItem(it.toString(), team.find { team -> team.key == it.teamKey }?.name ?: "", dateFormat.formatCalendar(it.getBirthDate()), it) }
+                .sortedBy { it.data.teamKey }
+        }
 }
 
 private class PlayerItem(val name: String, val subtitle: String, val date: String, val data: PlayerData) : HasKey by data

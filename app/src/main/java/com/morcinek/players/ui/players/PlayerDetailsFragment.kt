@@ -10,8 +10,8 @@ import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.createMenuConfiguration
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.database.FirebaseReferences
-import com.morcinek.players.core.database.map
-import com.morcinek.players.core.database.observe
+import com.morcinek.players.core.extensions.map
+import com.morcinek.players.core.extensions.observe
 import com.morcinek.players.core.database.teamsLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.ui.showDeleteCodeConfirmationDialog

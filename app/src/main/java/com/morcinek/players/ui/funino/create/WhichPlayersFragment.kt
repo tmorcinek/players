@@ -13,6 +13,8 @@ import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.SelectionListAdapter
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.database.*
+import com.morcinek.players.core.extensions.mutableSetValueLiveData
+import com.morcinek.players.core.extensions.observe
 import com.morcinek.players.core.extensions.toBundle
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.ui.lazyNavController

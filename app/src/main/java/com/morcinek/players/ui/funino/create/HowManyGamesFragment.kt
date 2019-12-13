@@ -13,8 +13,8 @@ import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.SelectionListAdapter
 import com.morcinek.players.core.SingleSelect
-import com.morcinek.players.core.database.mutableValueLiveData
-import com.morcinek.players.core.database.observe
+import com.morcinek.players.core.extensions.mutableValueLiveData
+import com.morcinek.players.core.extensions.observe
 import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.toBundle
 import com.morcinek.players.core.extensions.viewModelWithFragment

@@ -13,9 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.morcinek.players.R
 import com.morcinek.players.core.*
-import com.morcinek.players.core.database.map
-import com.morcinek.players.core.database.mutableSetValueLiveData
-import com.morcinek.players.core.database.observe
+import com.morcinek.players.core.extensions.map
+import com.morcinek.players.core.extensions.mutableSetValueLiveData
+import com.morcinek.players.core.extensions.observe
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.ui.funino.TeamData
 import com.morcinek.players.ui.funino.TournamentData

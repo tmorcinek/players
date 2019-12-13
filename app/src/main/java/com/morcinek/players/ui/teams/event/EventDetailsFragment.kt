@@ -14,8 +14,8 @@ import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.database.FirebaseReferences
-import com.morcinek.players.core.database.map
-import com.morcinek.players.core.database.observe
+import com.morcinek.players.core.extensions.map
+import com.morcinek.players.core.extensions.observe
 import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.moveTransition

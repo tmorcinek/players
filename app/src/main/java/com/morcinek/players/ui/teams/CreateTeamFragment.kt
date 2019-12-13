@@ -14,6 +14,9 @@ import com.morcinek.players.core.SelectionListAdapter
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.database.*
+import com.morcinek.players.core.extensions.map
+import com.morcinek.players.core.extensions.observe
+import com.morcinek.players.core.extensions.valueLiveData
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_create_player.view.*

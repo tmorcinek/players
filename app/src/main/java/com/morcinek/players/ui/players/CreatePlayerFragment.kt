@@ -10,10 +10,7 @@ import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.database.*
-import com.morcinek.players.core.extensions.calendar
-import com.morcinek.players.core.extensions.showYearFirstDatePickerDialog
-import com.morcinek.players.core.extensions.toStandardString
-import com.morcinek.players.core.extensions.year
+import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.ui.showStandardDropDown
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_create_player.view.*

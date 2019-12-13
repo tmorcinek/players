@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.FabConfiguration
-import com.morcinek.players.core.database.observe
+import com.morcinek.players.core.extensions.observe
 import com.morcinek.players.core.extensions.toBundle
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.core.listAdapter

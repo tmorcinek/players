@@ -14,10 +14,7 @@ import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.database.*
-import com.morcinek.players.core.extensions.getParcelable
-import com.morcinek.players.core.extensions.showDatePickerDialog
-import com.morcinek.players.core.extensions.toStandardString
-import com.morcinek.players.core.extensions.viewModelWithFragment
+import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.core.ui.showStandardDropDown
 import com.morcinek.players.ui.lazyNavController
