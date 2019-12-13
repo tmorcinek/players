@@ -11,9 +11,8 @@ class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
 fun <T> itemCallback(function: ItemCallback<T>.() -> Unit) = ItemCallback<T>().apply(function)
 
-fun <T : HasKey> itemCallback() = ItemCallback<T>().apply {
+fun <T : HasKey> itemCallback() = itemCallback<T> {
     areItemsTheSame { t, t2 -> t.key == t2.key }
-    areContentsTheSame { t, t2 -> t == t2 }
 }
 
 interface HasKey {
@@ -22,8 +21,8 @@ interface HasKey {
 
 class ItemCallback<T> : DiffUtil.ItemCallback<T>() {
 
-    private var _areItemsTheSame: (T, T) -> Boolean = { _, _ -> true }
-    private var _areContentsTheSame: (T, T) -> Boolean = { _, _ -> true }
+    private var _areItemsTheSame: (T, T) -> Boolean = { _, _ -> throw NotImplementedError() }
+    private var _areContentsTheSame: (T, T) -> Boolean = { t1, t2 -> t1 == t2 }
 
     fun areItemsTheSame(function: (T, T) -> Boolean) {
         _areItemsTheSame = function
