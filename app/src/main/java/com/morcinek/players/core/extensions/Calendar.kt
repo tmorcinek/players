@@ -31,6 +31,7 @@ var Calendar.dayOfMonth: Int
     set(value) = set(Calendar.DAY_OF_MONTH, value)
 
 fun calendar(time: Long) = Calendar.getInstance().apply { timeInMillis = time }
+fun calendar() = Calendar.getInstance()
 
 fun standardDateFormat() = SimpleDateFormat("dd.MM.yyyy", Locale.US)
 fun dayOfWeekDateFormat() = SimpleDateFormat("EEEE dd.MM.yyyy", Locale.US)

@@ -16,10 +16,7 @@ import com.morcinek.players.core.*
 import com.morcinek.players.core.database.map
 import com.morcinek.players.core.database.mutableSetValueLiveData
 import com.morcinek.players.core.database.observe
-import com.morcinek.players.core.extensions.getParcelable
-import com.morcinek.players.core.extensions.setDrawableColor
-import com.morcinek.players.core.extensions.toBundle
-import com.morcinek.players.core.extensions.viewModelWithFragment
+import com.morcinek.players.core.extensions.*
 import com.morcinek.players.ui.funino.TeamData
 import com.morcinek.players.ui.funino.TournamentData
 import com.morcinek.players.ui.funino.TournamentDetailsData
@@ -44,7 +41,8 @@ class WhatColorsFragment : BaseFragment(R.layout.fragment_select_colors) {
         super.onViewCreated(view, savedInstanceState)
         view.recyclerView.apply {
             layoutManager = GridLayoutManager(activity, 3)
-            adapter = SelectionListAdapter<Color>(R.layout.vh_color, itemCallback { areItemsTheSame { i1, i2 -> i1.code == i2.code } },
+            adapter = SelectionListAdapter<Color>(
+                R.layout.vh_color, itemCallback { areItemsTheSame { i1, i2 -> i1.code == i2.code } },
                 MultiSelect(viewModel.requiredNumberOfColors)
             ) { _, item ->
                 text.text = item.name
@@ -83,8 +81,16 @@ class WhatColorsFragment : BaseFragment(R.layout.fragment_select_colors) {
                 }
             }
 
-            val tournamentDetailsData =
-                TournamentDetailsData(TournamentData(1, "Tuesday 12 Listopada", "12 players", "Not Finished", true), list)
+            val tournamentDetailsData = TournamentDetailsData(
+                TournamentData(
+                    1,
+                    calendar().toDayOfWeekDateFormat(),
+                    "${viewModel.numberOfPlayers} players",
+                    "Not Finished",
+                    true
+                ),
+                list
+            )
             navController.navigate(R.id.nav_tournament_details, tournamentDetailsData.toBundle())
         }
     }
@@ -100,7 +106,9 @@ private class WhatColorsViewModel(val createTournamentData: CreateTournamentData
 
     val isNextEnabled: LiveData<Boolean> = selectedColors.map { it.size == requiredNumberOfColors }
 
-    val requiredNumberOfColors: Int = if (createTournamentData.numberOfPlayers >= 12) 4 else 2
+    val numberOfPlayers: Int = createTournamentData.numberOfPlayers
+
+    val requiredNumberOfColors: Int = if (numberOfPlayers >= 12) 4 else 2
 
     val colors: LiveData<List<Color>> = MutableLiveData<List<Color>>().apply {
         value = listOf(
