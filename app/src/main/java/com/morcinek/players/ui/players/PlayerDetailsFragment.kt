@@ -2,7 +2,6 @@ package com.morcinek.players.ui.players
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
@@ -14,10 +13,7 @@ import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.map
 import com.morcinek.players.core.database.observe
 import com.morcinek.players.core.database.teamsLiveDataForValueListener
-import com.morcinek.players.core.extensions.getParcelable
-import com.morcinek.players.core.extensions.moveTransition
-import com.morcinek.players.core.extensions.toStandardString
-import com.morcinek.players.core.extensions.viewModelWithFragment
+import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.ui.showDeleteCodeConfirmationDialog
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_player.view.*
@@ -56,15 +52,11 @@ class PlayerDetailsFragment : BaseFragment(R.layout.fragment_player) {
                     R.string.player_delete_message
                 ) { viewModel.deletePlayer { navController.popBackStack() } }
             }
-            addAction(R.id.edit) { Toast.makeText(requireContext(), "Edit", Toast.LENGTH_SHORT).show() }
+            addAction(R.id.edit) { toast("navController.navigate(R.id.nav_edit_player, viewModel.playerData)") }
         }
     }
 
     private fun menuResource() = if (getParcelable<PlayerData>().teamKey == null) R.menu.delete_edit else R.menu.edit
-}
-
-val playerDetailsModule = module {
-    viewModel { (fragment: Fragment) -> PlayerDetailsViewModel(get(), fragment.getParcelable()) }
 }
 
 class PlayerDetailsViewModel(private val references: FirebaseReferences, val playerData: PlayerData) : ViewModel() {
@@ -72,4 +64,8 @@ class PlayerDetailsViewModel(private val references: FirebaseReferences, val pla
     val playerTeam = references.teamsLiveDataForValueListener().map { it.find { it.key == playerData.teamKey } }
 
     fun deletePlayer(doOnComplete: () -> Unit) = references.playersReference().child(playerData.key).removeValue().addOnCompleteListener { doOnComplete() }
+}
+
+val playerDetailsModule = module {
+    viewModel { (fragment: Fragment) -> PlayerDetailsViewModel(get(), fragment.getParcelable()) }
 }

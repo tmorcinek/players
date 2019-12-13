@@ -67,10 +67,6 @@ class CreatePlayerFragment : BaseFragment(R.layout.fragment_create_player) {
         showYearFirstDatePickerDialog(calendar(timeInMillis) ?: Calendar.getInstance().apply { year = 2009 }, updatedDate)
 }
 
-val createPlayerModule = module {
-    viewModel { CreatePlayerViewModel(get()) }
-}
-
 private val DefaultDate = Calendar.getInstance().apply { year = 2009 }.timeInMillis
 
 private class CreatePlayerViewModel(val references: FirebaseReferences) : ViewModel() {
@@ -89,3 +85,7 @@ private class CreatePlayerViewModel(val references: FirebaseReferences) : ViewMo
 }
 
 private fun PlayerData.isValid() = name.isNotBlank() && surname.isNotBlank() && birthDateInMillis != 0L
+
+val createPlayerModule = module {
+    viewModel { CreatePlayerViewModel(get()) }
+}
