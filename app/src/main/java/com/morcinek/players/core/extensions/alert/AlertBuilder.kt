@@ -25,9 +25,6 @@ interface AlertBuilder<out D : DialogInterface> {
     var isCancelable: Boolean
         @Deprecated(NO_GETTER, level = ERROR) get
 
-    var customView: Int
-        @Deprecated(NO_GETTER, level = ERROR) get
-
     fun onCancelled(handler: (dialog: DialogInterface) -> Unit)
 
     fun positiveButton(buttonText: String, onClicked: (dialog: DialogInterface) -> Unit)
