@@ -8,7 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
-import com.morcinek.players.core.*
+import com.morcinek.players.core.BaseFragment
+import com.morcinek.players.core.createMenuConfiguration
 import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
@@ -20,6 +21,8 @@ import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.moveTransition
 import com.morcinek.players.core.extensions.toDayOfWeekDateFormat
 import com.morcinek.players.core.extensions.viewModelWithFragment
+import com.morcinek.players.core.itemCallback
+import com.morcinek.players.core.listAdapter
 import com.morcinek.players.core.ui.showDeleteCodeConfirmationDialog
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_event_details.*
@@ -60,15 +63,12 @@ class EventDetailsFragment : BaseFragment(R.layout.fragment_event_details) {
 
     override val menuConfiguration = createMenuConfiguration(R.menu.delete) {
         addAction(R.id.delete) {
-            showDeleteCodeConfirmationDialog(R.string.delete_event_query, R.string.delete_event_message) {
-                viewModel.deleteEvent { navController.popBackStack() }
-            }
+            showDeleteCodeConfirmationDialog(
+                R.string.delete_event_query,
+                R.string.delete_event_message
+            ) { viewModel.deleteEvent { navController.popBackStack() } }
         }
     }
-}
-
-val eventDetailsModule = module {
-    viewModel { (fragment: Fragment) -> EventDetailsViewModel(get(), fragment.getParcelable(), fragment.getParcelable()) }
 }
 
 class EventDetailsViewModel(val references: FirebaseReferences, val teamData: TeamData, val eventData: EventData) : ViewModel() {
@@ -80,4 +80,8 @@ class EventDetailsViewModel(val references: FirebaseReferences, val teamData: Te
 
     fun deleteEvent(doOnComplete: () -> Unit) =
         references.teamEventReference(teamData.key, eventData.key).removeValue().addOnCompleteListener { doOnComplete() }
+}
+
+val eventDetailsModule = module {
+    viewModel { (fragment: Fragment) -> EventDetailsViewModel(get(), fragment.getParcelable(), fragment.getParcelable()) }
 }

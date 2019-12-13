@@ -42,10 +42,6 @@ class PlayerStatsFragment : BaseFragment(R.layout.fragment_player_stats) {
     }
 }
 
-val playerStatsModule = module {
-    viewModel { (fragment: Fragment) -> PlayerStatsViewModel(fragment.getParcelable()) }
-}
-
 private class PlayerStatsViewModel(val playerStatsDetails: PlayerStatsDetails) : ViewModel() {
 
     private val dateFormat = dayOfWeekDateFormat()
@@ -66,3 +62,7 @@ private class PlayerStatsViewModel(val playerStatsDetails: PlayerStatsDetails) :
 class PlayerStatsDetails(val playerData: PlayerData, val events: List<EventData>) : Parcelable
 
 private data class PlayerEvent(val name: String, val date: String, val statusColor: Int, override var key: String) : HasKey
+
+val playerStatsModule = module {
+    viewModel { (fragment: Fragment) -> PlayerStatsViewModel(fragment.getParcelable()) }
+}

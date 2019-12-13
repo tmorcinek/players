@@ -82,10 +82,6 @@ class CreateEventFragment : BaseFragment(R.layout.fragment_create_event) {
 
 }
 
-val createEventModule = module {
-    viewModel { (fragment: Fragment) -> TeamDetailsViewModel(get(), fragment.getParcelable()) }
-}
-
 private class TeamDetailsViewModel(private val references: FirebaseReferences, private val teamData: TeamData) : ViewModel() {
 
     private val eventData = mutableValueLiveData(EventData().apply { setDate(Calendar.getInstance()) })
@@ -108,4 +104,8 @@ private class TeamDetailsViewModel(private val references: FirebaseReferences, p
         event.apply { players = selectedPlayers.value!!.map { it.key } }
         references.teamEventsReference(teamData.key).push().setValue(event).addOnCompleteListener { doOnComplete() }
     }
+}
+
+val createEventModule = module {
+    viewModel { (fragment: Fragment) -> TeamDetailsViewModel(get(), fragment.getParcelable()) }
 }

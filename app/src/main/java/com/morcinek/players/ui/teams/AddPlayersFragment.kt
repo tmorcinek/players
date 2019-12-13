@@ -52,10 +52,6 @@ class AddPlayersFragment : BaseFragment(R.layout.fragment_add_players) {
     }
 }
 
-val addPlayersModule = module {
-    viewModel { (fragment: Fragment) -> AddPlayersViewModel(get(), fragment.getParcelable()) }
-}
-
 private class AddPlayersViewModel(val references: FirebaseReferences, val teamData: TeamData) : ViewModel() {
 
     val selectedPlayers = mutableSetValueLiveData<PlayerData>()
@@ -68,4 +64,8 @@ private class AddPlayersViewModel(val references: FirebaseReferences, val teamDa
     val players = references.playersWithoutTeamLiveDataForValueListener()
 
     val isNextEnabled: LiveData<Boolean> = selectedPlayers.map { it.isNotEmpty() }
+}
+
+val addPlayersModule = module {
+    viewModel { (fragment: Fragment) -> AddPlayersViewModel(get(), fragment.getParcelable()) }
 }

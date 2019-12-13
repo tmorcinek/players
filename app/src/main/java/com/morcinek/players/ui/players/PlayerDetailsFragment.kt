@@ -51,9 +51,10 @@ class PlayerDetailsFragment : BaseFragment(R.layout.fragment_player) {
     override val menuConfiguration by lazy {
         createMenuConfiguration(menuResource()) {
             addAction(R.id.delete) {
-                showDeleteCodeConfirmationDialog(R.string.player_delete_query, R.string.player_delete_message) {
-                    viewModel.deletePlayer { navController.popBackStack() }
-                }
+                showDeleteCodeConfirmationDialog(
+                    R.string.player_delete_query,
+                    R.string.player_delete_message
+                ) { viewModel.deletePlayer { navController.popBackStack() } }
             }
             addAction(R.id.edit) { Toast.makeText(requireContext(), "Edit", Toast.LENGTH_SHORT).show() }
         }

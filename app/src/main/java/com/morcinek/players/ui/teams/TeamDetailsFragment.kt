@@ -79,10 +79,6 @@ class TeamDetailsFragment : BaseFragment(R.layout.fragment_team_details) {
     }
 }
 
-val teamDetailsModule = module {
-    viewModel { (fragment: Fragment) -> TeamDetailsViewModel(get(), fragment.getParcelable()) }
-}
-
 private class TeamDetailsViewModel(references: FirebaseReferences, val teamData: TeamData) : ViewModel() {
 
     val players = references.playersForTeamLiveDataForValueListener(teamData.key)
@@ -101,3 +97,7 @@ private class TeamDetailsViewModel(references: FirebaseReferences, val teamData:
 }
 
 private class PlayerStats(val name: String, val attended: Int, val missed: Int, val data: PlayerData) : HasKey by data
+
+val teamDetailsModule = module {
+    viewModel { (fragment: Fragment) -> TeamDetailsViewModel(get(), fragment.getParcelable()) }
+}
