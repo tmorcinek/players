@@ -55,8 +55,6 @@ class PlayerDetailsFragment : BaseFragment(R.layout.fragment_player) {
             addAction(R.string.action_edit, R.drawable.ic_edit) { toast("navController.navigate(R.id.nav_edit_player, viewModel.playerData)") }
         }
     }
-
-    private fun menuResource() = if (getParcelable<PlayerData>().teamKey == null) R.menu.delete_edit else R.menu.edit
 }
 
 class PlayerDetailsViewModel(private val references: FirebaseReferences, val playerData: PlayerData) : ViewModel() {
