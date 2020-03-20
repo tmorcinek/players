@@ -61,8 +61,8 @@ class EventDetailsFragment : BaseFragment(R.layout.fragment_event_details) {
         }
     }
 
-    override val menuConfiguration = createMenuConfiguration(R.menu.delete) {
-        addAction(R.id.delete) {
+    override val menuConfiguration = createMenuConfiguration {
+        addAction(R.string.action_delete, R.drawable.ic_delete) {
             showDeleteCodeConfirmationDialog(
                 R.string.delete_event_query,
                 R.string.delete_event_message

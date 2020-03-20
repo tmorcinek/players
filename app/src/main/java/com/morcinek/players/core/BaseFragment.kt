@@ -45,25 +45,33 @@ abstract class BaseFragment(private val layoutResourceId: Int) : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        menuConfiguration?.let {
-            it.actions[item.itemId]?.let { action ->
-                action.invoke()
+        menuConfiguration?.takeIf { item.itemId < it.actions.size }?.let {
+            it.actions[item.itemId].let { menuConfigurationItem ->
+                menuConfigurationItem.action.invoke()
                 return true
             }
         } ?: return false
     }
 
-    final override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) = menuConfiguration.safeLet { inflater.inflate(it.menuResourceId, menu) }
+    final override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) = menuConfiguration.safeLet {
+        it.actions.forEachIndexed { index, item ->
+            menu.add(Menu.NONE, index, index, item.textRes)
+                .setIcon(item.iconRes)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
+        }
+    }
 }
 
 class FabConfiguration(val fabActon: (View) -> Unit, val fabIcon: Int = R.drawable.ic_add)
 
-class MenuConfiguration(val menuResourceId: Int) {
-    internal val actions = mutableMapOf<Int, () -> Any>()
+class MenuConfiguration {
+    internal val actions = mutableListOf<MenuConfigurationItem>()
 
-    fun addAction(itemId: Int, action: () -> Any) {
-        actions[itemId] = action
+    fun addAction(textRes: Int, iconRes: Int, action: () -> Any) {
+        actions.add(MenuConfigurationItem(textRes, iconRes, action))
     }
 }
 
-inline fun createMenuConfiguration(menuResourceId: Int, function: MenuConfiguration.() -> Unit) = MenuConfiguration(menuResourceId).apply(function)
+class MenuConfigurationItem(val textRes: Int, val iconRes: Int, val action: () -> Any)
+
+inline fun createMenuConfiguration(function: MenuConfiguration.() -> Unit) = MenuConfiguration().apply(function)

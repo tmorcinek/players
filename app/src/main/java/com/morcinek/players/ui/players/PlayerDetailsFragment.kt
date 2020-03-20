@@ -10,8 +10,6 @@ import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.createMenuConfiguration
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.database.FirebaseReferences
-import com.morcinek.players.core.extensions.map
-import com.morcinek.players.core.extensions.observe
 import com.morcinek.players.core.database.teamsLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.ui.showDeleteCodeConfirmationDialog
@@ -45,14 +43,16 @@ class PlayerDetailsFragment : BaseFragment(R.layout.fragment_player) {
     }
 
     override val menuConfiguration by lazy {
-        createMenuConfiguration(menuResource()) {
-            addAction(R.id.delete) {
-                showDeleteCodeConfirmationDialog(
-                    R.string.player_delete_query,
-                    R.string.player_delete_message
-                ) { viewModel.deletePlayer { navController.popBackStack() } }
+        createMenuConfiguration {
+            if (getParcelable<PlayerData>().teamKey == null) {
+                addAction(R.string.action_delete, R.drawable.ic_delete) {
+                    showDeleteCodeConfirmationDialog(
+                        R.string.player_delete_query,
+                        R.string.player_delete_message
+                    ) { viewModel.deletePlayer { navController.popBackStack() } }
+                }
             }
-            addAction(R.id.edit) { toast("navController.navigate(R.id.nav_edit_player, viewModel.playerData)") }
+            addAction(R.string.action_edit, R.drawable.ic_edit) { toast("navController.navigate(R.id.nav_edit_player, viewModel.playerData)") }
         }
     }
 

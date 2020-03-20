@@ -10,7 +10,10 @@ import com.morcinek.players.core.*
 import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
-import com.morcinek.players.core.database.*
+import com.morcinek.players.core.database.FirebaseReferences
+import com.morcinek.players.core.database.eventsForTeamLiveDataForValueListener
+import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
+import com.morcinek.players.core.database.playersWithoutTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.ui.lazyNavController
 import com.morcinek.players.ui.teams.stats.PlayerStatsDetails
@@ -29,8 +32,8 @@ class TeamDetailsFragment : BaseFragment(R.layout.fragment_team_details) {
 
     override val fabConfiguration = FabConfiguration({ navController.navigate(R.id.nav_create_event, viewModel.teamData.toBundle()) }, R.drawable.ic_group_add)
 
-    override val menuConfiguration = createMenuConfiguration(R.menu.add) {
-        addAction(R.id.add_players) {
+    override val menuConfiguration = createMenuConfiguration {
+        addAction(R.string.add_players, R.drawable.ic_add) {
             observe(viewModel.playersWithoutTeam) {
                 when {
                     it.isEmpty() -> navController.navigate(R.id.nav_create_player, viewModel.teamData.toBundle())

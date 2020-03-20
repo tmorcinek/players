@@ -25,8 +25,8 @@ class PlayerStatsFragment : BaseFragment(R.layout.fragment_player_stats) {
 
     private val navController: NavController by lazyNavController()
 
-    override val menuConfiguration = createMenuConfiguration(R.menu.details) {
-        addAction(R.id.details) {
+    override val menuConfiguration = createMenuConfiguration {
+        addAction(R.string.menu_player_details, R.drawable.ic_profile) {
             navController.navigate(R.id.nav_player_details, viewModel.playerStatsDetails.playerData.toBundle())
         }
     }
