@@ -8,7 +8,6 @@
     <TextView
             android:id="@+id/title"
             style="@style/TitleText"
-            android:text="@string/add_players"
             android:layout_marginStart="@dimen/margin"
             android:layout_marginTop="@dimen/double_margin"
             android:layout_marginEnd="@dimen/margin"

@@ -3,26 +3,28 @@ package com.morcinek.players.ui.players
 import android.os.Bundle
 import android.view.View
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.data.PlayerData
-import com.morcinek.players.core.database.*
+import com.morcinek.players.core.data.TeamData
+import com.morcinek.players.core.database.FirebaseReferences
+import com.morcinek.players.core.database.teamsLiveDataForSingleValueListener
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.ui.showStandardDropDown
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_create_player.view.*
 import kotlinx.android.synthetic.main.header_button.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.dsl.module
 import java.util.*
 
 class CreatePlayerFragment : BaseFragment(R.layout.fragment_create_player) {
 
-    private val viewModel by viewModel<CreatePlayerViewModel>()
+    private val viewModel by viewModelWithFragment<CreatePlayerViewModel>()
 
     private val navController: NavController by lazyNavController()
 
@@ -43,12 +45,16 @@ class CreatePlayerFragment : BaseFragment(R.layout.fragment_create_player) {
             }
             teamLayout.apply {
                 header.setText(R.string.team)
-                value.setText(R.string.value_not_set)
-                setOnClickListener {
-                    observe(viewModel.teams) {
-                        showStandardDropDown(android.R.layout.simple_dropdown_item_1line, it) {
-                            viewModel.updateValue { teamKey = it.key }
-                            value.text = it.name
+                if (viewModel.teamData != null) {
+                    value.text = viewModel.teamData?.name
+                } else {
+                    value.setText(R.string.value_not_set)
+                    setOnClickListener {
+                        observe(viewModel.teams) { teams ->
+                            showStandardDropDown(android.R.layout.simple_dropdown_item_1line, teams) {
+                                viewModel.updateValue { teamKey = it.key }
+                                value.text = it.name
+                            }
                         }
                     }
                 }
@@ -66,11 +72,11 @@ class CreatePlayerFragment : BaseFragment(R.layout.fragment_create_player) {
 
 private val DefaultDate = Calendar.getInstance().apply { year = 2009 }.timeInMillis
 
-private class CreatePlayerViewModel(val references: FirebaseReferences) : ViewModel() {
+private class CreatePlayerViewModel(val references: FirebaseReferences, val teamData: TeamData?) : ViewModel() {
 
     val teams = references.teamsLiveDataForSingleValueListener()
 
-    private val player = mutableValueLiveData(PlayerData())
+    private val player = mutableValueLiveData(PlayerData(teamKey = teamData?.key))
 
     val isNextEnabled: LiveData<Boolean> = player.map { it.isValid() }
 
@@ -84,5 +90,5 @@ private class CreatePlayerViewModel(val references: FirebaseReferences) : ViewMo
 private fun PlayerData.isValid() = name.isNotBlank() && surname.isNotBlank() && birthDateInMillis != 0L
 
 val createPlayerModule = module {
-    viewModel { CreatePlayerViewModel(get()) }
+    viewModel { (fragment: Fragment) -> CreatePlayerViewModel(get(), fragment.getParcelableOrNull()) }
 }

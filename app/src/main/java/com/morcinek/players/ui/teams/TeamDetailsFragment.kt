@@ -30,7 +30,14 @@ class TeamDetailsFragment : BaseFragment(R.layout.fragment_team_details) {
     override val fabConfiguration = FabConfiguration({ navController.navigate(R.id.nav_create_event, viewModel.teamData.toBundle()) }, R.drawable.ic_group_add)
 
     override val menuConfiguration = createMenuConfiguration(R.menu.add) {
-        addAction(R.id.add_players) { navController.navigate(R.id.nav_add_players_to_team, viewModel.teamData.toBundle()) }
+        addAction(R.id.add_players) {
+            observe(viewModel.playersWithoutTeam) {
+                when {
+                    it.isEmpty() -> navController.navigate(R.id.nav_create_player, viewModel.teamData.toBundle())
+                    else -> navController.navigate(R.id.nav_add_players_to_team, viewModel.teamData.toBundle())
+                }
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -94,6 +101,8 @@ private class TeamDetailsViewModel(references: FirebaseReferences, val teamData:
             )
         }.sortedByDescending { it.attended }
     }
+
+    val playersWithoutTeam = references.playersWithoutTeamLiveDataForValueListener()
 }
 
 private class PlayerStats(val name: String, val attended: Int, val missed: Int, val data: PlayerData) : HasKey by data
