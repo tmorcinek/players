@@ -5,15 +5,14 @@ import android.os.Parcelable
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.*
 import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.data.PlayerData
-import com.morcinek.players.core.extensions.dayOfWeekDateFormat
-import com.morcinek.players.core.extensions.formatCalendar
-import com.morcinek.players.core.extensions.getParcelable
-import com.morcinek.players.core.extensions.viewModelWithFragment
+import com.morcinek.players.core.extensions.*
+import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.fragment_player_stats.view.*
 import kotlinx.android.synthetic.main.vh_player_event.view.*
@@ -23,6 +22,14 @@ import org.koin.dsl.module
 class PlayerStatsFragment : BaseFragment(R.layout.fragment_player_stats) {
 
     private val viewModel by viewModelWithFragment<PlayerStatsViewModel>()
+
+    private val navController: NavController by lazyNavController()
+
+    override val menuConfiguration = createMenuConfiguration(R.menu.details) {
+        addAction(R.id.details) {
+            navController.navigate(R.id.nav_player_details, viewModel.playerStatsDetails.playerData.toBundle())
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -51,8 +58,8 @@ private class PlayerStatsViewModel(val playerStatsDetails: PlayerStatsDetails) :
 
     fun events() = playerStatsDetails.events.map { PlayerEvent(it.type, dateFormat.formatCalendar(it.getDate()), eventStatus(it), it.key) }
 
-    private fun eventStatus(it: EventData) = when{
-       it.optional -> R.color.dark_indigo_30
+    private fun eventStatus(it: EventData) = when {
+        it.optional -> R.color.dark_indigo_30
         playerStatsDetails.playerData.key in it.players -> R.color.colorPrimary30
         else -> R.color.colorAccent30
     }
