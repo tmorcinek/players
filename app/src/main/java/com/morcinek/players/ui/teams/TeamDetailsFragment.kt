@@ -30,10 +30,10 @@ class TeamDetailsFragment : BaseFragment(R.layout.fragment_team_details) {
 
     private val navController: NavController by lazyNavController()
 
-    override val fabConfiguration = FabConfiguration({ navController.navigate(R.id.nav_create_event, viewModel.teamData.toBundle()) }, R.drawable.ic_group_add)
+    override val fabConfiguration = createFabConfiguration(R.drawable.ic_ball) { navController.navigate(R.id.nav_create_event, viewModel.teamData.toBundle()) }
 
     override val menuConfiguration = createMenuConfiguration {
-        addAction(R.string.add_players, R.drawable.ic_add) {
+        addAction(R.string.add_players, R.drawable.ic_person_add) {
             observe(viewModel.playersWithoutTeam) {
                 when {
                     it.isEmpty() -> navController.navigate(R.id.nav_create_player, viewModel.teamData.toBundle())

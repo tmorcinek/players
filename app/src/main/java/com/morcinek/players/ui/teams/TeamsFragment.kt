@@ -6,15 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
-import com.morcinek.players.core.BaseFragment
-import com.morcinek.players.core.FabConfiguration
+import com.morcinek.players.core.*
 import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.extensions.observe
 import com.morcinek.players.core.database.teamsLiveDataForValueListener
 import com.morcinek.players.core.extensions.toBundle
-import com.morcinek.players.core.itemCallback
-import com.morcinek.players.core.listAdapter
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_list.view.*
 import kotlinx.android.synthetic.main.vh_team.view.*
@@ -28,7 +25,7 @@ class TeamsFragment : BaseFragment(R.layout.fragment_list) {
 
     private val navController: NavController by lazyNavController()
 
-    override val fabConfiguration = FabConfiguration({ navController.navigate(R.id.nav_create_team) })
+    override val fabConfiguration = createFabConfiguration(R.drawable.ic_group_add) { navController.navigate(R.id.nav_create_team) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

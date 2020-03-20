@@ -23,7 +23,7 @@ class PlayersFragment : BaseFragment(R.layout.fragment_list) {
 
     private val navController: NavController by lazyNavController()
 
-    override val fabConfiguration = FabConfiguration({ navController.navigate(R.id.nav_create_player) })
+    override val fabConfiguration = createFabConfiguration(R.drawable.ic_person_add) { navController.navigate(R.id.nav_create_player) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -64,6 +64,8 @@ abstract class BaseFragment(private val layoutResourceId: Int) : Fragment() {
 
 class FabConfiguration(val fabActon: (View) -> Unit, val fabIcon: Int = R.drawable.ic_add)
 
+fun createFabConfiguration(fabIcon: Int = R.drawable.ic_add, fabActon: (View) -> Unit) = FabConfiguration(fabActon, fabIcon)
+
 class MenuConfiguration {
     internal val actions = mutableListOf<MenuConfigurationItem>()
 

@@ -26,7 +26,7 @@ class AddPlayersFragment : BaseFragment(R.layout.fragment_add_players) {
     private val navController: NavController by lazyNavController()
 
     override val menuConfiguration = createMenuConfiguration {
-        addAction(R.string.add_players, R.drawable.ic_add) { navController.navigate(R.id.nav_create_player) }
+        addAction(R.string.add_players, R.drawable.ic_person_add) { navController.navigate(R.id.nav_create_player) }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
