@@ -2,6 +2,7 @@ package com.morcinek.players.ui.teams
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
@@ -15,12 +16,15 @@ import com.morcinek.players.core.database.eventsForTeamLiveDataForValueListener
 import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
 import com.morcinek.players.core.database.playersWithoutTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
+import com.morcinek.players.core.ui.showDeleteCodeConfirmationDialog
 import com.morcinek.players.ui.lazyNavController
 import com.morcinek.players.ui.teams.stats.PlayerStatsDetails
 import kotlinx.android.synthetic.main.fragment_team_details.view.*
 import kotlinx.android.synthetic.main.vh_player.view.*
+import kotlinx.android.synthetic.main.vh_player.view.subtitle
 import kotlinx.android.synthetic.main.vh_stat.view.*
 import kotlinx.android.synthetic.main.vh_stat.view.name
+import kotlinx.android.synthetic.main.view_empty_players.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -46,13 +50,27 @@ class TeamDetailsFragment : BaseFragment(R.layout.fragment_team_details) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.apply {
-            title.text = viewModel.teamData.name
             tabLayout.setupWithViewPager(viewPager)
-            viewPager.adapter = recyclerViewPagerAdapter(
-                R.string.page_events to eventsAdapter(),
-                R.string.page_stats to statsAdapter(),
-                R.string.page_players to playersAdapter()
-            )
+            observe(viewModel.hasPlayers) {
+                tabLayout.isVisible = it
+                if (it) {
+                    viewPager.adapter = recyclerViewPagerAdapter(
+                        R.string.page_events to eventsAdapter(),
+                        R.string.page_stats to statsAdapter(),
+                        R.string.page_players to playersAdapter()
+                    )
+                } else {
+                    viewPager.adapter = singlePageAdapter(R.layout.view_empty_players) {
+                        addPlayerButton.setOnClickListener { navController.navigate(R.id.nav_create_player, viewModel.teamData.toBundle()) }
+                        deleteButton.setOnClickListener {
+                            showDeleteCodeConfirmationDialog(
+                                R.string.team_delete_query,
+                                R.string.team_delete_message
+                            ) { viewModel.deleteTeam { navController.popBackStack() } }
+                        }
+                    }.apply { notifyDataSetChanged() }
+                }
+            }
         }
         exitTransition = moveTransition()
     }
@@ -89,13 +107,15 @@ class TeamDetailsFragment : BaseFragment(R.layout.fragment_team_details) {
     }
 }
 
-private class TeamDetailsViewModel(references: FirebaseReferences, val teamData: TeamData) : ViewModel() {
+private class TeamDetailsViewModel(val references: FirebaseReferences, val teamData: TeamData) : ViewModel() {
 
     val players = references.playersForTeamLiveDataForValueListener(teamData.key)
 
     val events = references.eventsForTeamLiveDataForValueListener(teamData.key).map { it.sortedByDescending { it.dateInMillis } }
 
     fun playerEvents(player: PlayerData) = events.value!!.filter { !it.optional || player.key in it.players }
+
+    val hasPlayers = players.map { it.isNotEmpty() }
 
     val playersStats = combine(players, events) { player, events ->
         player.map { player ->
@@ -106,6 +126,8 @@ private class TeamDetailsViewModel(references: FirebaseReferences, val teamData:
     }
 
     val playersWithoutTeam = references.playersWithoutTeamLiveDataForValueListener()
+
+    fun deleteTeam(doOnComplete: () -> Unit) = references.teamsReference().child(teamData.key).removeValue().addOnCompleteListener { doOnComplete() }
 }
 
 private class PlayerStats(val name: String, val attended: Int, val missed: Int, val data: PlayerData) : HasKey by data

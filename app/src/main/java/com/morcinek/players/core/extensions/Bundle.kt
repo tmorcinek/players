@@ -29,4 +29,8 @@ fun Intent.putInt(value: Int) = putExtra(Int::class.java.name, value)
 fun Bundle.getInt() = getInt(Int::class.java.name).takeIf { it != 0 }
 
 fun Parcelable.toBundle() = Bundle().apply { putParcel(this@toBundle) }
+fun <T: Parcelable> T.toBundleWithTitle( title: T.() -> String) = Bundle().apply {
+    putParcel(this@toBundleWithTitle)
+    putString("title", title())
+}
 fun bundle(vararg parcelable: Parcelable) = Bundle().apply { parcelable.forEach { putParcel(it) } }

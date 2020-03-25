@@ -108,7 +108,7 @@ class NavActivity : AppCompatActivity() {
                         menu.clear()
                         it.forEach { team ->
                             menu.add(team.name, R.drawable.ic_menu_players) {
-                                navController.navigateSingleTop(R.id.nav_team_details, team.toBundle())
+                                navController.navigateSingleTop(R.id.nav_team_details, team.toBundleWithTitle { name })
                                 drawerLayout.closeDrawers()
                             }
                         }
@@ -139,9 +139,7 @@ private class NavViewModel(references: FirebaseReferences, val auth: FirebaseAut
     val user: FirebaseUser
         get() = auth.currentUser!!
 
-    fun signOut() {
-        auth.signOut()
-    }
+    fun signOut() = auth.signOut()
 }
 
 val navModule = module {

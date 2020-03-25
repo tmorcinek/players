@@ -6,12 +6,15 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
-import com.morcinek.players.core.*
+import com.morcinek.players.core.BaseFragment
+import com.morcinek.players.core.createFabConfiguration
 import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.database.FirebaseReferences
-import com.morcinek.players.core.extensions.observe
 import com.morcinek.players.core.database.teamsLiveDataForValueListener
-import com.morcinek.players.core.extensions.toBundle
+import com.morcinek.players.core.extensions.observe
+import com.morcinek.players.core.extensions.toBundleWithTitle
+import com.morcinek.players.core.itemCallback
+import com.morcinek.players.core.listAdapter
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_list.view.*
 import kotlinx.android.synthetic.main.vh_team.view.*
@@ -35,7 +38,7 @@ class TeamsFragment : BaseFragment(R.layout.fragment_list) {
                 layoutManager = LinearLayoutManager(activity)
                 adapter = listAdapter<TeamData>(R.layout.vh_team, itemCallback()) { _, item ->
                     name.text = item.name
-                    setOnClickListener { navController.navigate(R.id.nav_team_details, item.toBundle()) }
+                    setOnClickListener { navController.navigate(R.id.nav_team_details, item.toBundleWithTitle { name }) }
                 }.apply {
                     observe(viewModel.teams) {
                         submitList(it)

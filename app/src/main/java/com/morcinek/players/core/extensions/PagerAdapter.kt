@@ -19,8 +19,7 @@ fun Fragment.recyclerViewPagerAdapter(vararg pagers: Pair<Int, RecyclerView.Adap
     override fun instantiateItem(container: ViewGroup, position: Int) = RecyclerView(requireContext()).apply {
         layoutManager = LinearLayoutManager(requireContext())
         adapter = pagers[position].second
-        container.addView(this)
-    }
+    }.also { container.addView(it) }
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) = container.removeView(`object` as View)
 }
