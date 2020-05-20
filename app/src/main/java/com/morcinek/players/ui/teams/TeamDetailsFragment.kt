@@ -53,14 +53,14 @@ class TeamDetailsFragment : BaseFragment(R.layout.fragment_team_details) {
             tabLayout.setupWithViewPager(viewPager)
             observe(viewModel.hasPlayers) {
                 tabLayout.isVisible = it
-                if (it) {
-                    viewPager.adapter = recyclerViewPagerAdapter(
+                viewPager.adapter = if (it) {
+                    recyclerViewPagerAdapter(
                         R.string.page_events to eventsAdapter(),
                         R.string.page_stats to statsAdapter(),
                         R.string.page_players to playersAdapter()
                     )
                 } else {
-                    viewPager.adapter = singlePageAdapter(R.layout.view_empty_players) {
+                    singlePageAdapter(R.layout.view_empty_players) {
                         addPlayerButton.setOnClickListener { navController.navigate(R.id.nav_create_player, viewModel.teamData.toBundle()) }
                         deleteButton.setOnClickListener {
                             showDeleteCodeConfirmationDialog(
