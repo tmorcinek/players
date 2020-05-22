@@ -26,7 +26,7 @@ class TeamsFragment : BaseFragment(R.layout.fragment_list) {
 
     private val viewModel by viewModel<TeamsViewModel>()
 
-    private val navController: NavController by lazyNavController()
+    private val navController by lazyNavController()
 
     override val fabConfiguration = createFabConfiguration(R.drawable.ic_group_add) { navController.navigate(R.id.nav_create_team) }
 

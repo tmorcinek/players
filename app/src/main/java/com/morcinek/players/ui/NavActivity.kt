@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -128,9 +128,7 @@ class NavActivity : AppCompatActivity() {
     override fun onSupportNavigateUp() = findNavController(R.id.navHostFragment).navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
 }
 
-fun Fragment.findNavController(): NavController = requireActivity().findNavController(R.id.navHostFragment)
-
-fun Fragment.lazyNavController() = lazy { findNavController() }
+fun Fragment.lazyNavController() = lazy { Navigation.findNavController(view!!) }
 
 private class NavViewModel(references: FirebaseReferences, val auth: FirebaseAuth) : ViewModel() {
 

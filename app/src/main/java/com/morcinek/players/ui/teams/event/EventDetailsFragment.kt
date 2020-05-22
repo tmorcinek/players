@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
@@ -14,13 +13,8 @@ import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.database.FirebaseReferences
-import com.morcinek.players.core.extensions.map
-import com.morcinek.players.core.extensions.observe
 import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
-import com.morcinek.players.core.extensions.getParcelable
-import com.morcinek.players.core.extensions.moveTransition
-import com.morcinek.players.core.extensions.toDayOfWeekDateFormat
-import com.morcinek.players.core.extensions.viewModelWithFragment
+import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.core.listAdapter
 import com.morcinek.players.core.ui.showDeleteCodeConfirmationDialog
@@ -34,7 +28,7 @@ class EventDetailsFragment : BaseFragment(R.layout.fragment_event_details) {
 
     private val viewModel by viewModelWithFragment<EventDetailsViewModel>()
 
-    private val navController: NavController by lazyNavController()
+    private val navController by lazyNavController()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +46,7 @@ class EventDetailsFragment : BaseFragment(R.layout.fragment_event_details) {
             }
             recyclerView.apply {
                 layoutManager = LinearLayoutManager(activity)
-                adapter = listAdapter<PlayerData>(R.layout.vh_text, itemCallback()) { _, item ->
+                adapter = listAdapter(R.layout.vh_text, itemCallback()) { _, item: PlayerData ->
                     name.text = item.toString()
                 }.apply {
                     viewModel.players.observe(this@EventDetailsFragment) { submitList(it) }

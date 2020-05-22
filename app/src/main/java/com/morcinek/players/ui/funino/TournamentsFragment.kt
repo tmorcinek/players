@@ -26,7 +26,7 @@ class TournamentsFragment : BaseFragment(R.layout.fragment_list) {
 
     private val viewModel by viewModel<TournamentsViewModel>()
 
-    private val navController: NavController by lazyNavController()
+    private val navController by lazyNavController()
 
     override val fabConfiguration = FabConfiguration({ navController.navigate(R.id.nav_how_many_players) })
 
@@ -53,6 +53,6 @@ val funinoModule = module {
 
 private class TournamentsViewModel : ViewModel() {
 
-    val tournaments: LiveData<List<TournamentData>> = MutableLiveData<List<TournamentData>>()
+    val tournaments: LiveData<List<TournamentData>> = MutableLiveData()
 }
 

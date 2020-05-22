@@ -3,9 +3,8 @@ package com.morcinek.players.ui.teams.event
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
@@ -13,7 +12,8 @@ import com.morcinek.players.core.SelectionListAdapter
 import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
-import com.morcinek.players.core.database.*
+import com.morcinek.players.core.database.FirebaseReferences
+import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.core.ui.showStandardDropDown
@@ -29,7 +29,7 @@ class CreateEventFragment : BaseFragment(R.layout.fragment_create_event) {
 
     private val viewModel by viewModelWithFragment<TeamDetailsViewModel>()
 
-    private val navController: NavController by lazyNavController()
+    private val navController by lazyNavController()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -81,7 +81,7 @@ class CreateEventFragment : BaseFragment(R.layout.fragment_create_event) {
 
 private class TeamDetailsViewModel(private val references: FirebaseReferences, private val teamData: TeamData) : ViewModel() {
 
-    private val eventData = mutableValueLiveData(EventData().apply { setDate(Calendar.getInstance()) })
+    private val eventData = MutableLiveData(EventData().apply { setDate(Calendar.getInstance()) })
 
     val event: EventData
         get() = eventData.value!!
@@ -90,8 +90,7 @@ private class TeamDetailsViewModel(private val references: FirebaseReferences, p
 
     val selectedPlayers = mutableSetValueLiveData<PlayerData>()
 
-    val isNextEnabled: LiveData<Boolean> =
-        selectedPlayers.combineWith(eventData) { players, event -> players.isNotEmpty() && event.type.isNotEmpty() && event.dateInMillis > 0 }
+    val isNextEnabled = selectedPlayers.combineWith(eventData) { players, event -> players.isNotEmpty() && event.type.isNotEmpty() && event.dateInMillis > 0 }
 
     fun updateValue(function: EventData.() -> Unit) {
         eventData.postValue(event.apply(function))

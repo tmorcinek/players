@@ -32,7 +32,7 @@ class TeamDetailsFragment : BaseFragment(R.layout.fragment_team_details) {
 
     private val viewModel by viewModelWithFragment<TeamDetailsViewModel>()
 
-    private val navController: NavController by lazyNavController()
+    private val navController by lazyNavController()
 
     override val fabConfiguration = createFabConfiguration(R.drawable.ic_ball) { navController.navigate(R.id.nav_create_event, viewModel.teamData.toBundle()) }
 

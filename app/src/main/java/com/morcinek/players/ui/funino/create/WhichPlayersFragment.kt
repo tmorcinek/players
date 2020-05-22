@@ -26,7 +26,7 @@ import org.koin.dsl.module
 
 class WhichPlayersFragment : BaseFragment(R.layout.fragment_which_players) {
 
-    private val navController: NavController by lazyNavController()
+    private val navController by lazyNavController()
 
     private val viewModel by viewModel<WhichPlayersViewModel>()
 

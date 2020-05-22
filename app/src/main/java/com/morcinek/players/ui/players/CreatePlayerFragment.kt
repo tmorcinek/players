@@ -4,9 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavController
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.data.PlayerData
@@ -26,7 +25,7 @@ class CreatePlayerFragment : BaseFragment(R.layout.fragment_create_player) {
 
     private val viewModel by viewModelWithFragment<CreatePlayerViewModel>()
 
-    private val navController: NavController by lazyNavController()
+    private val navController by lazyNavController()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -76,9 +75,9 @@ private class CreatePlayerViewModel(val references: FirebaseReferences, val team
 
     val teams = references.teamsLiveDataForSingleValueListener()
 
-    private val player = mutableValueLiveData(PlayerData(teamKey = teamData?.key))
+    private val player = MutableLiveData(PlayerData(teamKey = teamData?.key))
 
-    val isNextEnabled: LiveData<Boolean> = player.map { it.isValid() }
+    val isNextEnabled = player.map { it.isValid() }
 
     fun dateInMillis() = player.value!!.birthDateInMillis.takeIf { it > 0 } ?: DefaultDate
 

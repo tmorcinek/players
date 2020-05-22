@@ -33,7 +33,7 @@ import kotlin.collections.set
 
 class WhatColorsFragment : BaseFragment(R.layout.fragment_select_colors) {
 
-    private val navController: NavController by lazyNavController()
+    private val navController by lazyNavController()
 
     private val viewModel by viewModelWithFragment<WhatColorsViewModel>()
 

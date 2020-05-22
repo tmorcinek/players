@@ -5,7 +5,6 @@ import android.os.Parcelable
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.*
@@ -23,7 +22,7 @@ class PlayerStatsFragment : BaseFragment(R.layout.fragment_player_stats) {
 
     private val viewModel by viewModelWithFragment<PlayerStatsViewModel>()
 
-    private val navController: NavController by lazyNavController()
+    private val navController by lazyNavController()
 
     override val menuConfiguration = createMenuConfiguration {
         addAction(R.string.menu_player_details, R.drawable.ic_profile) {
@@ -37,7 +36,7 @@ class PlayerStatsFragment : BaseFragment(R.layout.fragment_player_stats) {
             title.text = viewModel.title()
             recyclerView.apply {
                 layoutManager = LinearLayoutManager(activity)
-                adapter = listAdapter<PlayerEvent>(R.layout.vh_player_event, itemCallback()) { _, item ->
+                adapter = listAdapter(R.layout.vh_player_event, itemCallback()) { _, item: PlayerEvent ->
                     name.text = item.name
                     date.text = item.date
                     setBackgroundResource(item.statusColor)

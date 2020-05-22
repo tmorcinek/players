@@ -13,7 +13,6 @@ import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.SelectionListAdapter
 import com.morcinek.players.core.SingleSelect
-import com.morcinek.players.core.extensions.mutableValueLiveData
 import com.morcinek.players.core.extensions.observe
 import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.toBundle
@@ -27,7 +26,7 @@ import org.koin.dsl.module
 
 class HowManyGamesFragment : BaseFragment(R.layout.fragment_number_games) {
 
-    private val navController: NavController by lazyNavController()
+    private val navController by lazyNavController()
 
     private val viewModel by viewModelWithFragment<HowManyGamesViewModel>()
 
@@ -65,7 +64,7 @@ class HowManyGamesViewModel(val createTournamentData: CreateTournamentData) : Vi
     private val teamsGenerator = TeamsGenerator()
     private val allGames = gamesCombination(createTournamentData.numberOfPlayers)
 
-    val selectedGamesNumber = mutableValueLiveData<GamesNumber?>()
+    val selectedGamesNumber = MutableLiveData<GamesNumber?>()
 
     fun select(gamesNumber: GamesNumber?) {
         selectedGamesNumber.postValue(gamesNumber)

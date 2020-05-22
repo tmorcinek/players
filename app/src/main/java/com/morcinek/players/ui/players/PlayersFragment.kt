@@ -8,7 +8,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.*
 import com.morcinek.players.core.data.PlayerData
-import com.morcinek.players.core.database.*
+import com.morcinek.players.core.database.FirebaseReferences
+import com.morcinek.players.core.database.playersLiveDataForValueListener
+import com.morcinek.players.core.database.teamsLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_list.view.*
@@ -21,7 +23,7 @@ class PlayersFragment : BaseFragment(R.layout.fragment_list) {
 
     private val viewModel by viewModel<PlayersViewModel>()
 
-    private val navController: NavController by lazyNavController()
+    private val navController by lazyNavController()
 
     override val fabConfiguration = createFabConfiguration(R.drawable.ic_person_add) { navController.navigate(R.id.nav_create_player) }
 
@@ -59,11 +61,11 @@ private class PlayersViewModel(references: FirebaseReferences) : ViewModel() {
 
     private val dateFormat = standardDateFormat()
 
-    val players =
-        combine(references.playersLiveDataForValueListener(), references.teamsLiveDataForValueListener()) { player, team ->
-            player.map { PlayerItem(it.toString(), team.find { team -> team.key == it.teamKey }?.name ?: "", dateFormat.formatCalendar(it.getBirthDate()), it) }
-                .sortedBy { it.data.teamKey }
-        }
+    val players = combine(references.playersLiveDataForValueListener(), references.teamsLiveDataForValueListener()) { player, team ->
+        player
+            .map { PlayerItem(it.toString(), team.find { team -> team.key == it.teamKey }?.name ?: "", dateFormat.formatCalendar(it.getBirthDate()), it) }
+            .sortedBy { it.data.teamKey }
+    }
 }
 
 private class PlayerItem(val name: String, val subtitle: String, val date: String, val data: PlayerData) : HasKey by data

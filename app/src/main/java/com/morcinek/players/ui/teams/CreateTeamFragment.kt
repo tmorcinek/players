@@ -3,7 +3,6 @@ package com.morcinek.players.ui.teams
 import android.os.Bundle
 import android.view.View
 import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
@@ -13,10 +12,10 @@ import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.SelectionListAdapter
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
-import com.morcinek.players.core.database.*
+import com.morcinek.players.core.database.FirebaseReferences
+import com.morcinek.players.core.database.playersWithoutTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.map
 import com.morcinek.players.core.extensions.observe
-import com.morcinek.players.core.extensions.valueLiveData
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_create_player.view.*
@@ -31,7 +30,7 @@ class CreateTeamFragment : BaseFragment(R.layout.fragment_create_team) {
 
     private val viewModel by viewModel<CreateTeamViewModel>()
 
-    private val navController: NavController by lazyNavController()
+    private val navController by lazyNavController()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -57,13 +56,13 @@ class CreateTeamFragment : BaseFragment(R.layout.fragment_create_team) {
 
 private class CreateTeamViewModel(val references: FirebaseReferences) : ViewModel() {
 
-    private val team = valueLiveData(TeamData())
+    private val team = MutableLiveData(TeamData())
 
     var selectedPlayers = setOf<PlayerData>()
 
-    val isNextEnabled: LiveData<Boolean> = team.map { it.name.isNotBlank() }
+    val isNextEnabled = team.map { it.name.isNotBlank() }
 
-    fun updateValue(function: TeamData.() -> Unit) = (team as MutableLiveData).postValue(team.value?.apply(function))
+    fun updateValue(function: TeamData.() -> Unit) = team.postValue(team.value?.apply(function))
 
     fun createTeam(doOnComplete: () -> Unit) {
         val childUpdates = HashMap<String, Any>()

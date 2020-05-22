@@ -22,7 +22,7 @@ class PlayerDetailsFragment : BaseFragment(R.layout.fragment_player) {
 
     private val viewModel by viewModelWithFragment<PlayerDetailsViewModel>()
 
-    private val navController: NavController by lazyNavController()
+    private val navController by lazyNavController()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

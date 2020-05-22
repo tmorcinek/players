@@ -34,7 +34,4 @@ fun <T, R, Y> combine(sourceA: LiveData<T>, sourceB: LiveData<R>, mapFunction: (
 fun <T, R, Y> LiveData<T>.combineWith(source: LiveData<R>, mapFunction: (T, R) -> (Y)): LiveData<Y> =
     combine(this, source).map { mapFunction(it.first, it.second) }
 
-fun <T> mutableValueLiveData() = MutableLiveData<T>()
-fun <T> mutableValueLiveData(value: T) = MutableLiveData<T>().apply { this.value = value }
-fun <T> valueLiveData(value: T): LiveData<T> = mutableValueLiveData(value)
-fun <T> mutableSetValueLiveData() = MutableLiveData<Set<T>>().apply { value = setOf() }
+fun <T> mutableSetValueLiveData() = MutableLiveData<Set<T>>(setOf())
