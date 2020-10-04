@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavController
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.createMenuConfiguration
@@ -52,7 +51,7 @@ class PlayerDetailsFragment : BaseFragment(R.layout.fragment_player) {
                     ) { viewModel.deletePlayer { navController.popBackStack() } }
                 }
             }
-            addAction(R.string.action_edit, R.drawable.ic_edit) { toast("navController.navigate(R.id.nav_edit_player, viewModel.playerData)") }
+            addAction(R.string.action_edit, R.drawable.ic_edit) { navController.navigate(R.id.nav_edit_player, bundle(viewModel.playerData)) }
         }
     }
 }

@@ -23,6 +23,8 @@
     <string name="menu_event_details">Event Details</string>
     <string name="menu_player_stats">Player Stats</string>
 
+    <string name="title_edit_player">Edit Player</string>
+
     <string name="team_title">Team</string>
     <string name="player_title">Player</string>
     <string name="today">Today</string>

@@ -69,11 +69,11 @@ fun createFabConfiguration(fabIcon: Int = R.drawable.ic_add, fabActon: (View) ->
 class MenuConfiguration {
     internal val actions = mutableListOf<MenuConfigurationItem>()
 
-    fun addAction(textRes: Int, iconRes: Int, action: () -> Any) {
+    fun addAction(textRes: Int, iconRes: Int, action: () -> Unit) {
         actions.add(MenuConfigurationItem(textRes, iconRes, action))
     }
 }
 
-class MenuConfigurationItem(val textRes: Int, val iconRes: Int, val action: () -> Any)
+class MenuConfigurationItem(val textRes: Int, val iconRes: Int, val action: () -> Unit)
 
 inline fun createMenuConfiguration(function: MenuConfiguration.() -> Unit) = MenuConfiguration().apply(function)

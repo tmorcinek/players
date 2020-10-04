@@ -30,11 +30,17 @@ class CreatePlayerFragment : BaseFragment(R.layout.fragment_create_player) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.apply {
-            nameTextInputLayout.editText?.doOnTextChanged { text, _, _, _ -> viewModel.updateValue { name = text.toString() } }
-            surnameTextInputLayout.editText?.doOnTextChanged { text, _, _, _ -> viewModel.updateValue { surname = text.toString() } }
+            nameTextInputLayout.editText?.apply {
+                setText(viewModel.playerData.name)
+                doOnTextChanged { text, _, _, _ -> viewModel.updateValue { name = text.toString() } }
+            }
+            surnameTextInputLayout.editText?.apply {
+                setText(viewModel.playerData.surname)
+                doOnTextChanged { text, _, _, _ -> viewModel.updateValue { surname = text.toString() } }
+            }
             birthDateLayout.apply {
+                value.text = viewModel.playerDate() ?: getString(R.string.value_not_set)
                 header.setText(R.string.birth_date)
-                value.setText(R.string.value_not_set)
                 setOnClickListener {
                     startDatePicker(viewModel.dateInMillis()) {
                         viewModel.updateValue { birthDateInMillis = it.timeInMillis }
@@ -44,23 +50,25 @@ class CreatePlayerFragment : BaseFragment(R.layout.fragment_create_player) {
             }
             teamLayout.apply {
                 header.setText(R.string.team)
-                if (viewModel.teamData != null) {
-                    value.text = viewModel.teamData?.name
-                } else {
-                    value.setText(R.string.value_not_set)
-                    setOnClickListener {
-                        observe(viewModel.teams) { teams ->
-                            showStandardDropDown(android.R.layout.simple_dropdown_item_1line, teams) {
-                                viewModel.updateValue { teamKey = it.key }
-                                value.text = it.name
+                observe(viewModel.playerTeamName()) {
+                    if (it == null) {
+                        value.setText(R.string.value_not_set)
+                        setOnClickListener {
+                            observe(viewModel.teams) { teams ->
+                                showStandardDropDown(android.R.layout.simple_dropdown_item_1line, teams) {
+                                    viewModel.updateValue { teamKey = it.key }
+                                    value.text = it.name
+                                }
                             }
                         }
+                    } else {
+                        value.text = it
                     }
                 }
             }
             nextButton.apply {
                 observe(viewModel.isNextEnabled) { isEnabled = it }
-                setOnClickListener { viewModel.createPlayer { navController.popBackStack() } }
+                setOnClickListener { viewModel.createOrUpdatePlayer { navController.popBackStack() } }
             }
         }
     }
@@ -71,23 +79,33 @@ class CreatePlayerFragment : BaseFragment(R.layout.fragment_create_player) {
 
 private val DefaultDate = Calendar.getInstance().apply { year = 2009 }.timeInMillis
 
-private class CreatePlayerViewModel(val references: FirebaseReferences, val teamData: TeamData?) : ViewModel() {
+private class CreatePlayerViewModel(val references: FirebaseReferences, teamData: TeamData?, playerData: PlayerData?) : ViewModel() {
+
+    private val player = MutableLiveData(playerData ?: PlayerData(teamKey = teamData?.key))
 
     val teams = references.teamsLiveDataForSingleValueListener()
 
-    private val player = MutableLiveData(PlayerData(teamKey = teamData?.key))
-
     val isNextEnabled = player.map { it.isValid() }
+
+    val playerData: PlayerData = player.value!!
+
+    fun playerDate() = playerData.takeIf { it.birthDateInMillis != 0L }?.getBirthDate()?.toStandardString()
+
+    fun playerTeamName() = teams.map { it.find { it.key == playerData.teamKey }?.name }
 
     fun dateInMillis() = player.value!!.birthDateInMillis.takeIf { it > 0 } ?: DefaultDate
 
     fun updateValue(function: PlayerData.() -> Unit) = player.postValue(player.value?.apply(function))
 
-    fun createPlayer(doOnComplete: () -> Unit) = references.playersReference().push().setValue(player.value).addOnSuccessListener { doOnComplete() }
+    fun createOrUpdatePlayer(doOnComplete: () -> Unit) = if (playerData.key.isNotEmpty()) {
+        references.playersReference().child(playerData.key).setValue(playerData)
+    } else {
+        references.playersReference().push().setValue(player.value)
+    }.addOnSuccessListener { doOnComplete() }
 }
 
 private fun PlayerData.isValid() = name.isNotBlank() && surname.isNotBlank() && birthDateInMillis != 0L
 
 val createPlayerModule = module {
-    viewModel { (fragment: Fragment) -> CreatePlayerViewModel(get(), fragment.getParcelableOrNull()) }
+    viewModel { (fragment: Fragment) -> CreatePlayerViewModel(get(), fragment.getParcelableOrNull(), fragment.getParcelableOrNull()) }
 }

@@ -70,6 +70,12 @@
             tools:layout="@layout/fragment_create_player" />
 
     <fragment
+            android:id="@+id/nav_edit_player"
+            android:name="com.morcinek.players.ui.players.CreatePlayerFragment"
+            android:label="@string/title_edit_player"
+            tools:layout="@layout/fragment_create_player" />
+
+    <fragment
             android:id="@+id/nav_create_team"
             android:name="com.morcinek.players.ui.teams.CreateTeamFragment"
             android:label="@string/menu_create_team"
