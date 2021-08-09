@@ -71,7 +71,7 @@ class CreateEventFragment : BaseFragment(R.layout.fragment_create_event) {
             nextButton.apply {
                 viewModel.isNextEnabled.observe(this@CreateEventFragment) { isEnabled = it }
                 setOnClickListener {
-                    viewModel.addPlayersToTeam { navController.popBackStack() }
+                    viewModel.createOrUpdateEvent { navController.popBackStack() }
                 }
             }
         }
@@ -79,9 +79,9 @@ class CreateEventFragment : BaseFragment(R.layout.fragment_create_event) {
 
 }
 
-private class TeamDetailsViewModel(private val references: FirebaseReferences, private val teamData: TeamData) : ViewModel() {
+private class TeamDetailsViewModel(private val references: FirebaseReferences, private val teamData: TeamData, editEvent: EventData?) : ViewModel() {
 
-    private val eventData = MutableLiveData(EventData().apply { setDate(Calendar.getInstance()) })
+    private val eventData = MutableLiveData(editEvent ?: EventData().apply { setDate(Calendar.getInstance()) })
 
     val event: EventData
         get() = eventData.value!!
@@ -96,12 +96,16 @@ private class TeamDetailsViewModel(private val references: FirebaseReferences, p
         eventData.postValue(event.apply(function))
     }
 
-    fun addPlayersToTeam(doOnComplete: () -> Unit) {
+    fun createOrUpdateEvent(doOnComplete: () -> Unit) {
         event.apply { players = selectedPlayers.value!!.map { it.key } }
-        references.teamEventsReference(teamData.key).push().setValue(event).addOnCompleteListener { doOnComplete() }
+        if (event.key.isNotEmpty()) {
+            references.teamEventsReference(teamData.key).child(event.key).setValue(event).addOnCompleteListener { doOnComplete() }
+        } else {
+            references.teamEventsReference(teamData.key).push().setValue(event).addOnCompleteListener { doOnComplete() }
+        }
     }
 }
 
 val createEventModule = module {
-    viewModel { (fragment: Fragment) -> TeamDetailsViewModel(get(), fragment.getParcelable()) }
+    viewModel { (fragment: Fragment) -> TeamDetailsViewModel(get(), fragment.getParcelable(), fragment.getParcelable()) }
 }

@@ -62,6 +62,7 @@ class EventDetailsFragment : BaseFragment(R.layout.fragment_event_details) {
                 R.string.delete_event_message
             ) { viewModel.deleteEvent { navController.popBackStack() } }
         }
+        addAction(R.string.action_edit, R.drawable.ic_edit) { navController.navigate(R.id.nav_edit_event, bundle(viewModel.teamData, viewModel.eventData)) }
     }
 }
 

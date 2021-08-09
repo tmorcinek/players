@@ -22,7 +22,7 @@ fun Bundle.getString() = getString(String::class.java.name)
 fun Fragment.getString() = arguments?.getString(String::class.java.name)
 
 inline fun <reified T : Parcelable> Intent.putParcel(value: T, key: String = value.javaClass.name) = putExtra(key, value)
-inline fun <reified T : Parcelable> Intent.getParcel(key: String = T::class.java.name): T = getParcelableExtra(key)
+inline fun <reified T : Parcelable> Intent.getParcel(key: String = T::class.java.name): T = getParcelableExtra(key)!!
 inline fun <reified T : Parcelable> Intent.getParcelOrNull(key: String = T::class.java.name): T? = getParcelableExtra(key)
 
 fun Intent.putInt(value: Int) = putExtra(Int::class.java.name, value)
