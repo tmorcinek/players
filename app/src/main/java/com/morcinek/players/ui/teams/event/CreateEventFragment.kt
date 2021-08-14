@@ -68,7 +68,7 @@ class CreateEventFragment : BaseFragment(R.layout.fragment_create_event) {
                 }
                 liveData(viewLifecycleOwner, viewModel.selectedPlayers)
             }
-            observe(viewModel.selectedPlayers) { selectedPlayersNumber.text = "${it.size} selected" }
+            observe(viewModel.selectedPlayers) { selectedPlayersNumber.text = "${it.count { it.isSelected }} selected" }
             nextButton.apply {
                 viewModel.isNextEnabled.observe(this@CreateEventFragment) { isEnabled = it }
                 setOnClickListener {

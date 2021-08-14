@@ -1,5 +1,6 @@
 package com.morcinek.recyclerview
 
+import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.*
@@ -12,6 +13,10 @@ fun <T> RecyclerView.list(diffCallback: DiffUtil.ItemCallback<T>, body: FListAda
 }
 
 fun <T> listAdapter(diffCallback: DiffUtil.ItemCallback<T>, body: FListAdapter<T>.() -> Unit) = FListAdapter(diffCallback).apply(body)
+fun <T> listAdapter(resId: Int, diffCallback: DiffUtil.ItemCallback<T>, onBind: (View.(Int, T) -> Unit)) = FListAdapter(diffCallback).apply {
+    resId(resId)
+    onBind(onBind)
+}
 
 class FListAdapter<T>(diffCallback: DiffUtil.ItemCallback<T>) : FAdapter<T>() {
 

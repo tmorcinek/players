@@ -5,7 +5,6 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavController
 import com.morcinek.players.R
 import com.morcinek.players.core.*
 import com.morcinek.players.core.data.EventData
@@ -19,6 +18,8 @@ import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.ui.showDeleteCodeConfirmationDialog
 import com.morcinek.players.ui.lazyNavController
 import com.morcinek.players.ui.teams.stats.PlayerStatsDetails
+import com.morcinek.recyclerview.listAdapter
+import com.morcinek.recyclerview.HasKey
 import kotlinx.android.synthetic.main.fragment_team_details.view.*
 import kotlinx.android.synthetic.main.vh_player.view.*
 import kotlinx.android.synthetic.main.vh_player.view.subtitle
@@ -85,16 +86,16 @@ class TeamDetailsFragment : BaseFragment(R.layout.fragment_team_details) {
             navController.navigate(R.id.nav_event_details, bundle { putParcel(item); putString(viewModel.teamData.key)}, null, FragmentNavigatorExtras(view.name, view.date))
         }
     }.apply {
-        observe(viewModel.events) { submitList(it) }
+        liveData(viewLifecycleOwner, viewModel.events)
     }
 
-    private fun statsAdapter() = listAdapter<PlayerStats>(R.layout.vh_stat, itemCallback()) { position, item ->
+    private fun statsAdapter() = listAdapter<PlayerStats>(R.layout.vh_stat, com.morcinek.recyclerview.itemCallback()) { position, item ->
         name.text = "${position + 1}. ${item.name}"
         attendance.text = item.attended.toString()
         missed.text = item.missed.toString()
         setOnClickListener { navController.navigate(R.id.nav_player_stats, bundle(PlayerStatsDetails(item.data, viewModel.playerEvents(item.data)))) }
     }.apply {
-        observe(viewModel.playersStats) { submitList(it) }
+        liveData(viewLifecycleOwner, viewModel.playersStats)
     }
 
     private val playersFormatter = standardDateFormat()
@@ -103,7 +104,7 @@ class TeamDetailsFragment : BaseFragment(R.layout.fragment_team_details) {
         date.text = playersFormatter.formatCalendar(item.getBirthDate())
         setOnClickListener { navController.navigate(R.id.nav_player_details, bundle(item)) }
     }.apply {
-        observe(viewModel.players) { submitList(it) }
+        liveData(viewLifecycleOwner, viewModel.players)
     }
 }
 
@@ -130,7 +131,7 @@ private class TeamDetailsViewModel(val references: FirebaseReferences, val teamD
     fun deleteTeam(doOnComplete: () -> Unit) = references.teamsReference().child(teamData.key).removeValue().addOnCompleteListener { doOnComplete() }
 }
 
-private class PlayerStats(val name: String, val attended: Int, val missed: Int, val data: PlayerData) : HasKey by data
+private class PlayerStats(val name: String, val attended: Int, val missed: Int, val data: PlayerData, override val key: String = data.key) : HasKey
 
 val teamDetailsModule = module {
     viewModel { (fragment: Fragment) -> TeamDetailsViewModel(get(), fragment.getParcelable()) }
