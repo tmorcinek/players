@@ -9,8 +9,13 @@ import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.createMenuConfiguration
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.database.FirebaseReferences
+import com.morcinek.players.core.database.eventsForTeamLiveDataForValueListener
 import com.morcinek.players.core.database.teamsLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
+import com.morcinek.players.core.extensions.alert.alert
+import com.morcinek.players.core.extensions.alert.cancelButton
+import com.morcinek.players.core.extensions.alert.noButton
+import com.morcinek.players.core.extensions.alert.yesButton
 import com.morcinek.players.core.ui.showDeleteCodeConfirmationDialog
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_player.view.*
@@ -43,12 +48,14 @@ class PlayerDetailsFragment : BaseFragment(R.layout.fragment_player) {
 
     override val menuConfiguration by lazy {
         createMenuConfiguration {
-            if (getParcelable<PlayerData>().teamKey == null) {
-                addAction(R.string.action_delete, R.drawable.ic_delete) {
-                    showDeleteCodeConfirmationDialog(
-                        R.string.player_delete_query,
-                        R.string.player_delete_message
-                    ) { viewModel.deletePlayer { navController.popBackStack() } }
+            addAction(R.string.action_delete, R.drawable.ic_delete) {
+                viewModel.playerEventsCount().observe(viewLifecycleOwner) {
+                    when (it) {
+                        0 -> showDeleteCodeConfirmationDialog(R.string.player_delete_query, R.string.player_delete_message) {
+                            viewModel.deletePlayer { navController.popBackStack() }
+                        }
+                        else -> alert(R.string.player_delete_not_possible) { cancelButton {} }.show()
+                    }
                 }
             }
             addAction(R.string.action_edit, R.drawable.ic_edit) { navController.navigate(R.id.nav_edit_player, bundle(viewModel.playerData)) }
@@ -59,6 +66,8 @@ class PlayerDetailsFragment : BaseFragment(R.layout.fragment_player) {
 class PlayerDetailsViewModel(private val references: FirebaseReferences, val playerData: PlayerData) : ViewModel() {
 
     val playerTeam = references.teamsLiveDataForValueListener().map { it.find { it.key == playerData.teamKey } }
+
+    fun playerEventsCount() = references.eventsForTeamLiveDataForValueListener(playerData.teamKey!!).map { it.count { playerData.key in it.players } }
 
     fun deletePlayer(doOnComplete: () -> Unit) = references.playersReference().child(playerData.key).removeValue().addOnCompleteListener { doOnComplete() }
 }
