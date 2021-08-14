@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModel
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.data.EventData
-import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
@@ -28,7 +27,7 @@ import java.util.*
 
 class CreateEventFragment : BaseFragment(R.layout.fragment_create_event) {
 
-    private val viewModel by viewModelWithFragment<TeamDetailsViewModel>()
+    private val viewModel by viewModelWithFragment<CreateEventViewModel>()
 
     private val navController by lazyNavController()
 
@@ -81,12 +80,12 @@ class CreateEventFragment : BaseFragment(R.layout.fragment_create_event) {
 
 }
 
-private class TeamDetailsViewModel(private val references: FirebaseReferences, private val teamData: TeamData, editEvent: EventData? = null) : ViewModel() {
+private class CreateEventViewModel(private val references: FirebaseReferences, private val teamKey: String, editEvent: EventData? = null) : ViewModel() {
 
     val event: EventData
         get() = eventData.value!!
 
-    private val players = references.playersForTeamLiveDataForValueListener(teamData.key)
+    private val players = references.playersForTeamLiveDataForValueListener(teamKey)
 
     val eventData = MutableLiveData(editEvent ?: EventData().apply { setDate(Calendar.getInstance()) })
 
@@ -100,9 +99,9 @@ private class TeamDetailsViewModel(private val references: FirebaseReferences, p
 
     fun createOrUpdateEvent(doOnComplete: () -> Unit) {
         if (event.key.isNotEmpty()) {
-            references.teamEventsReference(teamData.key).child(event.key).setValue(event).addOnCompleteListener { doOnComplete() }
+            references.teamEventsReference(teamKey).child(event.key).setValue(event).addOnCompleteListener { doOnComplete() }
         } else {
-            references.teamEventsReference(teamData.key).push().setValue(event).addOnCompleteListener { doOnComplete() }
+            references.teamEventsReference(teamKey).push().setValue(event).addOnCompleteListener { doOnComplete() }
         }
     }
 }
@@ -110,5 +109,5 @@ private class TeamDetailsViewModel(private val references: FirebaseReferences, p
 private data class SelectedPlayer(val name: String, val isSelected: Boolean, override val key: String) : HasKey
 
 val createEventModule = module {
-    viewModel { (fragment: Fragment) -> TeamDetailsViewModel(get(), fragment.getParcelable(), fragment.getParcelableOrNull()) }
+    viewModel { (fragment: Fragment) -> CreateEventViewModel(get(), fragment.getString(), fragment.getParcelableOrNull()) }
 }

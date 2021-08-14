@@ -10,7 +10,6 @@ import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.createMenuConfiguration
 import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.data.PlayerData
-import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.eventForTeamLiveDataForValueListener
 import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
@@ -61,24 +60,29 @@ class EventDetailsFragment : BaseFragment(R.layout.fragment_event_details) {
                 R.string.delete_event_message
             ) { viewModel.deleteEvent { navController.popBackStack() } }
         }
-        addAction(R.string.action_edit, R.drawable.ic_edit) { navController.navigate(R.id.nav_edit_event, bundle(viewModel.teamData, viewModel.event.value!!)) }
+        addAction(R.string.action_edit, R.drawable.ic_edit) {
+            navController.navigate(R.id.nav_edit_event, bundle {
+                putString(viewModel.teamKey)
+                putParcel(viewModel.event.value!!)
+            })
+        }
     }
 }
 
-class EventDetailsViewModel(val references: FirebaseReferences, val teamData: TeamData, eventData: EventData) : ViewModel() {
+class EventDetailsViewModel(val references: FirebaseReferences, val teamKey: String, eventData: EventData) : ViewModel() {
 
-    val event = references.eventForTeamLiveDataForValueListener(teamData.key, eventData.key)
-    val players = references.playersForTeamLiveDataForValueListener(teamData.key).combineWith(event) { players, event ->
+    val event = references.eventForTeamLiveDataForValueListener(teamKey, eventData.key)
+    val players = references.playersForTeamLiveDataForValueListener(teamKey).combineWith(event) { players, event ->
         players.filter { it.key in event.players }
     }
 
     fun deleteEvent(doOnComplete: () -> Unit) =
-        references.teamEventReference(teamData.key, event.value!!.key).removeValue().addOnCompleteListener { doOnComplete() }
+        references.teamEventReference(teamKey, event.value!!.key).removeValue().addOnCompleteListener { doOnComplete() }
 }
 
 private fun EventData.statusText() = if (optional) R.string.optional else R.string.mandatory
 private fun EventData.statusColor() = if (optional) R.color.colorPrimary else R.color.colorAccent
 
 val eventDetailsModule = module {
-    viewModel { (fragment: Fragment) -> EventDetailsViewModel(get(), fragment.getParcelable(), fragment.getParcelable()) }
+    viewModel { (fragment: Fragment) -> EventDetailsViewModel(get(), fragment.getString(), fragment.getParcelable()) }
 }

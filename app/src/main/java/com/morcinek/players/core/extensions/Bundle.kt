@@ -19,7 +19,7 @@ inline fun <reified T : Parcelable> Bundle.putTypedParcel(value: Parcelable) = p
 fun Bundle.putString(value: String) = putString(String::class.java.name, value)
 fun Bundle.getString() = getString(String::class.java.name)
 
-fun Fragment.getString() = arguments?.getString(String::class.java.name)
+fun Fragment.getString() = arguments?.getString(String::class.java.name)!!
 
 inline fun <reified T : Parcelable> Intent.putParcel(value: T, key: String = value.javaClass.name) = putExtra(key, value)
 inline fun <reified T : Parcelable> Intent.getParcel(key: String = T::class.java.name): T = getParcelableExtra(key)!!
@@ -34,3 +34,4 @@ fun <T: Parcelable> T.toBundleWithTitle( title: T.() -> String) = Bundle().apply
     putString("title", title())
 }
 fun bundle(vararg parcelable: Parcelable) = Bundle().apply { parcelable.forEach { putParcel(it) } }
+fun bundle(body: Bundle.() -> Unit) = Bundle().apply(body)

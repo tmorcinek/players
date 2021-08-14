@@ -34,7 +34,7 @@ class TeamDetailsFragment : BaseFragment(R.layout.fragment_team_details) {
 
     private val navController by lazyNavController()
 
-    override val fabConfiguration = createFabConfiguration(R.drawable.ic_ball) { navController.navigate(R.id.nav_create_event, viewModel.teamData.toBundle()) }
+    override val fabConfiguration = createFabConfiguration(R.drawable.ic_ball) { navController.navigate(R.id.nav_create_event, bundle { putString(viewModel.teamData.key) }) }
 
     override val menuConfiguration = createMenuConfiguration {
         addAction(R.string.add_players, R.drawable.ic_person_add) {
@@ -82,7 +82,7 @@ class TeamDetailsFragment : BaseFragment(R.layout.fragment_team_details) {
         date.text = eventsFormatter.formatCalendar(item.getDate())
         subtitle.text = "${item.players.size} players"
         setOnClickListener { view ->
-            navController.navigate(R.id.nav_event_details, bundle(item, viewModel.teamData), null, FragmentNavigatorExtras(view.name, view.date))
+            navController.navigate(R.id.nav_event_details, bundle { putParcel(item); putString(viewModel.teamData.key)}, null, FragmentNavigatorExtras(view.name, view.date))
         }
     }.apply {
         observe(viewModel.events) { submitList(it) }

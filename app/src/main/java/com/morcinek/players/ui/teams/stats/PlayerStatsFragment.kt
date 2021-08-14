@@ -12,9 +12,14 @@ import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.ui.lazyNavController
+import com.morcinek.recyclerview.list
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.fragment_player_stats.view.*
+import kotlinx.android.synthetic.main.vh_player.view.*
 import kotlinx.android.synthetic.main.vh_player_event.view.*
+import kotlinx.android.synthetic.main.vh_player_event.view.date
+import kotlinx.android.synthetic.main.vh_player_event.view.name
+import kotlinx.android.synthetic.main.vh_stat.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -34,15 +39,23 @@ class PlayerStatsFragment : BaseFragment(R.layout.fragment_player_stats) {
         super.onViewCreated(view, savedInstanceState)
         view.apply {
             title.text = viewModel.title()
-            recyclerView.apply {
-                layoutManager = LinearLayoutManager(activity)
-                adapter = listAdapter(R.layout.vh_player_event, itemCallback()) { _, item: PlayerEvent ->
+            recyclerView.list<PlayerEvent>(itemCallback()) {
+                resId(R.layout.vh_player_event)
+                onBind { _, item ->
                     name.text = item.name
                     date.text = item.date
                     setBackgroundResource(item.statusColor)
-                }.apply {
-                    submitList(viewModel.events())
+                    setOnClickListener {
+                        navController.navigate(
+                            R.id.nav_event_details,
+                            bundle {
+                                putParcel(item.eventData)
+                                putString(viewModel.playerStatsDetails.playerData.teamKey!!)
+                            }
+                        )
+                    }
                 }
+                submitList(viewModel.events())
             }
         }
     }
@@ -55,7 +68,7 @@ private class PlayerStatsViewModel(val playerStatsDetails: PlayerStatsDetails) :
     fun title() =
         "${playerStatsDetails.playerData} (${playerStatsDetails.events.count { playerStatsDetails.playerData.key in it.players }}/${playerStatsDetails.events.size})"
 
-    fun events() = playerStatsDetails.events.map { PlayerEvent(it.type, dateFormat.formatCalendar(it.getDate()), eventStatus(it), it.key) }
+    fun events() = playerStatsDetails.events.map { PlayerEvent(it.type, dateFormat.formatCalendar(it.getDate()), eventStatus(it), it.key, it) }
 
     private fun eventStatus(it: EventData) = when {
         it.optional -> R.color.dark_indigo_30
@@ -67,7 +80,7 @@ private class PlayerStatsViewModel(val playerStatsDetails: PlayerStatsDetails) :
 @Parcelize
 class PlayerStatsDetails(val playerData: PlayerData, val events: List<EventData>) : Parcelable
 
-private data class PlayerEvent(val name: String, val date: String, val statusColor: Int, override var key: String) : HasKey
+private data class PlayerEvent(val name: String, val date: String, val statusColor: Int, override var key: String, val eventData: EventData) : HasKey
 
 val playerStatsModule = module {
     viewModel { (fragment: Fragment) -> PlayerStatsViewModel(fragment.getParcelable()) }
