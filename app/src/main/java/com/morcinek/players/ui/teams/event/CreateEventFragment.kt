@@ -5,22 +5,23 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
-import com.morcinek.players.core.SelectionListAdapter
 import com.morcinek.players.core.data.EventData
-import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
-import com.morcinek.players.core.itemCallback
 import com.morcinek.players.core.ui.showStandardDropDown
 import com.morcinek.players.ui.lazyNavController
+import com.morcinek.recyclerview.HasKey
+import com.morcinek.recyclerview.itemCallback
+import com.morcinek.recyclerview.list
 import kotlinx.android.synthetic.main.fragment_create_event.*
 import kotlinx.android.synthetic.main.header_button.view.*
 import kotlinx.android.synthetic.main.vh_player.view.*
+import kotlinx.android.synthetic.main.vh_player.view.name
+import kotlinx.android.synthetic.main.vh_selectable_player.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import java.util.*
@@ -36,7 +37,7 @@ class CreateEventFragment : BaseFragment(R.layout.fragment_create_event) {
         view.apply {
             typeLayout.apply {
                 header.setText(R.string.type)
-                value.setText(R.string.value_not_set)
+                value.text = viewModel.event.type.takeIf { it.isNotEmpty() } ?: getString(R.string.value_not_set)
                 setOnClickListener {
                     it.showStandardDropDown(android.R.layout.simple_dropdown_item_1line, listOf("Training", "Game", "Tournament", "Friendly")) {
                         viewModel.updateValue { type = it }
@@ -57,15 +58,16 @@ class CreateEventFragment : BaseFragment(R.layout.fragment_create_event) {
                 }
             }
             mandatorySwitch.setOnCheckedChangeListener { _, isChecked -> viewModel.updateValue { optional = !isChecked } }
-            recyclerView.apply {
-                layoutManager = LinearLayoutManager(activity)
-                adapter = SelectionListAdapter<PlayerData>(R.layout.vh_selectable_player, itemCallback()) { _, item ->
-                    name.text = item.toString()
-                }.apply {
-                    selectedItems = viewModel.selectedPlayers.value!!
-                    observe(viewModel.players) { submitList(it) }
-                    onSelectedItemsChanged { viewModel.selectedPlayers.postValue(it) }
+            recyclerView.list(itemCallback<SelectedPlayer>()) {
+                resId(R.layout.vh_selectable_player)
+                onBind { _, player ->
+                    name.text = player.name
+                    isSelected = player.isSelected
+                    setOnClickListener {
+                        viewModel.updateValue { players = (if (player.key in players) players.minus(player.key) else players.plus(player.key)) }
+                    }
                 }
+                liveData(viewLifecycleOwner, viewModel.selectedPlayers)
             }
             observe(viewModel.selectedPlayers) { selectedPlayersNumber.text = "${it.size} selected" }
             nextButton.apply {
@@ -79,25 +81,24 @@ class CreateEventFragment : BaseFragment(R.layout.fragment_create_event) {
 
 }
 
-private class TeamDetailsViewModel(private val references: FirebaseReferences, private val teamData: TeamData, editEvent: EventData?) : ViewModel() {
-
-    private val eventData = MutableLiveData(editEvent ?: EventData().apply { setDate(Calendar.getInstance()) })
+private class TeamDetailsViewModel(private val references: FirebaseReferences, private val teamData: TeamData, editEvent: EventData? = null) : ViewModel() {
 
     val event: EventData
         get() = eventData.value!!
 
-    val players = references.playersForTeamLiveDataForValueListener(teamData.key)
+    private val players = references.playersForTeamLiveDataForValueListener(teamData.key)
 
-    val selectedPlayers = mutableSetValueLiveData<PlayerData>()
+    val eventData = MutableLiveData(editEvent ?: EventData().apply { setDate(Calendar.getInstance()) })
 
-    val isNextEnabled = selectedPlayers.combineWith(eventData) { players, event -> players.isNotEmpty() && event.type.isNotEmpty() && event.dateInMillis > 0 }
+    val selectedPlayers = combine(eventData, players) { event, players -> players.map { SelectedPlayer(it.toString(), it.key in event.players, it.key) } }
+
+    val isNextEnabled = eventData.map { event -> event.players.isNotEmpty() && event.type.isNotEmpty() && event.dateInMillis > 0 }
 
     fun updateValue(function: EventData.() -> Unit) {
         eventData.postValue(event.apply(function))
     }
 
     fun createOrUpdateEvent(doOnComplete: () -> Unit) {
-        event.apply { players = selectedPlayers.value!!.map { it.key } }
         if (event.key.isNotEmpty()) {
             references.teamEventsReference(teamData.key).child(event.key).setValue(event).addOnCompleteListener { doOnComplete() }
         } else {
@@ -106,6 +107,8 @@ private class TeamDetailsViewModel(private val references: FirebaseReferences, p
     }
 }
 
+private data class SelectedPlayer(val name: String, val isSelected: Boolean, override val key: String) : HasKey
+
 val createEventModule = module {
-    viewModel { (fragment: Fragment) -> TeamDetailsViewModel(get(), fragment.getParcelable(), fragment.getParcelable()) }
+    viewModel { (fragment: Fragment) -> TeamDetailsViewModel(get(), fragment.getParcelable(), fragment.getParcelableOrNull()) }
 }

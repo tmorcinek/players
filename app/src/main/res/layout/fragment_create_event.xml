@@ -30,6 +30,7 @@
             android:paddingBottom="@dimen/half_margin"
             android:checked="true"
             android:text="@string/mandatory"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/dateLayout" />
 
     <LinearLayout
