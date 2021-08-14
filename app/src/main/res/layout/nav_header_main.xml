@@ -49,7 +49,7 @@
             android:id="@+id/logoutButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin"
+            android:layout_marginTop="@dimen/triple_margin"
             android:padding="@dimen/margin"
             android:text="@string/logout"
             android:textAllCaps="true"
