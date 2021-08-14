@@ -3,19 +3,16 @@ package com.morcinek.players.ui.teams
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.createFabConfiguration
 import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.teamsLiveDataForValueListener
-import com.morcinek.players.core.extensions.observe
 import com.morcinek.players.core.extensions.toBundleWithTitle
 import com.morcinek.players.core.itemCallback
-import com.morcinek.players.core.listAdapter
 import com.morcinek.players.ui.lazyNavController
+import com.morcinek.recyclerview.list
 import kotlinx.android.synthetic.main.fragment_list.view.*
 import kotlinx.android.synthetic.main.vh_team.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -34,17 +31,13 @@ class TeamsFragment : BaseFragment(R.layout.fragment_list) {
         super.onViewCreated(view, savedInstanceState)
         view.apply {
             progressBar.show()
-            recyclerView.apply {
-                layoutManager = LinearLayoutManager(activity)
-                adapter = listAdapter<TeamData>(R.layout.vh_team, itemCallback()) { _, item ->
+            recyclerView.list<TeamData>(itemCallback()) {
+                resId(R.layout.vh_team)
+                onBind { _, item ->
                     name.text = item.name
                     setOnClickListener { navController.navigate(R.id.nav_team_details, item.toBundleWithTitle { name }) }
-                }.apply {
-                    observe(viewModel.teams) {
-                        submitList(it)
-                        view.progressBar.hide()
-                    }
                 }
+                liveData(viewLifecycleOwner, viewModel.teams) { view.progressBar.hide() }
             }
         }
     }

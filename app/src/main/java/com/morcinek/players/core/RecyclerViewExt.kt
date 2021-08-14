@@ -37,15 +37,6 @@ class ItemCallback<T> : DiffUtil.ItemCallback<T>() {
     override fun areContentsTheSame(oldItem: T, newItem: T) = _areContentsTheSame(oldItem, newItem)
 }
 
-@Deprecated("Use new functional adapters")
-inline fun <T> listAdapter(vhResourceId: Int, diffCallback: ItemCallback<T>, crossinline onBindView: View.(position: Int, item: T) -> Unit) =
-    object : ListAdapter<T, ViewHolder>(diffCallback) {
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(LayoutInflater.from(parent.context).inflate(vhResourceId, parent, false))
-
-        override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.itemView.onBindView(position, getItem(position))
-    }
-
 class SelectionListAdapter<T>(private val vhResourceId: Int, diffCallback: ItemCallback<T>,
                               private val selectionMode: SelectionMode = MultiSelect(),
                               private val onBindView: View.(position: Int, item: T) -> Unit) : ListAdapter<T, ViewHolder>(diffCallback) {

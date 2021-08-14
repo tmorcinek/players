@@ -13,6 +13,7 @@ import com.morcinek.players.core.database.playersLiveDataForValueListener
 import com.morcinek.players.core.database.teamsLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.ui.lazyNavController
+import com.morcinek.recyclerview.list
 import kotlinx.android.synthetic.main.fragment_list.view.*
 import kotlinx.android.synthetic.main.vh_player.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -31,9 +32,9 @@ class PlayersFragment : BaseFragment(R.layout.fragment_list) {
         super.onViewCreated(view, savedInstanceState)
         view.apply {
             progressBar.show()
-            recyclerView.apply {
-                layoutManager = LinearLayoutManager(activity)
-                adapter = listAdapter(R.layout.vh_player, itemCallback()) { _, item: PlayerItem ->
+            recyclerView.list<PlayerItem>(itemCallback()){
+                resId(R.layout.vh_player)
+                onBind { _, item ->
                     name.text = item.name
                     subtitle.text = item.subtitle
                     date.text = item.date
@@ -45,12 +46,8 @@ class PlayersFragment : BaseFragment(R.layout.fragment_list) {
                             FragmentNavigatorExtras(view.name, view.subtitle, view.date)
                         )
                     }
-                }.apply {
-                    observe(viewModel.players) {
-                        submitList(it)
-                        view.progressBar.hide()
-                    }
                 }
+                liveData(viewLifecycleOwner, viewModel.players) { view.progressBar.hide() }
             }
         }
         exitTransition = moveTransition()
