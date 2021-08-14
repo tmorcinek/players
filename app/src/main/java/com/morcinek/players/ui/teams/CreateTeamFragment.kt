@@ -5,7 +5,6 @@ import android.view.View
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
@@ -19,8 +18,7 @@ import com.morcinek.players.core.extensions.observe
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_create_player.view.*
-import kotlinx.android.synthetic.main.fragment_create_player.view.nextButton
-import kotlinx.android.synthetic.main.fragment_which_players.view.*
+import kotlinx.android.synthetic.main.fragment_create_team.*
 import kotlinx.android.synthetic.main.vh_selectable_player.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel

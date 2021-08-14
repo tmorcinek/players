@@ -22,46 +22,12 @@
     </fragment>
 
     <fragment
-            android:id="@+id/nav_tournament"
-            android:name="com.morcinek.players.ui.funino.TournamentsFragment"
-            android:label="@string/menu_tournaments"
-            tools:layout="@layout/fragment_list" >
-        <action
-                android:id="@+id/action_nav_tournament_to_nav_tournament_details"
-                app:destination="@id/nav_tournament_details" />
-    </fragment>
-
-    <fragment
-            android:id="@+id/nav_tournament_details"
-            android:name="com.morcinek.players.ui.funino.TournamentDetailsFragment"
-            android:label="@string/menu_tournament_details"
-            tools:layout="@layout/fragment_tournament_details" />
-
-    <fragment
             android:id="@+id/nav_team_details"
             android:name="com.morcinek.players.ui.teams.TeamDetailsFragment"
             android:label="{title}"
             tools:layout="@layout/fragment_team_details" >
         <argument android:name="title" app:argType="string"/>
     </fragment>
-
-    <fragment
-            android:id="@+id/nav_how_many_players"
-            android:name="com.morcinek.players.ui.funino.create.WhichPlayersFragment"
-            android:label="@string/menu_how_many_players"
-            tools:layout="@layout/fragment_which_players" />
-
-    <fragment
-            android:id="@+id/nav_how_many_games"
-            android:name="com.morcinek.players.ui.funino.create.HowManyGamesFragment"
-            android:label="@string/menu_how_many_games"
-            tools:layout="@layout/fragment_number_games" />
-
-    <fragment
-            android:id="@+id/nav_what_colors"
-            android:name="com.morcinek.players.ui.funino.create.WhatColorsFragment"
-            android:label="@string/menu_what_colors"
-            tools:layout="@layout/fragment_number_games" />
 
     <fragment
             android:id="@+id/nav_create_player"

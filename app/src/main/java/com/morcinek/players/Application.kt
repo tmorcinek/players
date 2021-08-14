@@ -4,11 +4,6 @@ import android.app.Application
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.morcinek.players.core.database.FirebaseReferences
-import com.morcinek.players.ui.funino.create.howManyGamesModule
-import com.morcinek.players.ui.funino.create.whatColorsModule
-import com.morcinek.players.ui.funino.create.whichPlayersModule
-import com.morcinek.players.ui.funino.tournamentDetailsModule
-import com.morcinek.players.ui.funino.funinoModule
 import com.morcinek.players.ui.navModule
 import com.morcinek.players.ui.players.createPlayerModule
 import com.morcinek.players.ui.players.playerDetailsModule
@@ -38,8 +33,6 @@ class Application : Application() {
                 teamsModule, teamDetailsModule, createTeamModule, addPlayersModule,
                 createEventModule, eventDetailsModule,
                 playersModule, playerDetailsModule, createPlayerModule, playerStatsModule,
-                funinoModule, tournamentDetailsModule,
-                whichPlayersModule, howManyGamesModule, whatColorsModule
             )
         }
     }

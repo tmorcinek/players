@@ -4,7 +4,6 @@ import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.*
-import com.morcinek.recyclerview.FAdapter
 
 
 fun <T> RecyclerView.list(diffCallback: DiffUtil.ItemCallback<T>, body: FListAdapter<T>.() -> Unit) {
