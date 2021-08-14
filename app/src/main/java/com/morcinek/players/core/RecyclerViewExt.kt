@@ -37,6 +37,7 @@ class ItemCallback<T> : DiffUtil.ItemCallback<T>() {
     override fun areContentsTheSame(oldItem: T, newItem: T) = _areContentsTheSame(oldItem, newItem)
 }
 
+@Deprecated("Use new functional adapters")
 inline fun <T> listAdapter(vhResourceId: Int, diffCallback: ItemCallback<T>, crossinline onBindView: View.(position: Int, item: T) -> Unit) =
     object : ListAdapter<T, ViewHolder>(diffCallback) {
 

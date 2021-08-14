@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.createMenuConfiguration
@@ -13,12 +12,13 @@ import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.database.FirebaseReferences
+import com.morcinek.players.core.database.eventForTeamLiveDataForValueListener
 import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.itemCallback
-import com.morcinek.players.core.listAdapter
 import com.morcinek.players.core.ui.showDeleteCodeConfirmationDialog
 import com.morcinek.players.ui.lazyNavController
+import com.morcinek.recyclerview.list
 import kotlinx.android.synthetic.main.fragment_event_details.*
 import kotlinx.android.synthetic.main.vh_text.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -38,19 +38,18 @@ class EventDetailsFragment : BaseFragment(R.layout.fragment_event_details) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.apply {
-            title.text = viewModel.eventData.type
-            year.text = viewModel.eventData.getDate().toDayOfWeekDateFormat()
-            status.apply {
-                setText(viewModel.statusText)
-                setTextColor(resources.getColor(viewModel.statusColor))
-            }
-            recyclerView.apply {
-                layoutManager = LinearLayoutManager(activity)
-                adapter = listAdapter(R.layout.vh_text, itemCallback()) { _, item: PlayerData ->
-                    name.text = item.toString()
-                }.apply {
-                    viewModel.players.observe(this@EventDetailsFragment) { submitList(it) }
+            observe(viewModel.event) {
+                title.text = it.type
+                year.text = it.getDate().toDayOfWeekDateFormat()
+                status.apply {
+                    setText(it.statusText())
+                    setTextColor(resources.getColor(it.statusColor()))
                 }
+            }
+            recyclerView.list<PlayerData>(itemCallback()) {
+                resId(R.layout.vh_text)
+                onBind { _, item -> name.text = item.toString() }
+                liveData(viewLifecycleOwner, viewModel.players)
             }
         }
     }
@@ -62,20 +61,23 @@ class EventDetailsFragment : BaseFragment(R.layout.fragment_event_details) {
                 R.string.delete_event_message
             ) { viewModel.deleteEvent { navController.popBackStack() } }
         }
-        addAction(R.string.action_edit, R.drawable.ic_edit) { navController.navigate(R.id.nav_edit_event, bundle(viewModel.teamData, viewModel.eventData)) }
+        addAction(R.string.action_edit, R.drawable.ic_edit) { navController.navigate(R.id.nav_edit_event, bundle(viewModel.teamData, viewModel.event.value!!)) }
     }
 }
 
-class EventDetailsViewModel(val references: FirebaseReferences, val teamData: TeamData, val eventData: EventData) : ViewModel() {
+class EventDetailsViewModel(val references: FirebaseReferences, val teamData: TeamData, eventData: EventData) : ViewModel() {
 
-    val players = references.playersForTeamLiveDataForValueListener(teamData.key).map { it.filter { it.key in eventData.players } }
-
-    val statusText = if (eventData.optional) R.string.optional else R.string.mandatory
-    val statusColor = if (eventData.optional) R.color.colorPrimary else R.color.colorAccent
+    val event = references.eventForTeamLiveDataForValueListener(teamData.key, eventData.key)
+    val players = references.playersForTeamLiveDataForValueListener(teamData.key).combineWith(event) { players, event ->
+        players.filter { it.key in event.players }
+    }
 
     fun deleteEvent(doOnComplete: () -> Unit) =
-        references.teamEventReference(teamData.key, eventData.key).removeValue().addOnCompleteListener { doOnComplete() }
+        references.teamEventReference(teamData.key, event.value!!.key).removeValue().addOnCompleteListener { doOnComplete() }
 }
+
+private fun EventData.statusText() = if (optional) R.string.optional else R.string.mandatory
+private fun EventData.statusColor() = if (optional) R.color.colorPrimary else R.color.colorAccent
 
 val eventDetailsModule = module {
     viewModel { (fragment: Fragment) -> EventDetailsViewModel(get(), fragment.getParcelable(), fragment.getParcelable()) }
