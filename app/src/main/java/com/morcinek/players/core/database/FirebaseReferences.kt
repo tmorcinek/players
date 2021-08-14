@@ -36,27 +36,20 @@ inline fun valueEventListener(crossinline function: (DataSnapshot) -> Unit) = ob
 }
 
 inline fun <reified T> DataSnapshot.getList(): List<Pair<String, T>> = children.map { it.key!! to it.getValue<T>() }
-
 inline fun <reified T : HasKey> DataSnapshot.getHasKeyObjects(): List<T> = getList<T>().map { it.second.apply { key = it.first } }
 
-inline fun <reified T : HasKey> Query.objectsLiveDataForValueEventListener(function: Query.(ValueEventListener) -> Any): LiveData<List<T>> = MutableLiveData<List<T>>().apply {
-    function(valueEventListener { postValue(it.getHasKeyObjects()) })
+inline fun <reified T : HasKey> Query.objectsLiveDataForValueListener(): LiveData<List<T>> = MutableLiveData<List<T>>().apply {
+    addValueEventListener(valueEventListener { postValue(it.getHasKeyObjects()) })
 }
-
-inline fun <reified T : HasKey> objectLiveDataForValueListener(databaseReference: DatabaseReference): LiveData<T> = MutableLiveData<T>().apply {
-    databaseReference.addValueEventListener(valueEventListener { postValue(it.getValue<T>().apply { key = it.key!! }) })
+inline fun <reified T : HasKey> Query.objectLiveDataForValueListener(): LiveData<T> = MutableLiveData<T>().apply {
+    addValueEventListener(valueEventListener { postValue(it.getValue<T>().apply { key = it.key!! }) })
 }
-
-inline fun <reified T : HasKey> Query.objectsLiveDataForValueListener(): LiveData<List<T>> = objectsLiveDataForValueEventListener{ addValueEventListener(it)}
-inline fun <reified T : HasKey> Query.objectsLiveDataForSingleValueListener(): LiveData<List<T>> = objectsLiveDataForValueEventListener{ addListenerForSingleValueEvent(it)}
 
 fun FirebaseReferences.playersLiveDataForValueListener(): LiveData<List<PlayerData>> = playersReference().objectsLiveDataForValueListener()
-//fun FirebaseReferences.playersLiveDataForSingleValueListener(): LiveData<List<PlayerData>> = playersReference().objectsLiveDataForSingleValueListener()
 fun FirebaseReferences.playersWithoutTeamLiveDataForValueListener(): LiveData<List<PlayerData>> = playersReference().orderByChild("teamKey").equalTo(null).objectsLiveDataForValueListener()
 fun FirebaseReferences.playersForTeamLiveDataForValueListener(teamKey: String): LiveData<List<PlayerData>> = playersReference().orderByChild("teamKey").equalTo(teamKey).objectsLiveDataForValueListener()
 
 fun FirebaseReferences.teamsLiveDataForValueListener(): LiveData<List<TeamData>> = teamsReference().objectsLiveDataForValueListener()
-fun FirebaseReferences.teamsLiveDataForSingleValueListener(): LiveData<List<TeamData>> = teamsReference().objectsLiveDataForSingleValueListener()
 
 fun FirebaseReferences.eventsForTeamLiveDataForValueListener(teamKey: String): LiveData<List<EventData>> = teamEventsReference(teamKey).objectsLiveDataForValueListener()
-fun FirebaseReferences.eventForTeamLiveDataForValueListener(teamKey: String, eventKey: String): LiveData<EventData> = objectLiveDataForValueListener(teamEventReference(teamKey, eventKey))
+fun FirebaseReferences.eventForTeamLiveDataForValueListener(teamKey: String, eventKey: String): LiveData<EventData> = teamEventReference(teamKey, eventKey).objectLiveDataForValueListener()

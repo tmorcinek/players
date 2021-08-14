@@ -11,7 +11,7 @@ import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.database.FirebaseReferences
-import com.morcinek.players.core.database.teamsLiveDataForSingleValueListener
+import com.morcinek.players.core.database.teamsLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.ui.showStandardDropDown
 import com.morcinek.players.ui.lazyNavController
@@ -83,7 +83,7 @@ private class CreatePlayerViewModel(val references: FirebaseReferences, teamData
 
     private val player = MutableLiveData(playerData ?: PlayerData(teamKey = teamData?.key))
 
-    val teams = references.teamsLiveDataForSingleValueListener()
+    val teams = references.teamsLiveDataForValueListener()
 
     val isNextEnabled = player.map { it.isValid() }
 
