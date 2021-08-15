@@ -12,6 +12,7 @@ import com.morcinek.players.ui.teams.addPlayersModule
 import com.morcinek.players.ui.teams.createTeamModule
 import com.morcinek.players.ui.teams.teamDetailsModule
 import com.morcinek.players.ui.teams.event.createEventModule
+import com.morcinek.players.ui.teams.event.createPointsModule
 import com.morcinek.players.ui.teams.event.eventDetailsModule
 import com.morcinek.players.ui.teams.stats.playerStatsModule
 import com.morcinek.players.ui.teams.teamsModule
@@ -31,7 +32,7 @@ class Application : Application() {
             modules(
                 appModule, navModule,
                 teamsModule, teamDetailsModule, createTeamModule, addPlayersModule,
-                createEventModule, eventDetailsModule,
+                createEventModule, eventDetailsModule, createPointsModule,
                 playersModule, playerDetailsModule, createPlayerModule, playerStatsModule,
             )
         }

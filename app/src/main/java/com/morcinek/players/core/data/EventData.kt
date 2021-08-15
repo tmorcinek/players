@@ -15,7 +15,8 @@ data class EventData(
     var dateInMillis: Long = 0,
     var type: String = "",
     var optional: Boolean = false,
-    var players: List<String> = listOf()
+    var players: List<String> = listOf(),
+    var points: List<PointsData> = listOf()
 ) : Parcelable, HasKey {
 
     @Exclude

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/half_margin"
+    android:background="@drawable/item_selector">
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/margin"
+        android:layout_toStartOf="@id/pointsLayout"
+        android:textSize="@dimen/font_medium"
+        tools:text="Name Surname" />
+
+    <LinearLayout
+        android:id="@+id/pointsLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/minusButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_round_button"
+            android:padding="@dimen/margin"
+            android:src="@drawable/ic_minus" />
+
+        <TextView
+            android:id="@+id/pointsLabel"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="@dimen/font_bigger"
+            android:textStyle="bold"
+            tools:text="0" />
+
+        <ImageView
+            android:id="@+id/plusButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_round_button"
+            android:padding="@dimen/margin"
+            android:src="@drawable/ic_plus" />
+    </LinearLayout>
+</RelativeLayout>

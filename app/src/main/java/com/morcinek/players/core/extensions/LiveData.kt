@@ -1,10 +1,13 @@
 package com.morcinek.players.core.extensions
 
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 
 inline fun <reified T> LiveData<T>.observe(owner: LifecycleOwner, crossinline observer: (T) -> Unit) = observe(owner, Observer { observer(it) })
 
-inline fun <reified T> LifecycleOwner.observe(liveData: LiveData<T>, crossinline observer: (T) -> Unit) = liveData.observe(this, Observer { observer(it) })
+inline fun <reified T> AppCompatActivity.observe(liveData: LiveData<T>, observer: Observer<T>) = liveData.observe(this, observer)
+inline fun <reified T> Fragment.observe(liveData: LiveData<T>, observer: Observer<T>) = liveData.observe(viewLifecycleOwner, observer)
 
 fun <X, Y> LiveData<X>.map(mapFunction: (X) -> (Y)): LiveData<Y> = Transformations.map(this, mapFunction)
 
@@ -35,3 +38,5 @@ fun <T, R, Y> LiveData<T>.combineWith(source: LiveData<R>, mapFunction: (T, R) -
     combine(this, source).map { mapFunction(it.first, it.second) }
 
 fun <T> mutableSetValueLiveData() = MutableLiveData<Set<T>>(setOf())
+
+fun <T> MutableLiveData<T>.updateValue(update: T.() -> T) = postValue(value?.update())
