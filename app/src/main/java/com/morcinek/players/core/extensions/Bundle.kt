@@ -22,14 +22,11 @@ fun Bundle.getString() = getString(String::class.java.name)
 fun Fragment.getString() = arguments?.getString(String::class.java.name)!!
 
 fun Bundle.putInt(value: Int) = putInt(Int::class.java.name, value)
-fun Fragment.getIntOrNull() = arguments?.getInt(Int::class.java.name).takeIf { it != 0 }
+fun Fragment.getIntOrNull() = arguments?.getInt(Int::class.java.name, -1).takeIf { it != -1 }
 
 inline fun <reified T : Parcelable> Intent.putParcel(value: T, key: String = value.javaClass.name) = putExtra(key, value)
 inline fun <reified T : Parcelable> Intent.getParcel(key: String = T::class.java.name): T = getParcelableExtra(key)!!
 inline fun <reified T : Parcelable> Intent.getParcelOrNull(key: String = T::class.java.name): T? = getParcelableExtra(key)
-
-fun Intent.putInt(value: Int) = putExtra(Int::class.java.name, value)
-fun Bundle.getInt() = getInt(Int::class.java.name).takeIf { it != 0 }
 
 fun Parcelable.toBundle() = Bundle().apply { putParcel(this@toBundle) }
 fun <T: Parcelable> T.toBundleWithTitle( title: T.() -> String) = Bundle().apply {

@@ -92,7 +92,7 @@ class TeamDetailsFragment : BaseFragment(R.layout.fragment_team_details) {
     private fun statsAdapter() = listAdapter<PlayerStats>(R.layout.vh_stat, com.morcinek.recyclerview.itemCallback()) { position, item ->
         name.text = "${position + 1}. ${item.name}"
         attendance.text = item.attended.toString()
-        missed.text = item.missed.toString()
+        points.text = item.points.toString()
         setOnClickListener { navController.navigate(R.id.nav_player_stats, bundle(PlayerStatsDetails(item.data, viewModel.playerEvents(item.data)))) }
     }.apply {
         liveData(viewLifecycleOwner, viewModel.playersStats)
@@ -118,10 +118,13 @@ private class TeamDetailsViewModel(val references: FirebaseReferences, val teamD
 
     val hasPlayers = players.map { it.isNotEmpty() }
 
-    val playersStats = combine(players, events) { player, events ->
-        player.map { player ->
+    val playersStats = combine(players, events) { players, events ->
+        players.map { player ->
             PlayerStats(
-                player.toString(), events.count { player.key in it.players }, events.count { !it.optional && player.key !in it.players }, player
+                name = player.toString(),
+                attended = events.count { player.key in it.players },
+                points = events.filter { player.key in it.players }.sumOf { it.playerPointsSum(player.key) },
+                player
             )
         }.sortedByDescending { it.attended }
     }
@@ -131,7 +134,12 @@ private class TeamDetailsViewModel(val references: FirebaseReferences, val teamD
     fun deleteTeam(doOnComplete: () -> Unit) = references.teamsReference().child(teamData.key).removeValue().addOnCompleteListener { doOnComplete() }
 }
 
-private class PlayerStats(val name: String, val attended: Int, val missed: Int, val data: PlayerData, override val key: String = data.key) : HasKey
+private class PlayerStats(
+    val name: String,
+    val attended: Int,
+    val points: Int,
+    val data: PlayerData,
+    override val key: String = data.key) : HasKey
 
 val teamDetailsModule = module {
     viewModel { (fragment: Fragment) -> TeamDetailsViewModel(get(), fragment.getParcelable()) }

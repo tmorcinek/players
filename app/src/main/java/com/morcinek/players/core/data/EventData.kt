@@ -28,4 +28,6 @@ data class EventData(
     }
 
     override fun toString() = "$type on ${getDate().toStandardString()}"
+
+    fun playerPointsSum(playerKey: String) = points.sumOf { it.playersPoints[playerKey] ?: 0 }
 }
