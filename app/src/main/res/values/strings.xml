@@ -40,7 +40,9 @@
     <string name="logout">Logout</string>
     <string name="add_players">Add Players</string>
     <string name="add_player">Add Player</string>
+    <string name="calendar_stats">Calendar Stats</string>
 
+    <string name="page_general">General</string>
     <string name="page_events">Events</string>
     <string name="page_stats">Stats</string>
     <string name="page_players">Players</string>

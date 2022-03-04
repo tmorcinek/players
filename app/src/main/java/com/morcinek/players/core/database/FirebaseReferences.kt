@@ -4,11 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import com.morcinek.players.core.extensions.getValue
 import com.morcinek.players.core.HasKey
+import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
-import com.morcinek.players.core.data.EventData
+import com.morcinek.players.core.extensions.dayOfMonth
+import com.morcinek.players.core.extensions.getValue
+import com.morcinek.players.core.extensions.month
+import com.morcinek.players.core.extensions.year
+import java.util.*
 
 class FirebaseReferences(private val auth: FirebaseAuth, val database: FirebaseDatabase) {
 
@@ -22,6 +26,14 @@ class FirebaseReferences(private val auth: FirebaseAuth, val database: FirebaseD
     fun teamsReference() = rootReference().child("teams")
 
     fun teamEventsReference(teamKey: String) = rootReference().child("teams").child(teamKey).child("events")
+
+    fun teamEventsReferenceFromAugust(teamKey: String) = teamEventsReference(teamKey)
+        .orderByChild("dateInMillis")
+        .startAt(Calendar.getInstance().apply {
+            year = 2021
+            month = 7
+            dayOfMonth = 1
+        }.timeInMillis.toDouble())
 
     fun teamEventReference(teamKey: String, eventKey: String) = rootReference().child("teams").child(teamKey).child("events").child(eventKey)
 }
@@ -51,5 +63,5 @@ fun FirebaseReferences.playersForTeamLiveDataForValueListener(teamKey: String): 
 
 fun FirebaseReferences.teamsLiveDataForValueListener(): LiveData<List<TeamData>> = teamsReference().objectsLiveDataForValueListener()
 
-fun FirebaseReferences.eventsForTeamLiveDataForValueListener(teamKey: String): LiveData<List<EventData>> = teamEventsReference(teamKey).objectsLiveDataForValueListener()
+fun FirebaseReferences.eventsForTeamLiveDataForValueListener(teamKey: String): LiveData<List<EventData>> = teamEventsReferenceFromAugust(teamKey).objectsLiveDataForValueListener()
 fun FirebaseReferences.eventForTeamLiveDataForValueListener(teamKey: String, eventKey: String): LiveData<EventData> = teamEventReference(teamKey, eventKey).objectLiveDataForValueListener()

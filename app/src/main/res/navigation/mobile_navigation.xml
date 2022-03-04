@@ -88,4 +88,10 @@
             android:name="com.morcinek.players.ui.teams.stats.PlayerStatsFragment"
             android:label="@string/menu_player_stats"
             tools:layout="@layout/fragment_player_stats" />
+
+    <fragment
+            android:id="@+id/nav_team_stats"
+            android:name="com.morcinek.players.ui.teams.TeamStatsFragment"
+            android:label="@string/calendar_stats"
+            tools:layout="@layout/fragment_player_stats" />
 </navigation>
