@@ -1,8 +1,12 @@
 package com.morcinek.players
 
 import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
+import android.preference.PreferenceManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.gson.GsonBuilder
 import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.ui.navModule
 import com.morcinek.players.ui.players.createPlayerModule
@@ -16,6 +20,7 @@ import com.morcinek.players.ui.teams.event.createPointsModule
 import com.morcinek.players.ui.teams.event.eventDetailsModule
 import com.morcinek.players.ui.teams.stats.playerStatsModule
 import com.morcinek.players.ui.teams.teamsModule
+import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -41,7 +46,10 @@ class Application : Application() {
 
 val appModule = module {
 
-    //    single<SharedPreferences> { PreferenceManager.getDefaultSharedPreferences(androidApplication()) }
+    factory { GsonBuilder().create() }
+    factory { androidApplication().getSharedPreferences("AppSharedPreferences", Context.MODE_PRIVATE) }
+    factory { AppPreferences(get(), get()) }
+
     single { FirebaseAuth.getInstance() }
     single { FirebaseDatabase.getInstance() }
     single { FirebaseReferences(get(), get()) }

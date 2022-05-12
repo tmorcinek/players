@@ -5,6 +5,7 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
+import com.morcinek.players.AppPreferences
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.createFabConfiguration
@@ -12,7 +13,10 @@ import com.morcinek.players.core.createMenuConfiguration
 import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
-import com.morcinek.players.core.database.*
+import com.morcinek.players.core.database.FirebaseReferences
+import com.morcinek.players.core.database.eventsForTeamLiveDataForValueListener
+import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
+import com.morcinek.players.core.database.playersWithoutTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.core.ui.showDeleteCodeConfirmationDialog
@@ -26,6 +30,7 @@ import kotlinx.android.synthetic.main.vh_player.view.subtitle
 import kotlinx.android.synthetic.main.vh_stat.view.*
 import kotlinx.android.synthetic.main.vh_stat.view.name
 import kotlinx.android.synthetic.main.view_empty_players.view.*
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -34,6 +39,7 @@ class TeamDetailsFragment : BaseFragment(R.layout.fragment_team_details) {
     private val viewModel by viewModelWithFragment<TeamDetailsViewModel>()
 
     private val navController by lazyNavController()
+    private val appPreferences by inject<AppPreferences>()
 
     override val fabConfiguration =
         createFabConfiguration(R.drawable.ic_ball) { navController.navigate(R.id.nav_create_event, bundle { putString(viewModel.teamData.key) }) }
@@ -54,6 +60,7 @@ class TeamDetailsFragment : BaseFragment(R.layout.fragment_team_details) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        appPreferences.selectedTeamData = viewModel.teamData
         view.apply {
             tabLayout.setupWithViewPager(viewPager)
             observe(viewModel.hasPlayers) {
@@ -115,14 +122,15 @@ class TeamDetailsFragment : BaseFragment(R.layout.fragment_team_details) {
         liveData(viewLifecycleOwner, viewModel.playersStats)
     }
 
-    private fun statsAdapterLast(numberOfRecords: Int) = listAdapter<PlayerStats>(R.layout.vh_stat, com.morcinek.recyclerview.itemCallback()) { position, item ->
-        name.text = "${position + 1}. ${item.name}"
-        attendance.text = item.attended.toString()
-        points.text = item.points.toString()
-        setOnClickListener { navController.navigate(R.id.nav_player_stats, bundle(PlayerStatsDetails(item.data, viewModel.playerEvents(item.data)))) }
-    }.apply {
-        liveData(viewLifecycleOwner, viewModel.playersStatsLast(numberOfRecords))
-    }
+    private fun statsAdapterLast(numberOfRecords: Int) =
+        listAdapter<PlayerStats>(R.layout.vh_stat, com.morcinek.recyclerview.itemCallback()) { position, item ->
+            name.text = "${position + 1}. ${item.name}"
+            attendance.text = item.attended.toString()
+            points.text = item.points.toString()
+            setOnClickListener { navController.navigate(R.id.nav_player_stats, bundle(PlayerStatsDetails(item.data, viewModel.playerEvents(item.data)))) }
+        }.apply {
+            liveData(viewLifecycleOwner, viewModel.playersStatsLast(numberOfRecords))
+        }
 
     private val playersFormatter = standardDateFormat()
     private fun playersAdapter() = listAdapter<PlayerData>(R.layout.vh_player, itemCallback()) { _, item ->
@@ -143,9 +151,15 @@ private class TeamDetailsViewModel(val references: FirebaseReferences, val teamD
         listOf(
             GeneralStats("Events", "${it.size}"),
             GeneralStats("Frequency", "${it.sumOf { it.players.size }.toDouble() / it.size}"),
-            GeneralStats("Frequency games", "${it.filter { it.type == "Game" }.let { events ->  events.sumOf { it.players.size }.toDouble() / events.size }}"),
-            GeneralStats("Frequency training", "${it.filter { it.type == "Training" }.let { events ->  events.sumOf { it.players.size }.toDouble() / events.size }}"),
-            GeneralStats("Frequency friendlies", "${it.filter { it.type == "Friendly" }.let { events ->  events.sumOf { it.players.size }.toDouble() / events.size }}"),
+            GeneralStats("Frequency games", "${it.filter { it.type == "Game" }.let { events -> events.sumOf { it.players.size }.toDouble() / events.size }}"),
+            GeneralStats(
+                "Frequency training",
+                "${it.filter { it.type == "Training" }.let { events -> events.sumOf { it.players.size }.toDouble() / events.size }}"
+            ),
+            GeneralStats(
+                "Frequency friendlies",
+                "${it.filter { it.type == "Friendly" }.let { events -> events.sumOf { it.players.size }.toDouble() / events.size }}"
+            ),
         ).plus(it.groupBy { it.type }.map { GeneralStats(it.key, "${it.value.size}") })
     }
 //    "Training", "Game", "Tournament", "Friendly"
@@ -165,16 +179,17 @@ private class TeamDetailsViewModel(val references: FirebaseReferences, val teamD
         }.sortedByDescending { it.attended }
     }
 
-    fun playersStatsLast(numberOfRecords: Int) = combine(players, references.eventsForTeamLiveDataForValueListener(teamData.key, numberOfRecords)) {players, events ->
-        players.map { player ->
-            PlayerStats(
-                name = player.toString(),
-                attended = events.count { player.key in it.players },
-                points = events.filter { player.key in it.players }.sumOf { it.playerPointsSum(player.key) },
-                player
-            )
-        }.sortedByDescending { it.attended }
-    }
+    fun playersStatsLast(numberOfRecords: Int) =
+        combine(players, references.eventsForTeamLiveDataForValueListener(teamData.key, numberOfRecords)) { players, events ->
+            players.map { player ->
+                PlayerStats(
+                    name = player.toString(),
+                    attended = events.count { player.key in it.players },
+                    points = events.filter { player.key in it.players }.sumOf { it.playerPointsSum(player.key) },
+                    player
+                )
+            }.sortedByDescending { it.attended }
+        }
 
     val playersWithoutTeam = references.playersWithoutTeamLiveDataForValueListener()
 

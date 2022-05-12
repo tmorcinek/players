@@ -19,6 +19,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.morcinek.players.AppPreferences
 import com.morcinek.players.R
 import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.extensions.observe
@@ -30,11 +31,14 @@ import com.morcinek.players.core.extensions.alert.yesButton
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.nav_header_main.view.*
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.dsl.module
 
 class NavActivity : AppCompatActivity() {
+
+    private val appPreferences by inject<AppPreferences>()
 
     private val viewModel by viewModel<NavViewModel>()
 
@@ -116,6 +120,7 @@ class NavActivity : AppCompatActivity() {
                 }
             }
         }
+        appPreferences.selectedTeamData?.let { findNavController(R.id.navHostFragment).navigateSingleTop(R.id.nav_team_details, it.toBundleWithTitle { name }) }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
