@@ -12,10 +12,7 @@ import com.morcinek.players.core.createMenuConfiguration
 import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
-import com.morcinek.players.core.database.FirebaseReferences
-import com.morcinek.players.core.database.eventsForTeamLiveDataForValueListener
-import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
-import com.morcinek.players.core.database.playersWithoutTeamLiveDataForValueListener
+import com.morcinek.players.core.database.*
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.core.ui.showDeleteCodeConfirmationDialog
@@ -66,6 +63,7 @@ class TeamDetailsFragment : BaseFragment(R.layout.fragment_team_details) {
                         R.string.page_general to generalAdapter(),
                         R.string.page_events to eventsAdapter(),
                         R.string.page_stats to statsAdapter(),
+                        R.string.page_stats_last_n to statsAdapterLast(20),
                         R.string.page_players to playersAdapter()
                     )
                 } else {
@@ -117,6 +115,15 @@ class TeamDetailsFragment : BaseFragment(R.layout.fragment_team_details) {
         liveData(viewLifecycleOwner, viewModel.playersStats)
     }
 
+    private fun statsAdapterLast(numberOfRecords: Int) = listAdapter<PlayerStats>(R.layout.vh_stat, com.morcinek.recyclerview.itemCallback()) { position, item ->
+        name.text = "${position + 1}. ${item.name}"
+        attendance.text = item.attended.toString()
+        points.text = item.points.toString()
+        setOnClickListener { navController.navigate(R.id.nav_player_stats, bundle(PlayerStatsDetails(item.data, viewModel.playerEvents(item.data)))) }
+    }.apply {
+        liveData(viewLifecycleOwner, viewModel.playersStatsLast(numberOfRecords))
+    }
+
     private val playersFormatter = standardDateFormat()
     private fun playersAdapter() = listAdapter<PlayerData>(R.layout.vh_player, itemCallback()) { _, item ->
         name.text = item.toString()
@@ -148,6 +155,17 @@ private class TeamDetailsViewModel(val references: FirebaseReferences, val teamD
     val hasPlayers = players.map { it.isNotEmpty() }
 
     val playersStats = combine(players, events) { players, events ->
+        players.map { player ->
+            PlayerStats(
+                name = player.toString(),
+                attended = events.count { player.key in it.players },
+                points = events.filter { player.key in it.players }.sumOf { it.playerPointsSum(player.key) },
+                player
+            )
+        }.sortedByDescending { it.attended }
+    }
+
+    fun playersStatsLast(numberOfRecords: Int) = combine(players, references.eventsForTeamLiveDataForValueListener(teamData.key, numberOfRecords)) {players, events ->
         players.map { player ->
             PlayerStats(
                 name = player.toString(),

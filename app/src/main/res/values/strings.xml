@@ -45,6 +45,7 @@
     <string name="page_general">General</string>
     <string name="page_events">Events</string>
     <string name="page_stats">Stats</string>
+    <string name="page_stats_last_n">Last n</string>
     <string name="page_players">Players</string>
 
     <string name="action_delete">Delete</string>
