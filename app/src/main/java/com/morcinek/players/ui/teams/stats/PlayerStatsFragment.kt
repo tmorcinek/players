@@ -5,23 +5,23 @@ import android.os.Parcelable
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
-import com.morcinek.players.core.*
+import com.morcinek.players.core.BaseFragment
+import com.morcinek.players.core.HasKey
+import com.morcinek.players.core.createMenuConfiguration
 import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.extensions.*
+import com.morcinek.players.core.itemCallback
 import com.morcinek.players.ui.lazyNavController
 import com.morcinek.recyclerview.list
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.fragment_player_stats.view.*
-import kotlinx.android.synthetic.main.vh_player.view.*
 import kotlinx.android.synthetic.main.vh_player_event.view.*
-import kotlinx.android.synthetic.main.vh_player_event.view.date
-import kotlinx.android.synthetic.main.vh_player_event.view.name
-import kotlinx.android.synthetic.main.vh_stat.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
+import java.text.NumberFormat
+
 
 class PlayerStatsFragment : BaseFragment(R.layout.fragment_player_stats) {
 
@@ -39,6 +39,7 @@ class PlayerStatsFragment : BaseFragment(R.layout.fragment_player_stats) {
         super.onViewCreated(view, savedInstanceState)
         view.apply {
             title.text = viewModel.title()
+            subtitle.text = viewModel.subtitle()
             recyclerView.list<PlayerEvent>(itemCallback()) {
                 resId(R.layout.vh_player_event)
                 onBind { _, item ->
@@ -66,7 +67,10 @@ private class PlayerStatsViewModel(val playerStatsDetails: PlayerStatsDetails) :
     private val dateFormat = dayOfWeekDateFormat()
 
     fun title() =
-        "${playerStatsDetails.playerData} (${playerStatsDetails.events.count { playerStatsDetails.playerData.key in it.players }}/${playerStatsDetails.events.size})"
+        "${playerStatsDetails.playerData}"
+
+    fun subtitle() =
+        "Frequency: $playerStatsDetails"
 
     fun events() = playerStatsDetails.events.map { PlayerEvent(it.type, dateFormat.formatCalendar(it.getDate()), eventStatus(it), it.key, it) }
 
@@ -78,7 +82,13 @@ private class PlayerStatsViewModel(val playerStatsDetails: PlayerStatsDetails) :
 }
 
 @Parcelize
-class PlayerStatsDetails(val playerData: PlayerData, val events: List<EventData>) : Parcelable
+class PlayerStatsDetails(val playerData: PlayerData, val events: List<EventData>) : Parcelable {
+    val trainings = events.filter { it.type == "Training" }
+    val attendence = trainings.count { playerData.key in it.players }
+    val ratio = attendence.toDouble() / trainings.size
+
+    override fun toString() = "     ${attendence}/${trainings.size}      ${NumberFormat.getPercentInstance().format(ratio)}"
+}
 
 private data class PlayerEvent(val name: String, val date: String, val statusColor: Int, override var key: String, val eventData: EventData) : HasKey
 
