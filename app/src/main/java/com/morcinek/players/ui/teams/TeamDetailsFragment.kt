@@ -70,6 +70,7 @@ class TeamDetailsFragment : BaseFragment(R.layout.fragment_team_details) {
                         R.string.page_general to generalAdapter(),
                         R.string.page_events to eventsAdapter(),
                         R.string.page_stats to statsAdapter(),
+                        R.string.page_trainings to trainingsAdapter(),
                         R.string.page_stats_last_n to statsAdapterLast(20),
                         R.string.page_players to playersAdapter()
                     )
@@ -120,6 +121,15 @@ class TeamDetailsFragment : BaseFragment(R.layout.fragment_team_details) {
         setOnClickListener { navController.navigate(R.id.nav_player_stats, bundle(PlayerStatsDetails(item.data, viewModel.playerEvents(item.data)))) }
     }.apply {
         liveData(viewLifecycleOwner, viewModel.playersStats)
+    }
+
+    private fun trainingsAdapter() = listAdapter<PlayerStats>(R.layout.vh_stat, com.morcinek.recyclerview.itemCallback()) { position, item ->
+        name.text = "${position + 1}. ${item.name}"
+        attendance.text = item.attended.toString()
+        points.text = item.points.toString()
+        setOnClickListener { navController.navigate(R.id.nav_player_stats, bundle(PlayerStatsDetails(item.data, viewModel.playerEvents(item.data)))) }
+    }.apply {
+        liveData(viewLifecycleOwner, viewModel.playersTrainingStats)
     }
 
     private fun statsAdapterLast(numberOfRecords: Int) =
@@ -179,12 +189,23 @@ private class TeamDetailsViewModel(val references: FirebaseReferences, val teamD
         }.sortedByDescending { it.attended }
     }
 
+    val playersTrainingStats = combine(players, events) { players, events ->
+        players.map { player ->
+            PlayerStats(
+                name = player.toString(),
+                attended = events.filter { it.type == "Training" }.count { player.key in it.players },
+                points = events.filter { player.key in it.players }.sumOf { it.playerPointsSum(player.key) },
+                player
+            )
+        }.sortedByDescending { it.attended }
+    }
+
     fun playersStatsLast(numberOfRecords: Int) =
         combine(players, references.eventsForTeamLiveDataForValueListener(teamData.key, numberOfRecords)) { players, events ->
             players.map { player ->
                 PlayerStats(
                     name = player.toString(),
-                    attended = events.count { player.key in it.players },
+                    attended = events.filter { it.type == "Training" }.count { player.key in it.players },
                     points = events.filter { player.key in it.players }.sumOf { it.playerPointsSum(player.key) },
                     player
                 )
