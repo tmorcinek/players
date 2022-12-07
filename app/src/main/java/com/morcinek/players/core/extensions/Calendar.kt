@@ -35,5 +35,6 @@ fun calendar() = Calendar.getInstance()
 
 fun standardDateFormat() = SimpleDateFormat("dd.MM.yyyy", Locale.US)
 fun dayOfWeekDateFormat() = SimpleDateFormat("EEEE dd.MM.yyyy", Locale.US)
+fun circleDayDate() = SimpleDateFormat("EEE\ndd.MM", Locale.US)
 
 fun DateFormat.formatCalendar(calendar: Calendar): String = format(calendar.time)

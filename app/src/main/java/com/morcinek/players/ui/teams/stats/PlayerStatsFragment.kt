@@ -15,9 +15,11 @@ import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.ui.lazyNavController
 import com.morcinek.recyclerview.list
+import com.morcinek.recyclerview.setup
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.fragment_player_stats.view.*
-import kotlinx.android.synthetic.main.vh_player_event.view.*
+import kotlinx.android.synthetic.main.vh_games_number.view.*
+import kotlinx.android.synthetic.main.vh_player_event_circle.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import java.text.NumberFormat
@@ -40,44 +42,58 @@ class PlayerStatsFragment : BaseFragment(R.layout.fragment_player_stats) {
         view.apply {
             title.text = viewModel.title()
             subtitle.text = viewModel.subtitle()
-            recyclerView.list<PlayerEvent>(itemCallback()) {
-                resId(R.layout.vh_player_event)
-                onBind { _, item ->
-                    name.text = item.name
-                    date.text = item.date
-                    setBackgroundResource(item.statusColor)
-                    setOnClickListener {
-                        navController.navigate(
-                            R.id.nav_event_details,
-                            bundle {
-                                putParcel(item.eventData)
-                                putString(viewModel.playerStatsDetails.playerData.teamKey!!)
-                            }
-                        )
+            recyclerView.setup {
+                list<PlayerEvent>(itemCallback()){
+                    resId(R.layout.vh_player_event_circle)
+                    onBind { _, item ->
+                        circleText.text = item.date
+                        circleText.setBackgroundResource(item.statusColor)
                     }
+                    submitList(viewModel.events())
                 }
-                submitList(viewModel.events())
+                grid(6)
             }
+//            recyclerView.list<PlayerEvent>(itemCallback()) {
+//                resId(R.layout.vh_player_event)
+//                onBind { _, item ->
+//                    name.text = item.name
+//                    date.text = item.date
+//                    setBackgroundResource(item.statusColor)
+//                    setOnClickListener {
+//                        navController.navigate(
+//                            R.id.nav_event_details,
+//                            bundle {
+//                                putParcel(item.eventData)
+//                                putString(viewModel.playerStatsDetails.playerData.teamKey!!)
+//                            }
+//                        )
+//                    }
+//                }
+//                submitList(viewModel.events())
+//            }
         }
     }
 }
 
 private class PlayerStatsViewModel(val playerStatsDetails: PlayerStatsDetails) : ViewModel() {
 
-    private val dateFormat = dayOfWeekDateFormat()
+    private val dateFormat = circleDayDate()
 
-    fun title() =
-        "${playerStatsDetails.playerData}"
+    fun title() = "${playerStatsDetails.playerData}"
 
-    fun subtitle() =
-        "Frequency: $playerStatsDetails"
+    fun subtitle() = "Frequency: $playerStatsDetails"
 
-    fun events() = playerStatsDetails.events.map { PlayerEvent(it.type, dateFormat.formatCalendar(it.getDate()), eventStatus(it), it.key, it) }
+    fun events() = playerStatsDetails.trainings.map { PlayerEvent(it.type, dateFormat.formatCalendar(it.getDate()), eventBackground(it), it.key, it) }
 
     private fun eventStatus(it: EventData) = when {
         it.optional -> R.color.dark_indigo_30
         playerStatsDetails.playerData.key in it.players -> R.color.colorPrimary30
         else -> R.color.colorAccent30
+    }
+
+    private fun eventBackground(it: EventData) = when(playerStatsDetails.playerData.key in it.players) {
+        true -> R.drawable.circle_green
+        false -> R.drawable.circle_red
     }
 }
 
