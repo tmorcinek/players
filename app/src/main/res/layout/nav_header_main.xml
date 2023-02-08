@@ -52,9 +52,9 @@
             android:layout_marginTop="@dimen/triple_margin"
             android:padding="@dimen/margin"
             android:text="@string/logout"
-            android:textAllCaps="true"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/black"
             android:textStyle="bold"
+            android:background="?attr/selectableItemBackgroundBorderless"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

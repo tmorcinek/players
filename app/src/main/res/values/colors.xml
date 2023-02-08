@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#519548</color>
-    <color name="colorPrimaryDark">#DD519548</color>
+    <color name="colorPrimary">#189048</color>
+    <color name="colorPrimaryDark">#189048</color>
     <color name="colorAccent">@color/lipstick</color>
     <color name="colorAccent30">#4cda1c55</color>
-    <color name="colorPrimary30">#4c519548</color>
+    <color name="colorPrimary30">#4c189048</color>
+
+    <color name="turkishTeal">#30A878</color>
+    <color name="darkHunterGreen">#003018</color>
+    <color name="eucalipto">#47C0A8</color>
+    <color name="bluaBabie">#A8BFD7</color>
+    <color name="bluaBabie30">#19A8BFD7</color>
 
     <color name="lightGray">#D3D3D3</color>
     <color name="disabledBackground">#EAFDE6</color>

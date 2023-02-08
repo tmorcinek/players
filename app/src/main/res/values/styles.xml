@@ -134,6 +134,7 @@
         <item name="android:layout_marginTop">@dimen/margin</item>
         <item name="android:layout_marginStart">@dimen/margin</item>
         <item name="android:layout_marginEnd">@dimen/margin</item>
+        <item name="android:foreground">?attr/selectableItemBackgroundBorderless</item>
     </style>
 
 </resources>
