@@ -22,7 +22,6 @@ import com.google.firebase.auth.FirebaseUser
 import com.morcinek.players.AppPreferences
 import com.morcinek.players.R
 import com.morcinek.players.core.database.FirebaseReferences
-import com.morcinek.players.core.extensions.observe
 import com.morcinek.players.core.database.teamsLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.extensions.alert.alert
@@ -49,8 +48,7 @@ class NavActivity : AppCompatActivity() {
         )
     }
 
-    private val headerView: View
-        get() = navigationView.getHeaderView(0)
+    private val headerView: View get() = navigationView.getHeaderView(0)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
