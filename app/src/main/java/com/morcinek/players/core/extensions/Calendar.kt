@@ -6,6 +6,7 @@ import java.util.*
 
 fun Calendar.toDayOfWeekDateFormat() = dayOfWeekDateFormat().format(time)
 fun Calendar.toStandardString() = standardDateFormat().format(time)
+fun Calendar.toYearString() = year.toString()
 
 var Calendar.month: Int
     get() = get(Calendar.MONTH)

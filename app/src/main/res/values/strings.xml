@@ -10,6 +10,7 @@
     <string name="menu_players">Players</string>
     <string name="menu_teams">Teams</string>
     <string name="menu_team_details">Team Details</string>
+    <string name="menu_team_info">Team Info</string>
     <string name="menu_create_player">Create Player</string>
     <string name="menu_create_team">Create Team</string>
     <string name="menu_add_players_to_team">Add Players to Team</string>
@@ -21,6 +22,7 @@
     <string name="menu_player_stats">Player Stats</string>
 
     <string name="title_edit_player">Edit Player</string>
+    <string name="title_edit_team">Edit Team</string>
 
     <string name="team_title">Team</string>
     <string name="player_title">Player</string>

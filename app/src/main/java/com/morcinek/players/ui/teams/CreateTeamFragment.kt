@@ -3,6 +3,7 @@ package com.morcinek.players.ui.teams
 import android.os.Bundle
 import android.view.View
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,8 +14,10 @@ import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.playersWithoutTeamLiveDataForValueListener
+import com.morcinek.players.core.extensions.getParcelableOrNull
 import com.morcinek.players.core.extensions.map
 import com.morcinek.players.core.extensions.observe
+import com.morcinek.players.core.extensions.viewModelWithFragment
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.ui.lazyNavController
 import kotlinx.android.synthetic.main.fragment_create_player.view.*
@@ -26,14 +29,17 @@ import org.koin.dsl.module
 
 class CreateTeamFragment : BaseFragment(R.layout.fragment_create_team) {
 
-    private val viewModel by viewModel<CreateTeamViewModel>()
+    private val viewModel by viewModelWithFragment<CreateTeamViewModel>()
 
     private val navController by lazyNavController()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.apply {
-            nameTextInputLayout.editText?.doOnTextChanged { text, _, _, _ -> viewModel.updateValue { name = text.toString() } }
+            nameTextInputLayout.editText?.run {
+                setText(viewModel.teamData?.name)
+                doOnTextChanged { text, _, _, _ -> viewModel.updateValue { name = text.toString() } }
+            }
             recyclerView.apply {
                 layoutManager = LinearLayoutManager(activity)
                 adapter = SelectionListAdapter<PlayerData>(R.layout.vh_selectable_player, itemCallback()) { _, item ->
@@ -46,13 +52,13 @@ class CreateTeamFragment : BaseFragment(R.layout.fragment_create_team) {
             }
             nextButton.apply {
                 observe(viewModel.isNextEnabled) { isEnabled = it }
-                setOnClickListener { viewModel.createTeam { navController.popBackStack() } }
+                setOnClickListener { viewModel.createOrUpdateTeam { navController.popBackStack() } }
             }
         }
     }
 }
 
-private class CreateTeamViewModel(val references: FirebaseReferences) : ViewModel() {
+private class CreateTeamViewModel(val references: FirebaseReferences, val teamData: TeamData?) : ViewModel() {
 
     private val team = MutableLiveData(TeamData())
 
@@ -62,7 +68,7 @@ private class CreateTeamViewModel(val references: FirebaseReferences) : ViewMode
 
     fun updateValue(function: TeamData.() -> Unit) = team.postValue(team.value?.apply(function))
 
-    fun createTeam(doOnComplete: () -> Unit) {
+    fun createOrUpdateTeam(doOnComplete: () -> Unit) {
         val childUpdates = HashMap<String, Any>()
         references.teamsReference().push().key!!.let { key ->
             childUpdates["/teams/$key"] = team.value!!.toMap()
@@ -77,5 +83,5 @@ private class CreateTeamViewModel(val references: FirebaseReferences) : ViewMode
 }
 
 val createTeamModule = module {
-    viewModel { CreateTeamViewModel(get()) }
+    viewModel { (fragment: Fragment) -> CreateTeamViewModel(get(), fragment.getParcelableOrNull()) }
 }

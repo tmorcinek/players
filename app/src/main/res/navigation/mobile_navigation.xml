@@ -17,9 +17,31 @@
             android:label="@string/menu_teams"
             tools:layout="@layout/fragment_list" >
         <action
-                android:id="@+id/action_nav_teams_to_nav_team_details"
-                app:destination="@id/nav_team_details" />
+            android:id="@+id/action_nav_teams_to_team_info"
+            app:destination="@id/team_info" />
     </fragment>
+
+    <fragment
+            android:id="@+id/team_info"
+            android:name="com.morcinek.players.ui.teams.TeamInfoFragment"
+            android:label="@string/menu_team_info"
+            tools:layout="@layout/fragment_team_info" >
+        <argument
+            android:name="teamData"
+            app:argType="com.morcinek.players.core.data.TeamData" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_create_team"
+        android:name="com.morcinek.players.ui.teams.CreateTeamFragment"
+        android:label="@string/menu_create_team"
+        tools:layout="@layout/fragment_create_team" />
+
+    <fragment
+        android:id="@+id/nav_edit_team"
+        android:name="com.morcinek.players.ui.teams.CreateTeamFragment"
+        android:label="@string/title_edit_team"
+        tools:layout="@layout/fragment_create_team" />
 
     <fragment
             android:id="@+id/nav_team_details"
@@ -40,12 +62,6 @@
             android:name="com.morcinek.players.ui.players.CreatePlayerFragment"
             android:label="@string/title_edit_player"
             tools:layout="@layout/fragment_create_player" />
-
-    <fragment
-            android:id="@+id/nav_create_team"
-            android:name="com.morcinek.players.ui.teams.CreateTeamFragment"
-            android:label="@string/menu_create_team"
-            tools:layout="@layout/fragment_create_team" />
 
     <fragment
             android:id="@+id/nav_add_players_to_team"

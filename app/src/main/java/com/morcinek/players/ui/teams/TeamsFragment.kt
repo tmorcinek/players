@@ -9,6 +9,7 @@ import com.morcinek.players.core.createFabConfiguration
 import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.teamsLiveDataForValueListener
+import com.morcinek.players.core.extensions.bundle
 import com.morcinek.players.core.extensions.toBundleWithTitle
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.ui.lazyNavController
@@ -35,7 +36,10 @@ class TeamsFragment : BaseFragment(R.layout.fragment_list) {
                 resId(R.layout.vh_team)
                 onBind { _, item ->
                     name.text = item.name
-                    setOnClickListener { navController.navigate(R.id.nav_team_details, item.toBundleWithTitle { name }) }
+                    delete.setOnClickListener {
+//                        navController.navigate(R.id.nav_team_details, item.toBundleWithTitle { name })
+                    }
+                    edit.setOnClickListener { navController.navigate(R.id.action_nav_teams_to_team_info, bundle(item)) }
                 }
                 liveData(viewLifecycleOwner, viewModel.teams) { view.progressBar.hide() }
             }
