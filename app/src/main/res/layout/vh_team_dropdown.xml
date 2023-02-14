@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/half_margin"
+    android:ellipsize="marquee"
+    android:includeFontPadding="false"
+    android:singleLine="true"
+    android:textColor="@color/darkHunterGreen"
+    android:textSize="@dimen/font_std"
+    android:padding="@dimen/double_margin"
+    tools:text="Team Name" />

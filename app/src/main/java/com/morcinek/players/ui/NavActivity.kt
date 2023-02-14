@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -19,6 +21,9 @@ import com.bumptech.glide.request.RequestOptions
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.morcinek.core.navigate
+import com.morcinek.core.ui.PopupAdapter
+import com.morcinek.core.ui.showPopupWindow
 import com.morcinek.players.AppPreferences
 import com.morcinek.players.R
 import com.morcinek.players.core.database.FirebaseReferences
@@ -49,6 +54,8 @@ class NavActivity : AppCompatActivity() {
     }
 
     private val headerView: View get() = navigationView.getHeaderView(0)
+
+    private val navController by lazy { findNavController(R.id.navHostFragment) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,27 +105,59 @@ class NavActivity : AppCompatActivity() {
                         }.show()
                     }
                 }
+                editTeams.setOnClickListener {
+                    navController.navigate(R.id.nav_teams) { launchSingleTop = true }
+                    drawerLayout.closeDrawers()
+                }
+                selectTeamButton.run {
+                    text = appPreferences.selectedTeamData?.name ?: "Select team"
+//                    icon.rotate180()
+                    setOnClickListener {
+                        it.showPopupWindow(
+                            PopupAdapter(listOf("New Team", "Yemkdslfj", "This is the best team"), R.layout.vh_team_dropdown) {
+                                (this as TextView).text = it
+                            },
+                            onCreate = {
+//                                width = resources.getDimensionPixelSize(R.dimen.popup_dropdown_width)
+//                                verticalOffset = -resources.getDimensionPixelSize(R.dimen.one_half_app_margin)
+                            },
+                            onItemSelected = {
+                                Toast.makeText(context, "Clicked: $it", Toast.LENGTH_SHORT).show()
+//                                it.toLocale().let { locale ->
+//                                    appPreferences.locale = locale
+//                                    text.text = locale.languageCode
+//                                }
+//                                activityBinding.webView.evaluateJavascript("ChangeLanguage('${it.Code}')")
+//                                recreateActivity()
+                            },
+//                            onDismissed = { icon.rotate180() }
+                        )
+
+                    }
+                }
             }
         }
 
-        findNavController(R.id.navHostFragment).let { navController ->
-            setupActionBarWithNavController(navController, appBarConfiguration)
-            navigationView.apply {
-                setupWithNavController(navController)
-                menu.findItem(R.id.teams).subMenu.let { menu ->
-                    observe(viewModel.teams) {
-                        menu.clear()
-                        it.forEach { team ->
-                            menu.add(team.name, R.drawable.ic_menu_players) {
-                                navController.navigateSingleTop(R.id.nav_team_details, team.toBundleWithTitle { name })
-                                drawerLayout.closeDrawers()
-                            }
+        setupActionBarWithNavController(navController, appBarConfiguration)
+        navigationView.apply {
+            setupWithNavController(navController)
+            menu.findItem(R.id.teams).subMenu.let { menu ->
+                observe(viewModel.teams) {
+                    menu.clear()
+                    it.forEach { team ->
+                        menu.add(team.name, R.drawable.ic_menu_players) {
+                            navController.navigateSingleTop(R.id.nav_team_details, team.toBundleWithTitle { name })
+                            drawerLayout.closeDrawers()
                         }
                     }
                 }
             }
         }
-        appPreferences.selectedTeamData?.let { findNavController(R.id.navHostFragment).navigateSingleTop(R.id.nav_team_details, it.toBundleWithTitle { name }) }
+        appPreferences.selectedTeamData?.let {
+            navController.navigate(R.id.nav_team_details, it.toBundleWithTitle { name }) {
+                popUpTo(R.id.nav_teams) { inclusive = true }
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -128,7 +167,7 @@ class NavActivity : AppCompatActivity() {
         }
     }
 
-    override fun onSupportNavigateUp() = findNavController(R.id.navHostFragment).navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    override fun onSupportNavigateUp() = navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
 }
 
 fun Fragment.lazyNavController() = lazy { Navigation.findNavController(view!!) }

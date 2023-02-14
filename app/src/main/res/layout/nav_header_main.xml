@@ -85,7 +85,7 @@
     <TextView
         android:id="@+id/selectTeamButton"
         android:layout_width="wrap_content"
-        android:layout_height="32dp"
+        android:layout_height="40dp"
         android:layout_below="@id/divider"
         android:layout_alignParentLeft="true"
         android:layout_marginTop="@dimen/double_margin"
@@ -105,7 +105,9 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_alignTop="@id/selectTeamButton"
+        android:layout_marginTop="4dp"
         android:layout_alignParentRight="true"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:scaleType="center"
         android:src="@drawable/ic_list_bulleted" />
 </RelativeLayout>
