@@ -1,7 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
 
 androidExtensions {
     experimental = true
@@ -24,12 +23,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = 1.8
-        targetCompatibility = 1.8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
-
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_11.toString()
     }
 }
 
@@ -66,10 +64,8 @@ dependencies {
 //    implementation "com.google.firebase:firebase-config:17.0.0"
 
     //Glide
-    kapt 'com.github.bumptech.glide:compiler:4.9.0'
-    implementation('com.github.bumptech.glide:okhttp3-integration:4.9.0') {
-        exclude group: 'glide-parent'
-    }
+    implementation 'com.github.bumptech.glide:glide:4.14.2'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'
 
     testImplementation 'junit:junit:4.12'
 }
