@@ -11,6 +11,7 @@ import com.morcinek.players.ui.players.createPlayerModule
 import com.morcinek.players.ui.players.playerDetailsModule
 import com.morcinek.players.ui.team.eventsModule
 import com.morcinek.players.ui.team.playersModule
+import com.morcinek.players.ui.team.teamStatsModule
 import com.morcinek.players.ui.teams.*
 import com.morcinek.players.ui.teams.event.createEventModule
 import com.morcinek.players.ui.teams.event.createPointsModule
@@ -32,7 +33,7 @@ class Application : Application() {
             androidContext(this@Application)
             modules(
                 appModule, navModule,
-                teamsModule, eventsModule,
+                teamsModule, eventsModule, teamStatsModule,
                 teamInfoModule,
                 teamDetailsModule, createTeamModule, addPlayersModule,
                 createEventModule, eventDetailsModule, createPointsModule,

@@ -42,8 +42,7 @@ class TeamDetailsFragment : BaseFragment<FragmentTeamDetailsBinding>(FragmentTea
     private val navController by lazyNavController()
     private val appPreferences by inject<AppPreferences>()
 
-    override val fabConfiguration =
-        createFabConfiguration(R.drawable.ic_ball) { navController.navigate(R.id.nav_create_event, bundle { putString(viewModel.teamData.key) }) }
+    override val fabConfiguration = createFabConfiguration(R.drawable.ic_ball) { navController.navigate(R.id.nav_create_event, bundle { putString(viewModel.teamData.key) }) }
 
     override val menuConfiguration = createMenuConfiguration {
         addAction(R.string.add_players, R.drawable.ic_person_add) {

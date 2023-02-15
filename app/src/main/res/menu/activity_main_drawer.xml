@@ -12,6 +12,10 @@
                 android:id="@+id/nav_events"
                 android:icon="@drawable/ic_menu_teams"
                 android:title="@string/page_events" />
+        <item
+                android:id="@+id/nav_team_stats"
+                android:icon="@drawable/ic_menu_teams"
+                android:title="@string/team_stats" />
     </group>
 
     <item

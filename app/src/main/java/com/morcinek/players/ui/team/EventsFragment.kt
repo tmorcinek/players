@@ -26,7 +26,8 @@ class EventsFragment : BaseFragment<FragmentListBinding>(FragmentListBinding::in
 
     private val navController by lazyNavController()
 
-    override val fabConfiguration = createFabConfiguration(R.drawable.ic_person_add) { navController.navigate(R.id.nav_create_player, viewModel.teamData.toBundle()) }
+    override val fabConfiguration =
+        createFabConfiguration(R.drawable.ic_ball) { navController.navigate(R.id.action_nav_events_to_nav_create_event, bundle { putString(viewModel.teamData.key) }) }
 
     private val formatter = dayOfWeekDateFormat()
 
@@ -39,14 +40,18 @@ class EventsFragment : BaseFragment<FragmentListBinding>(FragmentListBinding::in
                     name.text = item.type
                     date.text = formatter.formatCalendar(item.getDate())
                     subtitle.text = "${item.players.size} players"
-                    root.setOnClickListener { view ->
-                        navController.navigate(R.id.nav_event_details, bundle { putParcel(item); putString(viewModel.teamData.key) }, null, FragmentNavigatorExtras(name, date))
+                    root.setOnClickListener {
+                        navController.navigate(
+                            R.id.action_nav_events_to_nav_event_details,
+                            bundle { putParcel(item); putString(viewModel.teamData.key) },
+                            null,
+                            FragmentNavigatorExtras(name, date)
+                        )
                     }
                 }
                 liveData(viewLifecycleOwner, viewModel.events) { progressBar.hide() }
             }
         }
-        exitTransition = moveTransition()
     }
 }
 

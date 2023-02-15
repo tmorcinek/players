@@ -48,7 +48,7 @@ class NavActivity : AppCompatActivity() {
 
     private val appBarConfiguration by lazy {
         AppBarConfiguration(
-            setOf(R.id.nav_players, R.id.nav_events),
+            setOf(R.id.nav_players, R.id.nav_events, R.id.nav_team_stats),
             binding.drawerLayout
         )
     }

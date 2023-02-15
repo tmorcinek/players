@@ -26,7 +26,7 @@ class PlayersFragment : BaseFragment<FragmentListBinding>(FragmentListBinding::i
 
     private val navController by lazyNavController()
 
-    override val fabConfiguration = createFabConfiguration(R.drawable.ic_person_add) { navController.navigate(R.id.nav_create_player, viewModel.teamData.toBundle()) }
+    override val fabConfiguration = createFabConfiguration(R.drawable.ic_person_add) { navController.navigate(R.id.action_nav_players_to_nav_create_player, viewModel.teamData.toBundle()) }
 
     private val playersFormatter = standardDateFormat()
 
@@ -40,7 +40,7 @@ class PlayersFragment : BaseFragment<FragmentListBinding>(FragmentListBinding::i
                     date.text = playersFormatter.formatCalendar(item.getBirthDate())
                     root.setOnClickListener {
                         navController.navigate(
-                            R.id.nav_player_details,
+                            R.id.action_nav_players_to_nav_player_details,
                             item.toBundle(),
                             null,
                             FragmentNavigatorExtras(name, subtitle, date)
@@ -50,7 +50,6 @@ class PlayersFragment : BaseFragment<FragmentListBinding>(FragmentListBinding::i
                 liveData(viewLifecycleOwner, viewModel.players) { progressBar.hide() }
             }
         }
-        exitTransition = moveTransition()
     }
 }
 
