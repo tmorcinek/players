@@ -14,14 +14,13 @@ import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.teamsLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.ui.showStandardDropDown
+import com.morcinek.players.databinding.FragmentCreatePlayerBinding
 import com.morcinek.players.ui.lazyNavController
-import kotlinx.android.synthetic.main.fragment_create_player.view.*
-import kotlinx.android.synthetic.main.header_button.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import java.util.*
 
-class CreatePlayerFragment : BaseFragment(R.layout.fragment_create_player) {
+class CreatePlayerFragment : BaseFragment<FragmentCreatePlayerBinding>(FragmentCreatePlayerBinding::inflate) {
 
     private val viewModel by viewModelWithFragment<CreatePlayerViewModel>()
 
@@ -29,33 +28,33 @@ class CreatePlayerFragment : BaseFragment(R.layout.fragment_create_player) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.apply {
-            nameTextInputLayout.editText?.apply {
+        binding.run {
+            nameTextInputLayout.editText?.run {
                 setText(viewModel.playerData.name)
                 doOnTextChanged { text, _, _, _ -> viewModel.updateValue { name = text.toString() } }
             }
-            surnameTextInputLayout.editText?.apply {
+            surnameTextInputLayout.editText?.run {
                 setText(viewModel.playerData.surname)
                 doOnTextChanged { text, _, _, _ -> viewModel.updateValue { surname = text.toString() } }
             }
-            birthDateLayout.apply {
+            birthDateLayout.run {
                 value.text = viewModel.playerDate() ?: getString(R.string.value_not_set)
                 header.setText(R.string.birth_date)
-                setOnClickListener {
+                root.setOnClickListener {
                     startDatePicker(viewModel.dateInMillis()) {
                         viewModel.updateValue { birthDateInMillis = it.timeInMillis }
                         value.text = it.toStandardString()
                     }
                 }
             }
-            teamLayout.apply {
+            teamLayout.run {
                 header.setText(R.string.team)
                 observe(viewModel.playerTeamName()) {
                     if (it == null) {
                         value.setText(R.string.value_not_set)
-                        setOnClickListener {
+                        root.setOnClickListener {
                             observe(viewModel.teams) { teams ->
-                                showStandardDropDown(android.R.layout.simple_dropdown_item_1line, teams) {
+                                root.showStandardDropDown(android.R.layout.simple_dropdown_item_1line, teams) {
                                     viewModel.updateValue { teamKey = it.key }
                                     value.text = it.name
                                 }

@@ -5,21 +5,24 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
-import com.morcinek.players.core.*
+import com.morcinek.players.core.BaseFragment
+import com.morcinek.players.core.SelectionListAdapter
+import com.morcinek.players.core.createMenuConfiguration
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
-import com.morcinek.players.core.database.*
+import com.morcinek.players.core.database.FirebaseReferences
+import com.morcinek.players.core.database.playersWithoutTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
+import com.morcinek.players.core.itemCallback
+import com.morcinek.players.databinding.FragmentAddPlayersBinding
 import com.morcinek.players.ui.lazyNavController
-import kotlinx.android.synthetic.main.fragment_add_players.view.*
 import kotlinx.android.synthetic.main.vh_selectable_player.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-class AddPlayersFragment : BaseFragment(R.layout.fragment_add_players) {
+class AddPlayersFragment : BaseFragment<FragmentAddPlayersBinding>(FragmentAddPlayersBinding::inflate) {
 
     private val viewModel by viewModelWithFragment<AddPlayersViewModel>()
 
@@ -31,9 +34,9 @@ class AddPlayersFragment : BaseFragment(R.layout.fragment_add_players) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.apply {
+        binding.run {
             title.text = viewModel.teamData.name
-            recyclerView.apply {
+            recyclerView.run {
                 layoutManager = LinearLayoutManager(activity)
                 adapter = SelectionListAdapter<PlayerData>(R.layout.vh_selectable_player, itemCallback()) { _, item ->
                     name.text = "$item"
@@ -43,7 +46,7 @@ class AddPlayersFragment : BaseFragment(R.layout.fragment_add_players) {
                     onSelectedItemsChanged { viewModel.selectedPlayers.postValue(it) }
                 }
             }
-            nextButton.apply {
+            nextButton.run {
                 observe(viewModel.isNextEnabled) { isEnabled = it }
                 setOnClickListener { viewModel.addPlayersToTeam { } }
             }

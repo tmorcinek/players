@@ -20,11 +20,11 @@ import com.morcinek.players.core.database.playersWithoutTeamLiveDataForValueList
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.itemCallback
 import com.morcinek.players.core.ui.showDeleteCodeConfirmationDialog
+import com.morcinek.players.databinding.FragmentTeamDetailsBinding
 import com.morcinek.players.ui.lazyNavController
 import com.morcinek.players.ui.teams.stats.PlayerStatsDetails
 import com.morcinek.recyclerview.HasKey
 import com.morcinek.recyclerview.listAdapter
-import kotlinx.android.synthetic.main.fragment_team_details.view.*
 import kotlinx.android.synthetic.main.vh_player.view.*
 import kotlinx.android.synthetic.main.vh_player.view.subtitle
 import kotlinx.android.synthetic.main.vh_stat.view.*
@@ -34,7 +34,7 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-class TeamDetailsFragment : BaseFragment(R.layout.fragment_team_details) {
+class TeamDetailsFragment : BaseFragment<FragmentTeamDetailsBinding>(FragmentTeamDetailsBinding::inflate) {
 
     private val viewModel by viewModelWithFragment<TeamDetailsViewModel>()
 
@@ -61,7 +61,7 @@ class TeamDetailsFragment : BaseFragment(R.layout.fragment_team_details) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         appPreferences.selectedTeamData = viewModel.teamData
-        view.apply {
+        binding.run {
             tabLayout.setupWithViewPager(viewPager)
             observe(viewModel.hasPlayers) {
                 tabLayout.isVisible = it

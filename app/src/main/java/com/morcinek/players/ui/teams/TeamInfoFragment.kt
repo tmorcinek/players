@@ -15,14 +15,13 @@ import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.toYearString
 import com.morcinek.players.core.extensions.viewModelWithFragment
 import com.morcinek.players.core.itemCallback
+import com.morcinek.players.databinding.FragmentTeamInfoBinding
 import com.morcinek.recyclerview.list
-import kotlinx.android.synthetic.main.fragment_team_info.view.*
-import kotlinx.android.synthetic.main.fragment_team_info.view.name
 import kotlinx.android.synthetic.main.vh_player_info.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-class TeamInfoFragment : BaseFragment(R.layout.fragment_team_info) {
+class TeamInfoFragment : BaseFragment<FragmentTeamInfoBinding>(FragmentTeamInfoBinding::inflate) {
 
     private val viewModel by viewModelWithFragment<TeamInfoViewModel>()
 
@@ -33,7 +32,7 @@ class TeamInfoFragment : BaseFragment(R.layout.fragment_team_info) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.apply {
+        binding.run {
             name.text = viewModel.teamData.name
             recyclerView.list<PlayerData>(itemCallback()) {
                 resId(R.layout.vh_player_info)

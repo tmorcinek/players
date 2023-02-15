@@ -16,16 +16,16 @@ import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.extensions.alert.alert
 import com.morcinek.players.core.extensions.alert.okButton
+import com.morcinek.players.databinding.FragmentCreatePointsBinding
 import com.morcinek.players.ui.lazyNavController
 import com.morcinek.recyclerview.HasKey
 import com.morcinek.recyclerview.itemCallback
 import com.morcinek.recyclerview.list
-import kotlinx.android.synthetic.main.fragment_create_points.*
 import kotlinx.android.synthetic.main.vh_player_points.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-class CreatePointsFragment : BaseFragment(R.layout.fragment_create_points) {
+class CreatePointsFragment : BaseFragment<FragmentCreatePointsBinding>(FragmentCreatePointsBinding::inflate) {
 
     private val viewModel by viewModelWithFragment<CreatePointsViewModel>()
 
@@ -38,7 +38,7 @@ class CreatePointsFragment : BaseFragment(R.layout.fragment_create_points) {
                     viewModel.submitPoints().addOnCompleteListener { navController.popBackStack() }
                 } else {
                     alert("No points") {
-                        okButton {  }
+                        okButton { }
                     }
                 }
             }
@@ -47,7 +47,7 @@ class CreatePointsFragment : BaseFragment(R.layout.fragment_create_points) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.apply {
+        binding.run {
             recyclerView.list(itemCallback<PlayerPoints>()) {
                 resId(R.layout.vh_player_points)
                 onBind { _, player ->
@@ -68,7 +68,7 @@ private class CreatePointsViewModel(private val references: FirebaseReferences, 
 
     private val players = references.playersForTeamLiveDataForValueListener(teamKey).map { it.filter { it.key in eventData.players } }
 
-    private val points = MutableLiveData(eventData.points.find { it.id == pointsId}?.playersPoints ?: mapOf())
+    private val points = MutableLiveData(eventData.points.find { it.id == pointsId }?.playersPoints ?: mapOf())
 
     private fun pointsData() = PointsData("", pointsId ?: eventData.points.size, points.value!!)
 

@@ -3,9 +3,7 @@ package com.morcinek.players.ui
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -33,15 +31,16 @@ import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.extensions.alert.alert
 import com.morcinek.players.core.extensions.alert.noButton
 import com.morcinek.players.core.extensions.alert.yesButton
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.app_bar_main.*
-import kotlinx.android.synthetic.main.nav_header_main.view.*
+import com.morcinek.players.databinding.ActivityMainBinding
+import com.morcinek.players.databinding.NavHeaderMainBinding
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.dsl.module
 
 class NavActivity : AppCompatActivity() {
+
+    lateinit var binding: ActivityMainBinding
 
     private val appPreferences by inject<AppPreferences>()
 
@@ -50,26 +49,27 @@ class NavActivity : AppCompatActivity() {
     private val appBarConfiguration by lazy {
         AppBarConfiguration(
             setOf(R.id.nav_players, R.id.nav_teams),
-            drawerLayout
+            binding.drawerLayout
         )
     }
 
-    private val headerView: View get() = navigationView.getHeaderView(0)
+    private val headerBinding: NavHeaderMainBinding get() = NavHeaderMainBinding.bind(binding.navigationView.getHeaderView(0))
 
     private val navController by lazy { findNavController(R.id.navHostFragment) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
-
+        binding = ActivityMainBinding.inflate(layoutInflater).also {
+            setContentView(it.root)
+        }
+        setSupportActionBar(binding.navigationContent.toolbar)
         viewModel.user.let { currentUser ->
-            headerView.apply {
+            headerBinding.run {
                 if (currentUser.isAnonymous) {
                     navHeaderTitle.setText(R.string.nav_header_title)
                     navHeaderSubtitle.setText(R.string.nav_header_subtitle)
                 } else {
-                    Glide.with(this)
+                    Glide.with(this@NavActivity)
                         .load(currentUser.photoUrl)
                         .apply(RequestOptions.circleCropTransform())
                         .into(imageView)
@@ -108,7 +108,7 @@ class NavActivity : AppCompatActivity() {
                 }
                 editTeams.setOnClickListener {
                     navController.navigate(R.id.nav_teams) { launchSingleTop = true }
-                    drawerLayout.closeDrawers()
+                    binding.drawerLayout.closeDrawers()
                 }
                 selectTeamButton.run {
                     text = appPreferences.selectedTeamData?.name ?: "Select team"
@@ -123,7 +123,7 @@ class NavActivity : AppCompatActivity() {
                                     appPreferences.selectedTeamData = it
                                     text = appPreferences.selectedTeamData?.name
                                     onTeamDataSelected(it)
-                                    drawerLayout.closeDrawers()
+                                    binding.drawerLayout.closeDrawers()
                                 },
 //                            onDismissed = { icon.rotate180() }
                             )
@@ -135,7 +135,7 @@ class NavActivity : AppCompatActivity() {
         }
 
         setupActionBarWithNavController(navController, appBarConfiguration)
-        navigationView.apply {
+        binding.navigationView.apply {
             setupWithNavController(navController)
 //            menu.findItem(R.id.teams).subMenu.let { menu ->
 //                observe(viewModel.teams) {

@@ -12,20 +12,17 @@ import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.ui.showStandardDropDown
+import com.morcinek.players.databinding.FragmentCreateEventBinding
 import com.morcinek.players.ui.lazyNavController
 import com.morcinek.recyclerview.HasKey
 import com.morcinek.recyclerview.itemCallback
 import com.morcinek.recyclerview.list
-import kotlinx.android.synthetic.main.fragment_create_event.*
-import kotlinx.android.synthetic.main.header_button.view.*
 import kotlinx.android.synthetic.main.vh_player.view.*
-import kotlinx.android.synthetic.main.vh_player.view.name
-import kotlinx.android.synthetic.main.vh_selectable_player.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import java.util.*
 
-class CreateEventFragment : BaseFragment(R.layout.fragment_create_event) {
+class CreateEventFragment : BaseFragment<FragmentCreateEventBinding>(FragmentCreateEventBinding::inflate) {
 
     private val viewModel by viewModelWithFragment<CreateEventViewModel>()
 
@@ -33,22 +30,22 @@ class CreateEventFragment : BaseFragment(R.layout.fragment_create_event) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.apply {
-            typeLayout.apply {
+        binding.run {
+            typeLayout.run {
                 header.setText(R.string.type)
                 value.text = viewModel.event.type.takeIf { it.isNotEmpty() } ?: getString(R.string.value_not_set)
-                setOnClickListener {
+                root.setOnClickListener {
                     it.showStandardDropDown(android.R.layout.simple_dropdown_item_1line, listOf("Training", "Game", "Tournament", "Friendly")) {
                         viewModel.updateValue { type = it }
                         value.text = it
                     }
                 }
             }
-            dateLayout.apply {
+            dateLayout.run {
                 header.setText(R.string.date)
                 viewModel.event.let { event ->
                     value.text = event.getDate().toStandardString()
-                    setOnClickListener {
+                    root.setOnClickListener {
                         showDatePickerDialog(event.getDate()) {
                             viewModel.updateValue { dateInMillis = it.timeInMillis }
                             value.text = it.toStandardString()
@@ -69,7 +66,7 @@ class CreateEventFragment : BaseFragment(R.layout.fragment_create_event) {
                 liveData(viewLifecycleOwner, viewModel.selectedPlayers)
             }
             observe(viewModel.selectedPlayers) { selectedPlayersNumber.text = "${it.count { it.isSelected }} selected" }
-            nextButton.apply {
+            nextButton.run {
                 viewModel.isNextEnabled.observe(this@CreateEventFragment) { isEnabled = it }
                 setOnClickListener {
                     viewModel.createOrUpdateEvent { navController.popBackStack() }

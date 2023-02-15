@@ -13,6 +13,7 @@ import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.itemCallback
+import com.morcinek.players.databinding.FragmentPlayerStatsBinding
 import com.morcinek.players.ui.lazyNavController
 import com.morcinek.recyclerview.list
 import com.morcinek.recyclerview.setup
@@ -25,7 +26,7 @@ import org.koin.dsl.module
 import java.text.NumberFormat
 
 
-class PlayerStatsFragment : BaseFragment(R.layout.fragment_player_stats) {
+class PlayerStatsFragment : BaseFragment<FragmentPlayerStatsBinding>(FragmentPlayerStatsBinding::inflate) {
 
     private val viewModel by viewModelWithFragment<PlayerStatsViewModel>()
 
@@ -39,7 +40,7 @@ class PlayerStatsFragment : BaseFragment(R.layout.fragment_player_stats) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.apply {
+        binding.run {
             title.text = viewModel.title()
             subtitle.text = viewModel.subtitle()
             recyclerView.setup {

@@ -3,24 +3,36 @@ package com.morcinek.players.core
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.viewbinding.ViewBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.morcinek.players.R
 import com.morcinek.players.core.extensions.hide
 import com.morcinek.players.core.extensions.safeLet
-import kotlinx.android.synthetic.main.app_bar_main.*
+import com.morcinek.players.ui.NavActivity
 
-abstract class BaseFragment(private val layoutResourceId: Int) : Fragment() {
+abstract  class BaseFragment<T : ViewBinding>(private val createBinding: (LayoutInflater, ViewGroup?, Boolean) -> T) : Fragment() {
 
     open val menuConfiguration: MenuConfiguration? = null
     open val fabConfiguration: FabConfiguration? = null
 
-    final override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-        inflater.inflate(layoutResourceId, container, false)!!
+    private var _binding: T? = null
+
+    internal val binding get() = _binding!!
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
+        createBinding(inflater, container, false).also {
+            _binding = it
+        }.root
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onResume() {
         super.onResume()
 
-        requireActivity().fab.let { fab ->
+        (requireActivity() as NavActivity).binding.navigationContent.fab.let { fab ->
             if (fab.isOrWillBeShown) fab.hide {
                 initializeFab(fab)
             } else {

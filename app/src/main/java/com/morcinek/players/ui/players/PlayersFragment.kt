@@ -3,24 +3,25 @@ package com.morcinek.players.ui.players
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.morcinek.players.R
-import com.morcinek.players.core.*
+import com.morcinek.players.core.BaseFragment
+import com.morcinek.players.core.HasKey
+import com.morcinek.players.core.createFabConfiguration
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.playersLiveDataForValueListener
 import com.morcinek.players.core.database.teamsLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
+import com.morcinek.players.core.itemCallback
+import com.morcinek.players.databinding.FragmentListBinding
 import com.morcinek.players.ui.lazyNavController
 import com.morcinek.recyclerview.list
-import kotlinx.android.synthetic.main.fragment_list.view.*
 import kotlinx.android.synthetic.main.vh_player.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.dsl.module
 
-class PlayersFragment : BaseFragment(R.layout.fragment_list) {
+class PlayersFragment : BaseFragment<FragmentListBinding>(FragmentListBinding::inflate) {
 
     private val viewModel by viewModel<PlayersViewModel>()
 
@@ -30,9 +31,9 @@ class PlayersFragment : BaseFragment(R.layout.fragment_list) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.apply {
+        binding.run {
             progressBar.show()
-            recyclerView.list<PlayerItem>(itemCallback()){
+            recyclerView.list<PlayerItem>(itemCallback()) {
                 resId(R.layout.vh_player)
                 onBind { _, item ->
                     name.text = item.name
@@ -47,7 +48,7 @@ class PlayersFragment : BaseFragment(R.layout.fragment_list) {
                         )
                     }
                 }
-                liveData(viewLifecycleOwner, viewModel.players) { view.progressBar.hide() }
+                liveData(viewLifecycleOwner, viewModel.players) { progressBar.hide() }
             }
         }
         exitTransition = moveTransition()

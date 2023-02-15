@@ -5,20 +5,18 @@ import android.view.View
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.HasKey
-import kotlinx.android.synthetic.main.fragment_player_stats.*
+import com.morcinek.players.databinding.FragmentPlayerStatsBinding
 
-class TeamStatsFragment : BaseFragment(R.layout.fragment_player_stats) {
-
+class TeamStatsFragment : BaseFragment<FragmentPlayerStatsBinding>(FragmentPlayerStatsBinding::inflate) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.run {
+        binding.run {
             title.setText(R.string.calendar_stats)
 //            recyclerView.list<PlayerAttendance>()
         }
     }
 }
-
 
 private class PlayerAttendance(val name: String, val attendance: Attendance) : HasKey {
     override var key: String

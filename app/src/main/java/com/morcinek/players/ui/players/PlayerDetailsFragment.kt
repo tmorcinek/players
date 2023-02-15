@@ -14,15 +14,13 @@ import com.morcinek.players.core.database.teamsLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.extensions.alert.alert
 import com.morcinek.players.core.extensions.alert.cancelButton
-import com.morcinek.players.core.extensions.alert.noButton
-import com.morcinek.players.core.extensions.alert.yesButton
 import com.morcinek.players.core.ui.showDeleteCodeConfirmationDialog
+import com.morcinek.players.databinding.FragmentPlayerBinding
 import com.morcinek.players.ui.lazyNavController
-import kotlinx.android.synthetic.main.fragment_player.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-class PlayerDetailsFragment : BaseFragment(R.layout.fragment_player) {
+class PlayerDetailsFragment : BaseFragment<FragmentPlayerBinding>(FragmentPlayerBinding::inflate) {
 
     private val viewModel by viewModelWithFragment<PlayerDetailsViewModel>()
 
@@ -35,7 +33,7 @@ class PlayerDetailsFragment : BaseFragment(R.layout.fragment_player) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.apply {
+        binding.apply {
             viewModel.playerData.let {
                 name.text = it.toString()
                 birthDate.text = it.getBirthDate().toStandardString()

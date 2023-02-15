@@ -4,7 +4,6 @@ package com.morcinek.players.ui.teams.event
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
@@ -18,15 +17,15 @@ import com.morcinek.players.core.database.eventForTeamLiveDataForValueListener
 import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.ui.showDeleteCodeConfirmationDialog
+import com.morcinek.players.databinding.FragmentEventDetailsBinding
 import com.morcinek.players.ui.lazyNavController
 import com.morcinek.recyclerview.HasKey
 import com.morcinek.recyclerview.sections
-import kotlinx.android.synthetic.main.fragment_event_details.*
 import kotlinx.android.synthetic.main.vh_player_event_points.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-class EventDetailsFragment : BaseFragment(R.layout.fragment_event_details) {
+class EventDetailsFragment : BaseFragment<FragmentEventDetailsBinding>(FragmentEventDetailsBinding::inflate) {
 
     private val viewModel by viewModelWithFragment<EventDetailsViewModel>()
 
@@ -39,11 +38,11 @@ class EventDetailsFragment : BaseFragment(R.layout.fragment_event_details) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.apply {
+        binding.run {
             observe(viewModel.event) {
                 title.text = it.type
                 year.text = it.getDate().toDayOfWeekDateFormat()
-                status.apply {
+                status.run {
                     setText(it.statusText())
                     setTextColor(resources.getColor(it.statusColor()))
                 }
@@ -57,7 +56,7 @@ class EventDetailsFragment : BaseFragment(R.layout.fragment_event_details) {
                     }
                     pointsSum.text = "${item.sum}"
                 }
-                section<Header>(R.layout.vh_player_event_points) {_, item ->
+                section<Header>(R.layout.vh_player_event_points) { _, item ->
                     pointsLayout.removeAllViews()
                     item.pointsDataList.forEach { pointsData ->
                         pointsLayout.addView((LayoutInflater.from(context).inflate(R.layout.view_points_button, pointsLayout, false)).apply {
@@ -124,7 +123,7 @@ private data class PlayerWithPoints(
 private data class Header(
     val pointsDataList: List<PointsData>,
     override val key: String = "Header"
-): HasKey
+) : HasKey
 
 private fun EventData.statusText() = if (optional) R.string.optional else R.string.mandatory
 private fun EventData.statusColor() = if (optional) R.color.colorPrimary else R.color.colorAccent
