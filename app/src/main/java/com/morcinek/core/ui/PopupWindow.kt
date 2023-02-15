@@ -6,7 +6,7 @@ import android.widget.BaseAdapter
 import android.widget.ListPopupWindow
 import com.morcinek.players.R
 
-fun <T> View.showPopupWindow(popupAdapter: PopupAdapter<T>, onCreate: ListPopupWindow.() -> Unit, onItemSelected: (T) -> Unit, onDismissed: () -> Unit = {}) =
+fun <T> View.showPopupWindow(popupAdapter: PopupAdapter<T>, onCreate: ListPopupWindow.() -> Unit = {}, onItemSelected: (T) -> Unit, onDismissed: () -> Unit = {}) =
     ListPopupWindow(context).apply {
         setBackgroundDrawable(resources.getDrawable(R.drawable.bg_popup_dark, null))
         setAdapter(popupAdapter)

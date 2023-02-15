@@ -26,6 +26,7 @@ import com.morcinek.core.ui.PopupAdapter
 import com.morcinek.core.ui.showPopupWindow
 import com.morcinek.players.AppPreferences
 import com.morcinek.players.R
+import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.teamsLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
@@ -113,26 +114,21 @@ class NavActivity : AppCompatActivity() {
                     text = appPreferences.selectedTeamData?.name ?: "Select team"
 //                    icon.rotate180()
                     setOnClickListener {
-                        it.showPopupWindow(
-                            PopupAdapter(listOf("New Team", "Yemkdslfj", "This is the best team"), R.layout.vh_team_dropdown) {
-                                (this as TextView).text = it
-                            },
-                            onCreate = {
-//                                width = resources.getDimensionPixelSize(R.dimen.popup_dropdown_width)
-//                                verticalOffset = -resources.getDimensionPixelSize(R.dimen.one_half_app_margin)
-                            },
-                            onItemSelected = {
-                                Toast.makeText(context, "Clicked: $it", Toast.LENGTH_SHORT).show()
-//                                it.toLocale().let { locale ->
-//                                    appPreferences.locale = locale
-//                                    text.text = locale.languageCode
-//                                }
-//                                activityBinding.webView.evaluateJavascript("ChangeLanguage('${it.Code}')")
-//                                recreateActivity()
-                            },
+                        observe(viewModel.teams) { teams ->
+                            it.showPopupWindow(
+                                PopupAdapter(teams, R.layout.vh_team_dropdown) {
+                                    (this as TextView).text = it.name
+                                },
+                                onItemSelected = {
+                                    appPreferences.selectedTeamData = it
+                                    text = appPreferences.selectedTeamData?.name
+                                    onTeamDataSelected(it)
+                                    drawerLayout.closeDrawers()
+                                },
 //                            onDismissed = { icon.rotate180() }
-                        )
+                            )
 
+                        }
                     }
                 }
             }
@@ -141,23 +137,23 @@ class NavActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navigationView.apply {
             setupWithNavController(navController)
-            menu.findItem(R.id.teams).subMenu.let { menu ->
-                observe(viewModel.teams) {
-                    menu.clear()
-                    it.forEach { team ->
-                        menu.add(team.name, R.drawable.ic_menu_players) {
-                            navController.navigateSingleTop(R.id.nav_team_details, team.toBundleWithTitle { name })
-                            drawerLayout.closeDrawers()
-                        }
-                    }
-                }
-            }
+//            menu.findItem(R.id.teams).subMenu.let { menu ->
+//                observe(viewModel.teams) {
+//                    menu.clear()
+//                    it.forEach { team ->
+//                        menu.add(team.name, R.drawable.ic_menu_players) {
+//                            navController.navigateSingleTop(R.id.nav_team_details, team.toBundleWithTitle { name })
+//                            drawerLayout.closeDrawers()
+//                        }
+//                    }
+//                }
+//            }
         }
-        appPreferences.selectedTeamData?.let {
-            navController.navigate(R.id.nav_team_details, it.toBundleWithTitle { name }) {
-                popUpTo(R.id.nav_teams) { inclusive = true }
-            }
-        }
+        appPreferences.selectedTeamData?.let { navController.navigate(R.id.nav_team_details, it.toBundleWithTitle { name }) { popUpTo(R.id.nav_teams) { inclusive = true } } }
+    }
+
+    private fun onTeamDataSelected(it: TeamData) {
+        navController.navigate(R.id.nav_team_details, it.toBundleWithTitle { name }) { popUpTo(R.id.nav_team_details) { inclusive = true } }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
