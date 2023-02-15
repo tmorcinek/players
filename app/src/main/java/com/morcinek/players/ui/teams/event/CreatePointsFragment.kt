@@ -6,6 +6,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.tasks.Task
+import com.morcinek.android.HasKey
+import com.morcinek.android.itemCallback
+import com.morcinek.android.list
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.createMenuConfiguration
@@ -17,11 +20,8 @@ import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.extensions.alert.alert
 import com.morcinek.players.core.extensions.alert.okButton
 import com.morcinek.players.databinding.FragmentCreatePointsBinding
+import com.morcinek.players.databinding.VhPlayerPointsBinding
 import com.morcinek.players.ui.lazyNavController
-import com.morcinek.recyclerview.HasKey
-import com.morcinek.recyclerview.itemCallback
-import com.morcinek.recyclerview.list
-import kotlinx.android.synthetic.main.vh_player_points.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -37,9 +37,7 @@ class CreatePointsFragment : BaseFragment<FragmentCreatePointsBinding>(FragmentC
                 if (it) {
                     viewModel.submitPoints().addOnCompleteListener { navController.popBackStack() }
                 } else {
-                    alert("No points") {
-                        okButton { }
-                    }
+                    alert("No points") { okButton { } }
                 }
             }
         }
@@ -48,8 +46,7 @@ class CreatePointsFragment : BaseFragment<FragmentCreatePointsBinding>(FragmentC
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.run {
-            recyclerView.list(itemCallback<PlayerPoints>()) {
-                resId(R.layout.vh_player_points)
+            recyclerView.list(itemCallback<PlayerPoints>(), VhPlayerPointsBinding::inflate) {
                 onBind { _, player ->
                     name.text = player.name
                     name.setTextColor(resources.getColor(player.nameColor))
@@ -61,7 +58,6 @@ class CreatePointsFragment : BaseFragment<FragmentCreatePointsBinding>(FragmentC
             }
         }
     }
-
 }
 
 private class CreatePointsViewModel(private val references: FirebaseReferences, val teamKey: String, val eventData: EventData, val pointsId: Int? = null) : ViewModel() {

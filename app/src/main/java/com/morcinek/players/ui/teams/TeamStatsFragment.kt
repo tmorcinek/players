@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
-import com.morcinek.players.core.HasKey
+import com.morcinek.android.HasKey
 import com.morcinek.players.databinding.FragmentPlayerStatsBinding
 
 class TeamStatsFragment : BaseFragment<FragmentPlayerStatsBinding>(FragmentPlayerStatsBinding::inflate) {

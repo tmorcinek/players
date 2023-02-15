@@ -11,7 +11,7 @@ import com.morcinek.players.core.extensions.alert.yesButton
 import com.morcinek.players.core.extensions.combineTwo
 import com.morcinek.players.core.extensions.inflate
 import com.morcinek.players.core.extensions.numericKeyboardTransformationMethod
-import kotlinx.android.synthetic.main.dialog_code_confirmation.view.*
+import com.morcinek.players.databinding.DialogCodeConfirmationBinding
 import kotlin.random.Random
 
 
@@ -23,7 +23,7 @@ fun Context.showCodeConfirmationDialog(message: Int, onSuccess: () -> Unit) =
             .setMessage(message)
             .setView(view)
             .create().apply {
-                view.apply {
+                DialogCodeConfirmationBinding.bind(view).run {
                     value.text = code
                     codeTextInputLayout.editText?.transformationMethod = numericKeyboardTransformationMethod()
                     codeTextInputLayout.editText?.doOnTextChanged { text, _, _, _ -> confirmButton.isEnabled = text.toString() == code }

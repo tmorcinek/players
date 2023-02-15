@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
+import com.morcinek.android.itemCallback
+import com.morcinek.android.list
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.createMenuConfiguration
@@ -14,10 +16,8 @@ import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.toYearString
 import com.morcinek.players.core.extensions.viewModelWithFragment
-import com.morcinek.players.core.itemCallback
 import com.morcinek.players.databinding.FragmentTeamInfoBinding
-import com.morcinek.recyclerview.list
-import kotlinx.android.synthetic.main.vh_player_info.view.*
+import com.morcinek.players.databinding.VhPlayerInfoBinding
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -34,8 +34,7 @@ class TeamInfoFragment : BaseFragment<FragmentTeamInfoBinding>(FragmentTeamInfoB
         super.onViewCreated(view, savedInstanceState)
         binding.run {
             name.text = viewModel.teamData.name
-            recyclerView.list<PlayerData>(itemCallback()) {
-                resId(R.layout.vh_player_info)
+            recyclerView.list(itemCallback<PlayerData>(), VhPlayerInfoBinding::inflate) {
                 onBind { _, item ->
                     name.text = item.toString()
                     date.text = item.getBirthDate().toYearString()

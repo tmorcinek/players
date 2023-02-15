@@ -5,6 +5,9 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.morcinek.android.HasKey
+import com.morcinek.android.itemCallback
+import com.morcinek.android.list
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.data.EventData
@@ -13,11 +16,8 @@ import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.ui.showStandardDropDown
 import com.morcinek.players.databinding.FragmentCreateEventBinding
+import com.morcinek.players.databinding.VhSelectablePlayerBinding
 import com.morcinek.players.ui.lazyNavController
-import com.morcinek.recyclerview.HasKey
-import com.morcinek.recyclerview.itemCallback
-import com.morcinek.recyclerview.list
-import kotlinx.android.synthetic.main.vh_player.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import java.util.*
@@ -54,13 +54,14 @@ class CreateEventFragment : BaseFragment<FragmentCreateEventBinding>(FragmentCre
                 }
             }
             mandatorySwitch.setOnCheckedChangeListener { _, isChecked -> viewModel.updateValue { optional = !isChecked } }
-            recyclerView.list(itemCallback<SelectedPlayer>()) {
-                resId(R.layout.vh_selectable_player)
+            recyclerView.list(itemCallback<SelectedPlayer>(), VhSelectablePlayerBinding::inflate) {
                 onBind { _, player ->
                     name.text = player.name
-                    isSelected = player.isSelected
-                    setOnClickListener {
-                        viewModel.updateValue { players = (if (player.key in players) players.minus(player.key) else players.plus(player.key)) }
+                    root.run {
+                        isSelected = player.isSelected
+                        setOnClickListener {
+                            viewModel.updateValue { players = (if (player.key in players) players.minus(player.key) else players.plus(player.key)) }
+                        }
                     }
                 }
                 liveData(viewLifecycleOwner, viewModel.selectedPlayers)

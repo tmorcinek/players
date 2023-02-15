@@ -7,9 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
-import com.morcinek.players.core.SelectionListAdapter
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.database.FirebaseReferences
@@ -18,10 +16,8 @@ import com.morcinek.players.core.extensions.getParcelableOrNull
 import com.morcinek.players.core.extensions.map
 import com.morcinek.players.core.extensions.observe
 import com.morcinek.players.core.extensions.viewModelWithFragment
-import com.morcinek.players.core.itemCallback
 import com.morcinek.players.databinding.FragmentCreateTeamBinding
 import com.morcinek.players.ui.lazyNavController
-import kotlinx.android.synthetic.main.vh_selectable_player.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -40,13 +36,13 @@ class CreateTeamFragment : BaseFragment<FragmentCreateTeamBinding>(FragmentCreat
             }
             recyclerView.run {
                 layoutManager = LinearLayoutManager(activity)
-                adapter = SelectionListAdapter<PlayerData>(R.layout.vh_selectable_player, itemCallback()) { _, item ->
-                    name.text = "$item"
-                }.apply {
-                    selectedItems = viewModel.selectedPlayers
-                    observe(viewModel.players) { submitList(it) }
-                    onSelectedItemsChanged { viewModel.selectedPlayers = it }
-                }
+//                adapter = SelectionListAdapter<PlayerData>(R.layout.vh_selectable_player, itemCallback()) { _, item ->
+//                    name.text = "$item"
+//                }.apply {
+//                    selectedItems = viewModel.selectedPlayers
+//                    observe(viewModel.players) { submitList(it) }
+//                    onSelectedItemsChanged { viewModel.selectedPlayers = it }
+//                }
             }
             nextButton.run {
                 observe(viewModel.isNextEnabled) { isEnabled = it }

@@ -3,8 +3,8 @@ package com.morcinek.players.core.data
 import android.os.Parcelable
 import com.google.firebase.database.Exclude
 import com.google.firebase.database.IgnoreExtraProperties
-import com.morcinek.players.core.HasKey
-import kotlinx.android.parcel.Parcelize
+import com.morcinek.android.HasKey
+import kotlinx.parcelize.Parcelize
 import java.util.*
 
 @IgnoreExtraProperties
@@ -15,7 +15,7 @@ data class PlayerData(
     var surname: String = "",
     var birthDateInMillis: Long = 0,
     var teamKey: String? = null
-) : Parcelable, HasKey {
+) : Parcelable, FirebaseKey {
 
     @Exclude
     fun getBirthDate() = Calendar.getInstance().apply { timeInMillis = birthDateInMillis }

@@ -9,16 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 
 class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
-fun <T> itemCallback(function: ItemCallback<T>.() -> Unit) = ItemCallback<T>().apply(function)
-
-fun <T : HasKey> itemCallback() = itemCallback<T> {
-    areItemsTheSame { t, t2 -> t.key == t2.key }
-}
-
-interface HasKey {
-    var key: String
-}
-
 class ItemCallback<T> : DiffUtil.ItemCallback<T>() {
 
     private var _areItemsTheSame: (T, T) -> Boolean = { _, _ -> throw NotImplementedError() }

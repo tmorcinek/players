@@ -1,10 +1,16 @@
 package com.morcinek.players.ui.teams
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
+import androidx.recyclerview.widget.DiffUtil
+import androidx.viewbinding.ViewBinding
+import com.morcinek.android.HasKey
+import com.morcinek.android.itemCallback
 import com.morcinek.players.AppPreferences
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
@@ -18,18 +24,13 @@ import com.morcinek.players.core.database.eventsForTeamLiveDataForValueListener
 import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
 import com.morcinek.players.core.database.playersWithoutTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
-import com.morcinek.players.core.itemCallback
 import com.morcinek.players.core.ui.showDeleteCodeConfirmationDialog
 import com.morcinek.players.databinding.FragmentTeamDetailsBinding
+import com.morcinek.players.databinding.VhPlayerBinding
+import com.morcinek.players.databinding.VhStatBinding
+import com.morcinek.players.databinding.ViewEmptyPlayersBinding
 import com.morcinek.players.ui.lazyNavController
 import com.morcinek.players.ui.teams.stats.PlayerStatsDetails
-import com.morcinek.recyclerview.HasKey
-import com.morcinek.recyclerview.listAdapter
-import kotlinx.android.synthetic.main.vh_player.view.*
-import kotlinx.android.synthetic.main.vh_player.view.subtitle
-import kotlinx.android.synthetic.main.vh_stat.view.*
-import kotlinx.android.synthetic.main.vh_stat.view.name
-import kotlinx.android.synthetic.main.view_empty_players.view.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -75,7 +76,7 @@ class TeamDetailsFragment : BaseFragment<FragmentTeamDetailsBinding>(FragmentTea
                         R.string.page_players to playersAdapter()
                     )
                 } else {
-                    singlePageAdapter(R.layout.view_empty_players) {
+                    singlePageAdapter(ViewEmptyPlayersBinding::inflate) {
                         addPlayerButton.setOnClickListener { navController.navigate(R.id.nav_create_player, viewModel.teamData.toBundle()) }
                         deleteButton.setOnClickListener {
                             showDeleteCodeConfirmationDialog(
@@ -90,66 +91,58 @@ class TeamDetailsFragment : BaseFragment<FragmentTeamDetailsBinding>(FragmentTea
         exitTransition = moveTransition()
     }
 
-    private fun generalAdapter() = listAdapter<GeneralStats>(R.layout.vh_player, com.morcinek.recyclerview.itemCallback()) { _, item ->
+    private fun generalAdapter() = listAdapter(itemCallback<GeneralStats>(), VhPlayerBinding::inflate) { _, item ->
         name.text = item.name
         date.text = "${item.value}"
-    }.apply {
-        liveData(viewLifecycleOwner, viewModel.general)
-    }
+    }.apply { liveData(viewLifecycleOwner, viewModel.general) }
+
+    private fun <T, B : ViewBinding> listAdapter(
+        diffCallback: DiffUtil.ItemCallback<T>,
+        createBinding: (LayoutInflater, ViewGroup?, Boolean) -> B,
+        onBindView: B.(position: Int, item: T) -> Unit
+    ) = com.morcinek.android.listAdapter(diffCallback, createBinding) { onBind(onBindView) }
 
     private val eventsFormatter = dayOfWeekDateFormat()
-    private fun eventsAdapter() = listAdapter<EventData>(R.layout.vh_player, itemCallback()) { _, item ->
+
+    private fun eventsAdapter() = listAdapter(itemCallback<EventData>(), VhPlayerBinding::inflate) { _, item ->
         name.text = item.type
         date.text = eventsFormatter.formatCalendar(item.getDate())
         subtitle.text = "${item.players.size} players"
-        setOnClickListener { view ->
-            navController.navigate(
-                R.id.nav_event_details,
-                bundle { putParcel(item); putString(viewModel.teamData.key) },
-                null,
-                FragmentNavigatorExtras(view.name, view.date)
-            )
+        root.setOnClickListener { view ->
+            navController.navigate(R.id.nav_event_details, bundle { putParcel(item); putString(viewModel.teamData.key) }, null, FragmentNavigatorExtras(name, date))
         }
-    }.apply {
-        liveData(viewLifecycleOwner, viewModel.events)
-    }
+    }.apply { liveData(viewLifecycleOwner, viewModel.events) }
 
-    private fun statsAdapter() = listAdapter<PlayerStats>(R.layout.vh_stat, com.morcinek.recyclerview.itemCallback()) { position, item ->
+    private fun statsAdapter() = listAdapter(itemCallback<PlayerStats>(), VhStatBinding::inflate) { position, item ->
         name.text = "${position + 1}. ${item.name}"
         attendance.text = item.attended.toString()
         points.text = item.points.toString()
-        setOnClickListener { navController.navigate(R.id.nav_player_stats, bundle(PlayerStatsDetails(item.data, viewModel.playerEvents(item.data)))) }
+        root.setOnClickListener { navController.navigate(R.id.nav_player_stats, bundle(PlayerStatsDetails(item.data, viewModel.playerEvents(item.data)))) }
     }.apply {
         liveData(viewLifecycleOwner, viewModel.playersStats)
     }
 
-    private fun trainingsAdapter() = listAdapter<PlayerStats>(R.layout.vh_stat, com.morcinek.recyclerview.itemCallback()) { position, item ->
+    private fun trainingsAdapter() = listAdapter(itemCallback<PlayerStats>(), VhStatBinding::inflate) { position, item ->
         name.text = "${position + 1}. ${item.name}"
         attendance.text = item.attended.toString()
         points.text = item.points.toString()
-        setOnClickListener { navController.navigate(R.id.nav_player_stats, bundle(PlayerStatsDetails(item.data, viewModel.playerEvents(item.data)))) }
-    }.apply {
-        liveData(viewLifecycleOwner, viewModel.playersTrainingStats)
-    }
+        root.setOnClickListener { navController.navigate(R.id.nav_player_stats, bundle(PlayerStatsDetails(item.data, viewModel.playerEvents(item.data)))) }
+    }.apply { liveData(viewLifecycleOwner, viewModel.playersTrainingStats) }
 
     private fun statsAdapterLast(numberOfRecords: Int) =
-        listAdapter<PlayerStats>(R.layout.vh_stat, com.morcinek.recyclerview.itemCallback()) { position, item ->
+        listAdapter(itemCallback<PlayerStats>(), VhStatBinding::inflate) { position, item ->
             name.text = "${position + 1}. ${item.name}"
             attendance.text = item.attended.toString()
             points.text = item.points.toString()
-            setOnClickListener { navController.navigate(R.id.nav_player_stats, bundle(PlayerStatsDetails(item.data, viewModel.playerEvents(item.data)))) }
-        }.apply {
-            liveData(viewLifecycleOwner, viewModel.playersStatsLast(numberOfRecords))
-        }
+            root.setOnClickListener { navController.navigate(R.id.nav_player_stats, bundle(PlayerStatsDetails(item.data, viewModel.playerEvents(item.data)))) }
+        }.apply { liveData(viewLifecycleOwner, viewModel.playersStatsLast(numberOfRecords)) }
 
     private val playersFormatter = standardDateFormat()
-    private fun playersAdapter() = listAdapter<PlayerData>(R.layout.vh_player, itemCallback()) { _, item ->
+    private fun playersAdapter() = listAdapter(itemCallback<PlayerData>(), VhPlayerBinding::inflate) { _, item ->
         name.text = item.toString()
         date.text = playersFormatter.formatCalendar(item.getBirthDate())
-        setOnClickListener { navController.navigate(R.id.nav_player_details, bundle(item)) }
-    }.apply {
-        liveData(viewLifecycleOwner, viewModel.players)
-    }
+        root.setOnClickListener { navController.navigate(R.id.nav_player_details, bundle(item)) }
+    }.apply { liveData(viewLifecycleOwner, viewModel.players) }
 }
 
 private class TeamDetailsViewModel(val references: FirebaseReferences, val teamData: TeamData) : ViewModel() {

@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import com.morcinek.players.core.HasKey
 import com.morcinek.players.core.data.EventData
+import com.morcinek.players.core.data.FirebaseKey
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.extensions.dayOfMonth
@@ -48,12 +48,12 @@ inline fun valueEventListener(crossinline function: (DataSnapshot) -> Unit) = ob
 }
 
 inline fun <reified T> DataSnapshot.getList(): List<Pair<String, T>> = children.map { it.key!! to it.getValue<T>() }
-inline fun <reified T : HasKey> DataSnapshot.getHasKeyObjects(): List<T> = getList<T>().map { it.second.apply { key = it.first } }
+inline fun <reified T : FirebaseKey> DataSnapshot.getHasKeyObjects(): List<T> = getList<T>().map { it.second.apply { key = it.first } }
 
-inline fun <reified T : HasKey> Query.objectsLiveDataForValueListener(): LiveData<List<T>> = MutableLiveData<List<T>>().apply {
+inline fun <reified T : FirebaseKey> Query.objectsLiveDataForValueListener(): LiveData<List<T>> = MutableLiveData<List<T>>().apply {
     addValueEventListener(valueEventListener { postValue(it.getHasKeyObjects()) })
 }
-inline fun <reified T : HasKey> Query.objectLiveDataForValueListener(): LiveData<T> = MutableLiveData<T>().apply {
+inline fun <reified T : FirebaseKey> Query.objectLiveDataForValueListener(): LiveData<T> = MutableLiveData<T>().apply {
     addValueEventListener(valueEventListener { postValue(it.getValue<T>().apply { key = it.key!! }) })
 }
 

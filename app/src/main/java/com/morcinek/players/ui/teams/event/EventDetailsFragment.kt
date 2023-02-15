@@ -7,6 +7,8 @@ import android.view.View
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
+import com.morcinek.android.HasKey
+import com.morcinek.android.setupSections
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.createMenuConfiguration
@@ -18,10 +20,8 @@ import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.ui.showDeleteCodeConfirmationDialog
 import com.morcinek.players.databinding.FragmentEventDetailsBinding
+import com.morcinek.players.databinding.VhPlayerEventPointsBinding
 import com.morcinek.players.ui.lazyNavController
-import com.morcinek.recyclerview.HasKey
-import com.morcinek.recyclerview.sections
-import kotlinx.android.synthetic.main.vh_player_event_points.view.*
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -47,8 +47,8 @@ class EventDetailsFragment : BaseFragment<FragmentEventDetailsBinding>(FragmentE
                     setTextColor(resources.getColor(it.statusColor()))
                 }
             }
-            recyclerView.sections {
-                section<PlayerWithPoints>(R.layout.vh_player_event_points) { _, item ->
+            recyclerView.setupSections {
+                sectionBinding(VhPlayerEventPointsBinding::inflate) { _, item: PlayerWithPoints ->
                     name.text = item.name
                     pointsLayout.removeAllViews()
                     item.points.forEach {
@@ -56,7 +56,7 @@ class EventDetailsFragment : BaseFragment<FragmentEventDetailsBinding>(FragmentE
                     }
                     pointsSum.text = "${item.sum}"
                 }
-                section<Header>(R.layout.vh_player_event_points) { _, item ->
+                sectionBinding(VhPlayerEventPointsBinding::inflate) { _, item: Header ->
                     pointsLayout.removeAllViews()
                     item.pointsDataList.forEach { pointsData ->
                         pointsLayout.addView((LayoutInflater.from(context).inflate(R.layout.view_points_button, pointsLayout, false)).apply {

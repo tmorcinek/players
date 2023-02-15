@@ -5,22 +5,20 @@ import android.os.Parcelable
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
+import com.morcinek.android.listAdapter
+import com.morcinek.android.setup
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
-import com.morcinek.players.core.HasKey
+import com.morcinek.android.HasKey
+import com.morcinek.android.itemCallback
 import com.morcinek.players.core.createMenuConfiguration
 import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.extensions.*
-import com.morcinek.players.core.itemCallback
 import com.morcinek.players.databinding.FragmentPlayerStatsBinding
+import com.morcinek.players.databinding.VhPlayerEventCircleBinding
 import com.morcinek.players.ui.lazyNavController
-import com.morcinek.recyclerview.list
-import com.morcinek.recyclerview.setup
-import kotlinx.android.parcel.Parcelize
-import kotlinx.android.synthetic.main.fragment_player_stats.view.*
-import kotlinx.android.synthetic.main.vh_games_number.view.*
-import kotlinx.android.synthetic.main.vh_player_event_circle.view.*
+import kotlinx.parcelize.Parcelize
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import java.text.NumberFormat
@@ -44,14 +42,13 @@ class PlayerStatsFragment : BaseFragment<FragmentPlayerStatsBinding>(FragmentPla
             title.text = viewModel.title()
             subtitle.text = viewModel.subtitle()
             recyclerView.setup {
-                list<PlayerEvent>(itemCallback()){
-                    resId(R.layout.vh_player_event_circle)
+                adapter(listAdapter(itemCallback<PlayerEvent>(), VhPlayerEventCircleBinding::inflate) {
                     onBind { _, item ->
                         circleText.text = item.date
                         circleText.setBackgroundResource(item.statusColor)
                     }
                     submitList(viewModel.events())
-                }
+                })
                 grid(6)
             }
 //            recyclerView.list<PlayerEvent>(itemCallback()) {
@@ -92,7 +89,7 @@ private class PlayerStatsViewModel(val playerStatsDetails: PlayerStatsDetails) :
         else -> R.color.colorAccent30
     }
 
-    private fun eventBackground(it: EventData) = when(playerStatsDetails.playerData.key in it.players) {
+    private fun eventBackground(it: EventData) = when (playerStatsDetails.playerData.key in it.players) {
         true -> R.drawable.circle_green
         false -> R.drawable.circle_red
     }
