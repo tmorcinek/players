@@ -2,8 +2,6 @@ package com.morcinek.players
 
 import android.app.Application
 import android.content.Context
-import android.content.SharedPreferences
-import android.preference.PreferenceManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.gson.GsonBuilder
@@ -11,7 +9,8 @@ import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.ui.navModule
 import com.morcinek.players.ui.players.createPlayerModule
 import com.morcinek.players.ui.players.playerDetailsModule
-import com.morcinek.players.ui.players.playersModule
+import com.morcinek.players.ui.team.eventsModule
+import com.morcinek.players.ui.team.playersModule
 import com.morcinek.players.ui.teams.*
 import com.morcinek.players.ui.teams.event.createEventModule
 import com.morcinek.players.ui.teams.event.createPointsModule
@@ -33,7 +32,8 @@ class Application : Application() {
             androidContext(this@Application)
             modules(
                 appModule, navModule,
-                teamsModule, teamInfoModule,
+                teamsModule, eventsModule,
+                teamInfoModule,
                 teamDetailsModule, createTeamModule, addPlayersModule,
                 createEventModule, eventDetailsModule, createPointsModule,
                 playersModule, playerDetailsModule, createPlayerModule, playerStatsModule,
