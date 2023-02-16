@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.DiffUtil
 import androidx.viewbinding.ViewBinding
@@ -18,7 +17,6 @@ import com.morcinek.players.core.createFabConfiguration
 import com.morcinek.players.core.createMenuConfiguration
 import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.data.PlayerData
-import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.eventsForTeamLiveDataForValueListener
 import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
@@ -26,18 +24,18 @@ import com.morcinek.players.core.database.playersWithoutTeamLiveDataForValueList
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.ui.showDeleteCodeConfirmationDialog
 import com.morcinek.players.databinding.FragmentTeamDetailsBinding
-import com.morcinek.players.databinding.VhPlayerBinding
 import com.morcinek.players.databinding.VhStatBinding
 import com.morcinek.players.databinding.ViewEmptyPlayersBinding
 import com.morcinek.players.ui.lazyNavController
 import com.morcinek.players.ui.teams.stats.PlayerStatsDetails
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.dsl.module
 
 class TeamDetailsFragment : BaseFragment<FragmentTeamDetailsBinding>(FragmentTeamDetailsBinding::inflate) {
 
-    private val viewModel by viewModelWithFragment<TeamDetailsViewModel>()
+    private val viewModel by viewModel<TeamDetailsViewModel>()
 
     private val navController by lazyNavController()
     private val appPreferences by inject<AppPreferences>()
@@ -53,9 +51,6 @@ class TeamDetailsFragment : BaseFragment<FragmentTeamDetailsBinding>(FragmentTea
                 }
             }
         }
-        addAction(R.string.calendar_stats, R.drawable.ic_menu_tournament) {
-            navController.navigatorProvider
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -67,12 +62,9 @@ class TeamDetailsFragment : BaseFragment<FragmentTeamDetailsBinding>(FragmentTea
                 tabLayout.isVisible = it
                 viewPager.adapter = if (it) {
                     recyclerViewPagerAdapter(
-                        R.string.page_general to generalAdapter(),
-                        R.string.page_events to eventsAdapter(),
-                        R.string.page_stats to statsAdapter(),
+                        R.string.all to statsAdapter(),
                         R.string.page_trainings to trainingsAdapter(),
-                        R.string.page_stats_last_n to statsAdapterLast(20),
-                        R.string.page_players to playersAdapter()
+                        R.string.page_stats_last_20 to statsAdapterLast(20),
                     )
                 } else {
                     singlePageAdapter(ViewEmptyPlayersBinding::inflate) {
@@ -90,27 +82,16 @@ class TeamDetailsFragment : BaseFragment<FragmentTeamDetailsBinding>(FragmentTea
         exitTransition = moveTransition()
     }
 
-    private fun generalAdapter() = listAdapter(itemCallback<GeneralStats>(), VhPlayerBinding::inflate) { _, item ->
-        name.text = item.name
-        date.text = "${item.value}"
-    }.apply { liveData(viewLifecycleOwner, viewModel.general) }
+    override fun onResume() {
+        navController.currentDestination?.label = viewModel.teamData.name
+        super.onResume()
+    }
 
     private fun <T, B : ViewBinding> listAdapter(
         diffCallback: DiffUtil.ItemCallback<T>,
         createBinding: (LayoutInflater, ViewGroup?, Boolean) -> B,
         onBindView: B.(position: Int, item: T) -> Unit
     ) = com.morcinek.android.listAdapter(diffCallback, createBinding) { onBind(onBindView) }
-
-    private val eventsFormatter = dayOfWeekDateFormat()
-
-    private fun eventsAdapter() = listAdapter(itemCallback<EventData>(), VhPlayerBinding::inflate) { _, item ->
-        name.text = item.type
-        date.text = eventsFormatter.formatCalendar(item.getDate())
-        subtitle.text = "${item.players.size} players"
-        root.setOnClickListener { view ->
-            navController.navigate(R.id.nav_event_details, bundle { putParcel(item); putString(viewModel.teamData.key) }, null, FragmentNavigatorExtras(name, date))
-        }
-    }.apply { liveData(viewLifecycleOwner, viewModel.events) }
 
     private fun statsAdapter() = listAdapter(itemCallback<PlayerStats>(), VhStatBinding::inflate) { position, item ->
         name.text = "${position + 1}. ${item.name}"
@@ -136,35 +117,15 @@ class TeamDetailsFragment : BaseFragment<FragmentTeamDetailsBinding>(FragmentTea
             root.setOnClickListener { navController.navigate(R.id.nav_player_stats, bundle(PlayerStatsDetails(item.data, viewModel.playerEvents(item.data)))) }
         }.apply { liveData(viewLifecycleOwner, viewModel.playersStatsLast(numberOfRecords)) }
 
-    private val playersFormatter = standardDateFormat()
-    private fun playersAdapter() = listAdapter(itemCallback<PlayerData>(), VhPlayerBinding::inflate) { _, item ->
-        name.text = item.toString()
-        date.text = playersFormatter.formatCalendar(item.getBirthDate())
-        root.setOnClickListener { navController.navigate(R.id.nav_player_details, bundle(item)) }
-    }.apply { liveData(viewLifecycleOwner, viewModel.players) }
 }
 
-private class TeamDetailsViewModel(val references: FirebaseReferences, val teamData: TeamData) : ViewModel() {
+private class TeamDetailsViewModel(val references: FirebaseReferences, val appPreferences: AppPreferences) : ViewModel() {
+
+    val teamData = appPreferences.selectedTeamData!!
 
     val players = references.playersForTeamLiveDataForValueListener(teamData.key)
 
     val events = references.eventsForTeamLiveDataForValueListener(teamData.key).map { it.sortedByDescending(EventData::dateInMillis) }
-    val general = events.map {
-        listOf(
-            GeneralStats("Events", "${it.size}"),
-            GeneralStats("Frequency", "${it.sumOf { it.players.size }.toDouble() / it.size}"),
-            GeneralStats("Frequency games", "${it.filter { it.type == "Game" }.let { events -> events.sumOf { it.players.size }.toDouble() / events.size }}"),
-            GeneralStats(
-                "Frequency training",
-                "${it.filter { it.type == "Training" }.let { events -> events.sumOf { it.players.size }.toDouble() / events.size }}"
-            ),
-            GeneralStats(
-                "Frequency friendlies",
-                "${it.filter { it.type == "Friendly" }.let { events -> events.sumOf { it.players.size }.toDouble() / events.size }}"
-            ),
-        ).plus(it.groupBy { it.type }.map { GeneralStats(it.key, "${it.value.size}") })
-    }
-//    "Training", "Game", "Tournament", "Friendly"
 
     fun playerEvents(player: PlayerData) = events.value!!.filter { !it.optional || player.key in it.players }
 
@@ -217,8 +178,6 @@ private class PlayerStats(
     override val key: String = data.key
 ) : HasKey
 
-private data class GeneralStats(val name: String, val value: String, override val key: String = name) : HasKey
-
 val teamDetailsModule = module {
-    viewModel { (fragment: Fragment) -> TeamDetailsViewModel(get(), fragment.getParcelable()) }
+    viewModel { TeamDetailsViewModel(get(), get()) }
 }

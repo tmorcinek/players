@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
@@ -24,13 +25,14 @@ import com.morcinek.core.ui.PopupAdapter
 import com.morcinek.core.ui.showPopupWindow
 import com.morcinek.players.AppPreferences
 import com.morcinek.players.R
-import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.teamsLiveDataForValueListener
-import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.extensions.alert.alert
 import com.morcinek.players.core.extensions.alert.noButton
 import com.morcinek.players.core.extensions.alert.yesButton
+import com.morcinek.players.core.extensions.observe
+import com.morcinek.players.core.extensions.startActivityForResult
+import com.morcinek.players.core.extensions.startNewActivityFinishCurrent
 import com.morcinek.players.databinding.ActivityMainBinding
 import com.morcinek.players.databinding.NavHeaderMainBinding
 import org.koin.android.ext.android.inject
@@ -122,7 +124,7 @@ class NavActivity : AppCompatActivity() {
                                 onItemSelected = {
                                     appPreferences.selectedTeamData = it
                                     text = appPreferences.selectedTeamData?.name
-                                    onTeamDataSelected(it)
+                                    onTeamDataSelected()
                                     binding.drawerLayout.closeDrawers()
                                 },
 //                            onDismissed = { icon.rotate180() }
@@ -149,11 +151,11 @@ class NavActivity : AppCompatActivity() {
 //                }
 //            }
         }
-        appPreferences.selectedTeamData?.let { navController.navigate(R.id.nav_team_details, it.toBundleWithTitle { name }) { popUpTo(R.id.nav_teams) { inclusive = true } } }
+        appPreferences.selectedTeamData?.let { navController.navigate(R.id.nav_team_details) { popUpTo(R.id.nav_teams) { inclusive = true } } }
     }
 
-    private fun onTeamDataSelected(it: TeamData) {
-        navController.navigate(R.id.nav_team_details, it.toBundleWithTitle { name }) { popUpTo(R.id.nav_team_details) { inclusive = true } }
+    private fun onTeamDataSelected() {
+        navController.navigate(R.id.nav_team_details) { popUpTo(R.id.nav_team_details) { inclusive = true } }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -164,6 +166,13 @@ class NavActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp() = navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+
+    override fun onBackPressed() {
+        binding.drawerLayout.run {
+            if (isDrawerOpen(GravityCompat.START)) closeDrawers()
+            else super.onBackPressed()
+        }
+    }
 }
 
 fun Fragment.lazyNavController() = lazy { Navigation.findNavController(view!!) }

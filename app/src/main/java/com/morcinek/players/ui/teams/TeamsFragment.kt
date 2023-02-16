@@ -35,7 +35,6 @@ class TeamsFragment : BaseFragment<FragmentListBinding>(FragmentListBinding::inf
                 onBind { _, item ->
                     name.text = item.name
                     delete.setOnClickListener {
-//                        navController.navigate(R.id.nav_team_details, item.toBundleWithTitle { name })
                     }
                     edit.setOnClickListener { navController.navigate(R.id.action_nav_teams_to_team_info, bundle(item)) }
                 }

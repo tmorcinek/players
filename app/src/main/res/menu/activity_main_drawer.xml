@@ -20,7 +20,14 @@
 
     <item
             android:id="@+id/teams"
-            android:title="@string/menu_teams">
-        <menu />
+            android:title="@string/menu_players">
+        <menu >
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_team_details"
+                    android:icon="@drawable/ic_menu_players"
+                    android:title="@string/page_stats" />
+            </group>
+        </menu>
     </item>
 </menu>

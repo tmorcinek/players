@@ -32,12 +32,22 @@
         android:id="@+id/nav_player_details"
         android:name="com.morcinek.players.ui.players.PlayerDetailsFragment"
         android:label="@string/menu_player_details"
-        tools:layout="@layout/fragment_player" />
+        tools:layout="@layout/fragment_player" >
+        <action
+            android:id="@+id/action_nav_player_details_to_nav_edit_player"
+            app:destination="@id/nav_edit_player" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_create_player"
         android:name="com.morcinek.players.ui.players.CreatePlayerFragment"
         android:label="@string/menu_create_player"
+        tools:layout="@layout/fragment_create_player" />
+
+    <fragment
+        android:id="@+id/nav_edit_player"
+        android:name="com.morcinek.players.ui.players.CreatePlayerFragment"
+        android:label="@string/title_edit_player"
         tools:layout="@layout/fragment_create_player" />
 
     <fragment
@@ -96,18 +106,7 @@
     <fragment
         android:id="@+id/nav_team_details"
         android:name="com.morcinek.players.ui.teams.TeamDetailsFragment"
-        android:label="{title}"
-        tools:layout="@layout/fragment_team_details">
-        <argument
-            android:name="title"
-            app:argType="string" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/nav_edit_player"
-        android:name="com.morcinek.players.ui.players.CreatePlayerFragment"
-        android:label="@string/title_edit_player"
-        tools:layout="@layout/fragment_create_player" />
+        tools:layout="@layout/fragment_team_details"/>
 
     <fragment
         android:id="@+id/nav_add_players_to_team"

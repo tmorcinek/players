@@ -56,7 +56,7 @@ class PlayerDetailsFragment : BaseFragment<FragmentPlayerBinding>(FragmentPlayer
                     }
                 }
             }
-            addAction(R.string.action_edit, R.drawable.ic_edit) { navController.navigate(R.id.nav_edit_player, bundle(viewModel.playerData)) }
+            addAction(R.string.action_edit, R.drawable.ic_edit) { navController.navigate(R.id.action_nav_player_details_to_nav_edit_player, bundle(viewModel.playerData)) }
         }
     }
 }
