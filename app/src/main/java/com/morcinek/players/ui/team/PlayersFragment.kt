@@ -1,14 +1,24 @@
 package com.morcinek.players.ui.team
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.lifecycle.ViewModel
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
+import com.morcinek.android.BListAdapter
 import com.morcinek.android.itemCallback
 import com.morcinek.android.list
+import com.morcinek.android.listAdapter
 import com.morcinek.players.AppPreferences
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.createFabConfiguration
+import com.morcinek.players.core.data.FirebaseKey
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
@@ -26,7 +36,8 @@ class PlayersFragment : BaseFragment<FragmentListBinding>(FragmentListBinding::i
 
     private val navController by lazyNavController()
 
-    override val fabConfiguration = createFabConfiguration(R.drawable.ic_person_add) { navController.navigate(R.id.action_nav_players_to_nav_create_player, viewModel.teamData.toBundle()) }
+    override val fabConfiguration =
+        createFabConfiguration(R.drawable.ic_person_add) { navController.navigate(R.id.action_nav_players_to_nav_create_player, viewModel.teamData.toBundle()) }
 
     private val playersFormatter = standardDateFormat()
 
@@ -34,20 +45,23 @@ class PlayersFragment : BaseFragment<FragmentListBinding>(FragmentListBinding::i
         super.onViewCreated(view, savedInstanceState)
         binding.run {
             progressBar.show()
-            recyclerView.list(itemCallback<PlayerData>(), VhPlayerBinding::inflate) {
-                onBind { position, item ->
-                    name.text = "${position + 1}. $item"
-                    date.text = playersFormatter.formatCalendar(item.getBirthDate())
-                    root.setOnClickListener {
-                        navController.navigate(
-                            R.id.action_nav_players_to_nav_player_details,
-                            item.toBundle(),
-                            null,
-                            FragmentNavigatorExtras(name, date)
-                        )
+            recyclerView.run {
+                addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+                list(itemCallback<PlayerData>(), VhPlayerBinding::inflate) {
+                    onBind { position, item ->
+                        name.text = "${position + 1}. $item"
+                        date.text = playersFormatter.formatCalendar(item.getBirthDate())
+                        root.setOnClickListener {
+                            navController.navigate(
+                                R.id.action_nav_players_to_nav_player_details,
+                                item.toBundle(),
+                                null,
+                                FragmentNavigatorExtras(name, date)
+                            )
+                        }
                     }
+                    liveData(viewLifecycleOwner, viewModel.players) { progressBar.hide() }
                 }
-                liveData(viewLifecycleOwner, viewModel.players) { progressBar.hide() }
             }
         }
     }
