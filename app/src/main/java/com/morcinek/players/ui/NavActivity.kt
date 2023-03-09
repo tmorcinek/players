@@ -151,7 +151,7 @@ class NavActivity : AppCompatActivity() {
 //                }
 //            }
         }
-        appPreferences.selectedTeamData?.let { navController.navigate(R.id.nav_team_details) { popUpTo(R.id.nav_teams) { inclusive = true } } }
+        appPreferences.selectedTeamData?.let { navController.navigate(R.id.action_nav_teams_to_nav_team_details) }
     }
 
     private fun onTeamDataSelected() {

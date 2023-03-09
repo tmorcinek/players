@@ -13,6 +13,11 @@
         <action
             android:id="@+id/action_nav_teams_to_team_info"
             app:destination="@id/team_info" />
+        <action
+            android:id="@+id/action_nav_teams_to_nav_team_details"
+            app:destination="@id/nav_team_details"
+            app:popUpTo="@id/nav_teams"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment

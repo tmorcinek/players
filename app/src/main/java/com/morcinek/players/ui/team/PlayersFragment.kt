@@ -35,15 +35,15 @@ class PlayersFragment : BaseFragment<FragmentListBinding>(FragmentListBinding::i
         binding.run {
             progressBar.show()
             recyclerView.list(itemCallback<PlayerData>(), VhPlayerBinding::inflate) {
-                onBind { _, item ->
-                    name.text = item.toString()
+                onBind { position, item ->
+                    name.text = "${position + 1}. $item"
                     date.text = playersFormatter.formatCalendar(item.getBirthDate())
                     root.setOnClickListener {
                         navController.navigate(
                             R.id.action_nav_players_to_nav_player_details,
                             item.toBundle(),
                             null,
-                            FragmentNavigatorExtras(name, subtitle, date)
+                            FragmentNavigatorExtras(name, date)
                         )
                     }
                 }

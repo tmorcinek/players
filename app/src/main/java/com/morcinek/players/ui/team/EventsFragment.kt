@@ -14,7 +14,7 @@ import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.eventsForTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.databinding.FragmentListBinding
-import com.morcinek.players.databinding.VhPlayerBinding
+import com.morcinek.players.databinding.VhEventBinding
 import com.morcinek.players.ui.lazyNavController
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -35,7 +35,7 @@ class EventsFragment : BaseFragment<FragmentListBinding>(FragmentListBinding::in
         super.onViewCreated(view, savedInstanceState)
         binding.run {
             progressBar.show()
-            recyclerView.list(itemCallback<EventData>(), VhPlayerBinding::inflate) {
+            recyclerView.list(itemCallback<EventData>(), VhEventBinding::inflate) {
                 onBind { _, item ->
                     name.text = item.type
                     date.text = formatter.formatCalendar(item.getDate())

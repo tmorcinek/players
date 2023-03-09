@@ -8,9 +8,11 @@ import com.morcinek.android.itemCallback
 import com.morcinek.android.list
 import com.morcinek.players.AppPreferences
 import com.morcinek.players.core.BaseFragment
+import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.eventsForTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.map
+import com.morcinek.players.core.extensions.toStandardString
 import com.morcinek.players.databinding.FragmentListBinding
 import com.morcinek.players.databinding.VhPlayerBinding
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -42,6 +44,8 @@ private class TeamStatsViewModel(references: FirebaseReferences, appPreferences:
 
     val general = references.eventsForTeamLiveDataForValueListener(teamData.key).map {
         listOf(
+            GeneralStats("First Training", it.sortedBy(EventData::dateInMillis).first().getDate().toStandardString()),
+            GeneralStats("Number of players", "${it.fold(setOf<String>()) { acc, eventData -> acc.plus(eventData.players)  }.count()}"),
             GeneralStats("Events", "${it.size}"),
             GeneralStats("Frequency", "${it.sumOf { it.players.size }.toDouble() / it.size}"),
             GeneralStats("Frequency games", "${it.filter { it.type == "Game" }.let { events -> events.sumOf { it.players.size }.toDouble() / events.size }}"),
