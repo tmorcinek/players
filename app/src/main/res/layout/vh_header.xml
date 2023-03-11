@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:letterSpacing="0.07"
+    android:paddingStart="@dimen/margin"
+    android:paddingTop="@dimen/triple_margin"
+    android:textColor="@color/black_60"
+    android:textSize="@dimen/font_std"
+    tools:text="Reports" />

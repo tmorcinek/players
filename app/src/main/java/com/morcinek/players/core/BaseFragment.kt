@@ -59,7 +59,7 @@ abstract  class BaseFragment<T : ViewBinding>(private val createBinding: (Layout
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         menuConfiguration?.takeIf { item.itemId < it.actions.size }?.let {
             it.actions[item.itemId].let { menuConfigurationItem ->
-                menuConfigurationItem.action.invoke()
+                menuConfigurationItem.action.invoke(item)
                 return true
             }
         } ?: return false
@@ -81,11 +81,11 @@ fun createFabConfiguration(fabIcon: Int = R.drawable.ic_add, fabActon: (View) ->
 class MenuConfiguration {
     internal val actions = mutableListOf<MenuConfigurationItem>()
 
-    fun addAction(textRes: Int, iconRes: Int, action: () -> Unit) {
+    fun addAction(textRes: Int, iconRes: Int, action: (MenuItem) -> Unit) {
         actions.add(MenuConfigurationItem(textRes, iconRes, action))
     }
 }
 
-class MenuConfigurationItem(val textRes: Int, val iconRes: Int, val action: () -> Unit)
+class MenuConfigurationItem(val textRes: Int, val iconRes: Int, val action: (MenuItem) -> Unit)
 
 inline fun createMenuConfiguration(function: MenuConfiguration.() -> Unit) = MenuConfiguration().apply(function)

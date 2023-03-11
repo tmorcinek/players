@@ -1,9 +1,12 @@
 package com.morcinek.core.ui
 
+import android.content.Context
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ListPopupWindow
+import androidx.appcompat.widget.PopupMenu
 import com.morcinek.players.R
 
 fun <T> View.showPopupWindow(popupAdapter: PopupAdapter<T>, onCreate: ListPopupWindow.() -> Unit = {}, onItemSelected: (T) -> Unit, onDismissed: () -> Unit = {}) =
@@ -31,3 +34,9 @@ class PopupAdapter<T>(val items: List<T>, val resId: Int, val onBind: View.(T) -
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View =
         (convertView ?: View.inflate(parent?.context, resId, null)).apply { onBind(getItem(position)) }
 }
+
+fun Context.showPopupMenu(view: View, vararg actions: Pair<String, () -> Unit>) =
+    PopupMenu(this, view).apply {
+        actions.forEachIndexed { index, item -> menu.add(0, index, Menu.NONE, item.first) }
+        setOnMenuItemClickListener { actions[it.itemId].second();true }
+    }.show()

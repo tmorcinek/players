@@ -76,5 +76,6 @@
     <string name="team_delete_query">Are you sure you want to delete this team?</string>
     <string name="team_delete_message">To delete this team type code and confirm.</string>
 
+    <string name="sort">Sort</string>
 
 </resources>
