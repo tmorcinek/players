@@ -35,7 +35,7 @@ class PopupAdapter<T>(val items: List<T>, val resId: Int, val onBind: View.(T) -
         (convertView ?: View.inflate(parent?.context, resId, null)).apply { onBind(getItem(position)) }
 }
 
-fun Context.showPopupMenu(view: View, vararg actions: Pair<String, () -> Unit>) =
+fun Context.showPopupMenu(view: View, vararg actions: Pair<Int, () -> Unit>) =
     PopupMenu(this, view).apply {
         actions.forEachIndexed { index, item -> menu.add(0, index, Menu.NONE, item.first) }
         setOnMenuItemClickListener { actions[it.itemId].second();true }

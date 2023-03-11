@@ -38,9 +38,9 @@ class PlayersFragment : BaseFragment<FragmentListBinding>(FragmentListBinding::i
         addAction(R.string.sort, R.drawable.ic_sort) {
             requireContext().showPopupMenu(
                 requireActivity().findViewById(it.itemId),
-                Pair("Sort by name") { viewModel.updateSortingMethod(SortingMethod.SortByName) },
-                Pair("Sort by age") { viewModel.updateSortingMethod(SortingMethod.SortByAge) },
-                Pair("Group by age") { viewModel.updateSortingMethod(SortingMethod.GroupByAge) },
+                Pair(R.string.sort_by_name) { viewModel.updateSortingMethod(SortingMethod.SortByName) },
+                Pair(R.string.sort_by_age) { viewModel.updateSortingMethod(SortingMethod.SortByAge) },
+                Pair(R.string.group_by_age) { viewModel.updateSortingMethod(SortingMethod.GroupByAge) },
             )
         }
     }
