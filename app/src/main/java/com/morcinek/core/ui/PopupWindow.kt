@@ -1,6 +1,5 @@
 package com.morcinek.core.ui
 
-import android.content.Context
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
@@ -35,8 +34,8 @@ class PopupAdapter<T>(val items: List<T>, val resId: Int, val onBind: View.(T) -
         (convertView ?: View.inflate(parent?.context, resId, null)).apply { onBind(getItem(position)) }
 }
 
-fun Context.showPopupMenu(view: View, vararg actions: Pair<Int, () -> Unit>) =
-    PopupMenu(this, view).apply {
+fun View.showPopupMenu(vararg actions: Pair<Int, () -> Unit>) =
+    PopupMenu(context, this).apply {
         actions.forEachIndexed { index, item -> menu.add(0, index, Menu.NONE, item.first) }
         setOnMenuItemClickListener { actions[it.itemId].second();true }
     }.show()

@@ -36,8 +36,7 @@ class PlayersFragment : BaseFragment<FragmentListBinding>(FragmentListBinding::i
 
     override val menuConfiguration = createMenuConfiguration {
         addAction(R.string.sort, R.drawable.ic_sort) {
-            requireContext().showPopupMenu(
-                requireActivity().findViewById(it.itemId),
+            requireActivity().findViewById<View>(it.itemId).showPopupMenu(
                 Pair(R.string.sort_by_name) { viewModel.updateSortingMethod(SortingMethod.SortByName) },
                 Pair(R.string.sort_by_age) { viewModel.updateSortingMethod(SortingMethod.SortByAge) },
                 Pair(R.string.group_by_age) { viewModel.updateSortingMethod(SortingMethod.GroupByAge) },
