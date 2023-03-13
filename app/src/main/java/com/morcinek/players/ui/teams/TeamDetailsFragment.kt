@@ -158,7 +158,7 @@ private class TeamDetailsViewModel(val references: FirebaseReferences, val appPr
             players.map { player ->
                 PlayerStats(
                     name = player.toString(),
-                    attended = events.filter { it.type == "Training" }.count { player.key in it.players },
+                    attended = events.count { player.key in it.players },
                     points = events.filter { player.key in it.players }.sumOf { it.playerPointsSum(player.key) },
                     player
                 )

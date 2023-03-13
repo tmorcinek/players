@@ -5,12 +5,12 @@ import android.os.Parcelable
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
+import com.morcinek.android.HasKey
+import com.morcinek.android.itemCallback
 import com.morcinek.android.listAdapter
 import com.morcinek.android.setup
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
-import com.morcinek.android.HasKey
-import com.morcinek.android.itemCallback
 import com.morcinek.players.core.createMenuConfiguration
 import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.data.PlayerData
@@ -18,6 +18,7 @@ import com.morcinek.players.core.extensions.*
 import com.morcinek.players.databinding.FragmentPlayerStatsBinding
 import com.morcinek.players.databinding.VhPlayerEventCircleBinding
 import com.morcinek.players.ui.lazyNavController
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -31,9 +32,7 @@ class PlayerStatsFragment : BaseFragment<FragmentPlayerStatsBinding>(FragmentPla
     private val navController by lazyNavController()
 
     override val menuConfiguration = createMenuConfiguration {
-        addAction(R.string.menu_player_details, R.drawable.ic_profile) {
-            navController.navigate(R.id.nav_player_details, viewModel.playerStatsDetails.playerData.toBundle())
-        }
+        addAction(R.string.menu_player_details, R.drawable.ic_profile) { navController.navigate(R.id.nav_player_details, viewModel.playerStatsDetails.playerData.toBundle()) }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -51,24 +50,6 @@ class PlayerStatsFragment : BaseFragment<FragmentPlayerStatsBinding>(FragmentPla
                 })
                 grid(6)
             }
-//            recyclerView.list<PlayerEvent>(itemCallback()) {
-//                resId(R.layout.vh_player_event)
-//                onBind { _, item ->
-//                    name.text = item.name
-//                    date.text = item.date
-//                    setBackgroundResource(item.statusColor)
-//                    setOnClickListener {
-//                        navController.navigate(
-//                            R.id.nav_event_details,
-//                            bundle {
-//                                putParcel(item.eventData)
-//                                putString(viewModel.playerStatsDetails.playerData.teamKey!!)
-//                            }
-//                        )
-//                    }
-//                }
-//                submitList(viewModel.events())
-//            }
         }
     }
 }
@@ -81,13 +62,7 @@ private class PlayerStatsViewModel(val playerStatsDetails: PlayerStatsDetails) :
 
     fun subtitle() = "Frequency: $playerStatsDetails"
 
-    fun events() = playerStatsDetails.trainings.map { PlayerEvent(it.type, dateFormat.formatCalendar(it.getDate()), eventBackground(it), it.key, it) }
-
-    private fun eventStatus(it: EventData) = when {
-        it.optional -> R.color.dark_indigo_30
-        playerStatsDetails.playerData.key in it.players -> R.color.colorPrimary30
-        else -> R.color.colorAccent30
-    }
+    fun events() = playerStatsDetails.events.map { PlayerEvent(it.type, dateFormat.formatCalendar(it.getDate()), eventBackground(it), it.key, it) }
 
     private fun eventBackground(it: EventData) = when (playerStatsDetails.playerData.key in it.players) {
         true -> R.drawable.circle_green
@@ -97,11 +72,11 @@ private class PlayerStatsViewModel(val playerStatsDetails: PlayerStatsDetails) :
 
 @Parcelize
 class PlayerStatsDetails(val playerData: PlayerData, val events: List<EventData>) : Parcelable {
-    val trainings = events.filter { it.type == "Training" }
-    val attendence = trainings.count { playerData.key in it.players }
-    val ratio = attendence.toDouble() / trainings.size
+//    @IgnoredOnParcel val trainings = events.filter { it.type == "Training" }
+    @IgnoredOnParcel val attendence = events.count { playerData.key in it.players }
+    @IgnoredOnParcel val ratio = attendence.toDouble() / events.size
 
-    override fun toString() = "     ${attendence}/${trainings.size}      ${NumberFormat.getPercentInstance().format(ratio)}"
+    override fun toString() = "     ${attendence}/${events.size}      ${NumberFormat.getPercentInstance().format(ratio)}"
 }
 
 private data class PlayerEvent(val name: String, val date: String, val statusColor: Int, override var key: String, val eventData: EventData) : HasKey

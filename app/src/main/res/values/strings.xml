@@ -77,8 +77,8 @@
     <string name="team_delete_message">To delete this team type code and confirm.</string>
 
     <string name="sort">Sort</string>
-    <string name="sort_by_name">Sort by 'name'</string>
-    <string name="sort_by_age">Sort by 'age'</string>
-    <string name="group_by_age">Group by 'age'</string>
+    <string name="sort_by_name">Sort by \'name\'</string>
+    <string name="sort_by_age">Sort by \'age\'</string>
+    <string name="group_by_age">Group by \'age\'</string>
 
 </resources>

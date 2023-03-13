@@ -63,6 +63,6 @@ fun FirebaseReferences.playersForTeamLiveDataForValueListener(teamKey: String): 
 
 fun FirebaseReferences.teamsLiveDataForValueListener(): LiveData<List<TeamData>> = teamsReference().objectsLiveDataForValueListener()
 
-fun FirebaseReferences.eventsForTeamLiveDataForValueListener(teamKey: String, numberOfRecords: Int): LiveData<List<EventData>> = teamEventsReferenceFromAugust(teamKey).limitToLast(numberOfRecords).objectsLiveDataForValueListener()
-fun FirebaseReferences.eventsForTeamLiveDataForValueListener(teamKey: String): LiveData<List<EventData>> = teamEventsReferenceFromAugust(teamKey).objectsLiveDataForValueListener()
+fun FirebaseReferences.eventsForTeamLiveDataForValueListener(teamKey: String, numberOfRecords: Int? = null): LiveData<List<EventData>> =
+    teamEventsReferenceFromAugust(teamKey).let { if (numberOfRecords != null) it.limitToLast(numberOfRecords) else it }.objectsLiveDataForValueListener()
 fun FirebaseReferences.eventForTeamLiveDataForValueListener(teamKey: String, eventKey: String): LiveData<EventData> = teamEventReference(teamKey, eventKey).objectLiveDataForValueListener()
