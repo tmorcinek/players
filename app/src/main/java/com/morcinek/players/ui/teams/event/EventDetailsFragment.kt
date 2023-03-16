@@ -21,7 +21,7 @@ import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.ui.showDeleteCodeConfirmationDialog
 import com.morcinek.players.databinding.FragmentEventDetailsBinding
 import com.morcinek.players.databinding.VhPlayerEventPointsBinding
-import com.morcinek.players.ui.lazyNavController
+import com.morcinek.core.lazyNavController
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -61,7 +61,7 @@ class EventDetailsFragment : BaseFragment<FragmentEventDetailsBinding>(FragmentE
                     item.pointsDataList.forEach { pointsData ->
                         pointsLayout.addView((LayoutInflater.from(context).inflate(R.layout.view_points_button, pointsLayout, false)).apply {
                             setOnClickListener {
-                                navController.navigate(R.id.nav_create_points, bundle {
+                                navController.navigate<CreatePointsFragment>(bundle {
                                     putString(viewModel.teamKey)
                                     putParcel(viewModel.event.value!!)
                                     putInt(pointsData.id)
@@ -83,13 +83,13 @@ class EventDetailsFragment : BaseFragment<FragmentEventDetailsBinding>(FragmentE
             ) { viewModel.deleteEvent { navController.popBackStack() } }
         }
         addAction(R.string.action_edit, R.drawable.ic_edit) {
-            navController.navigate(R.id.nav_edit_event, bundle {
+            navController.navigate<CreateEventFragment>(bundle {
                 putString(viewModel.teamKey)
                 putParcel(viewModel.event.value!!)
             })
         }
         addAction(R.string.event_action_points, R.drawable.ic_menu_tournament) {
-            navController.navigate(R.id.nav_create_points, bundle {
+            navController.navigate<CreatePointsFragment>(bundle {
                 putString(viewModel.teamKey)
                 putParcel(viewModel.event.value!!)
             })

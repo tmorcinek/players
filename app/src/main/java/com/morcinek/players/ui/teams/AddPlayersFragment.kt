@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.morcinek.core.lazyNavController
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.createMenuConfiguration
@@ -15,7 +16,7 @@ import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.playersWithoutTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.databinding.FragmentAddPlayersBinding
-import com.morcinek.players.ui.lazyNavController
+import com.morcinek.players.ui.players.CreatePlayerFragment
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -26,7 +27,7 @@ class AddPlayersFragment : BaseFragment<FragmentAddPlayersBinding>(FragmentAddPl
     private val navController by lazyNavController()
 
     override val menuConfiguration = createMenuConfiguration {
-        addAction(R.string.add_players, R.drawable.ic_person_add) { navController.navigate(R.id.nav_create_player) }
+        addAction(R.string.add_players, R.drawable.ic_person_add) { navController.navigate<CreatePlayerFragment>() }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -26,8 +26,11 @@ import com.morcinek.players.core.ui.showDeleteCodeConfirmationDialog
 import com.morcinek.players.databinding.FragmentTeamDetailsBinding
 import com.morcinek.players.databinding.VhStatBinding
 import com.morcinek.players.databinding.ViewEmptyPlayersBinding
-import com.morcinek.players.ui.lazyNavController
+import com.morcinek.core.lazyNavController
+import com.morcinek.players.ui.players.CreatePlayerFragment
+import com.morcinek.players.ui.teams.event.CreateEventFragment
 import com.morcinek.players.ui.teams.stats.PlayerStatsDetails
+import com.morcinek.players.ui.teams.stats.PlayerStatsFragment
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -40,14 +43,14 @@ class TeamDetailsFragment : BaseFragment<FragmentTeamDetailsBinding>(FragmentTea
     private val navController by lazyNavController()
     private val appPreferences by inject<AppPreferences>()
 
-    override val fabConfiguration = createFabConfiguration(R.drawable.ic_ball) { navController.navigate(R.id.nav_create_event, bundle { putString(viewModel.teamData.key) }) }
+    override val fabConfiguration = createFabConfiguration(R.drawable.ic_ball) { navController.navigate<CreateEventFragment>(bundle { putString(viewModel.teamData.key) }) }
 
     override val menuConfiguration = createMenuConfiguration {
         addAction(R.string.add_players, R.drawable.ic_person_add) {
             observe(viewModel.playersWithoutTeam) {
                 when {
-                    it.isEmpty() -> navController.navigate(R.id.nav_create_player, viewModel.teamData.toBundle())
-                    else -> navController.navigate(R.id.nav_add_players_to_team, viewModel.teamData.toBundle())
+                    it.isEmpty() -> navController.navigate<CreatePlayerFragment>(viewModel.teamData.toBundle())
+                    else -> navController.navigate<AddPlayersFragment>(viewModel.teamData.toBundle())
                 }
             }
         }
@@ -68,7 +71,7 @@ class TeamDetailsFragment : BaseFragment<FragmentTeamDetailsBinding>(FragmentTea
                     )
                 } else {
                     singlePageAdapter(ViewEmptyPlayersBinding::inflate) {
-                        addPlayerButton.setOnClickListener { navController.navigate(R.id.nav_create_player, viewModel.teamData.toBundle()) }
+                        addPlayerButton.setOnClickListener { navController.navigate<CreatePlayerFragment>(viewModel.teamData.toBundle()) }
                         deleteButton.setOnClickListener {
                             showDeleteCodeConfirmationDialog(
                                 R.string.team_delete_query,
@@ -83,21 +86,21 @@ class TeamDetailsFragment : BaseFragment<FragmentTeamDetailsBinding>(FragmentTea
     }
 
     override fun onResume() {
-        navController.currentDestination?.label = viewModel.teamData.name
+//        navController.currentDestination?.label = viewModel.teamData.name
         super.onResume()
     }
 
     private fun <T, B : ViewBinding> listAdapter(
         diffCallback: DiffUtil.ItemCallback<T>,
         createBinding: (LayoutInflater, ViewGroup?, Boolean) -> B,
-        onBindView: B.(position: Int, item: T) -> Unit
+        onBindView: B.(position: Int, item: T) -> Unit,
     ) = com.morcinek.android.listAdapter(diffCallback, createBinding) { onBind(onBindView) }
 
     private fun statsAdapter() = listAdapter(itemCallback<PlayerStats>(), VhStatBinding::inflate) { position, item ->
         name.text = "${position + 1}. ${item.name}"
         attendance.text = item.attended.toString()
         points.text = item.points.toString()
-        root.setOnClickListener { navController.navigate(R.id.nav_player_stats, bundle(PlayerStatsDetails(item.data, viewModel.playerEvents(item.data)))) }
+        root.setOnClickListener { navigateToPlayerStatsFragment(item) }
     }.apply {
         liveData(viewLifecycleOwner, viewModel.playersStats)
     }
@@ -106,7 +109,7 @@ class TeamDetailsFragment : BaseFragment<FragmentTeamDetailsBinding>(FragmentTea
         name.text = "${position + 1}. ${item.name}"
         attendance.text = item.attended.toString()
         points.text = item.points.toString()
-        root.setOnClickListener { navController.navigate(R.id.nav_player_stats, bundle(PlayerStatsDetails(item.data, viewModel.playerEvents(item.data)))) }
+        root.setOnClickListener { navigateToPlayerStatsFragment(item) }
     }.apply { liveData(viewLifecycleOwner, viewModel.playersTrainingStats) }
 
     private fun statsAdapterLast(numberOfRecords: Int) =
@@ -114,8 +117,11 @@ class TeamDetailsFragment : BaseFragment<FragmentTeamDetailsBinding>(FragmentTea
             name.text = "${position + 1}. ${item.name}"
             attendance.text = item.attended.toString()
             points.text = item.points.toString()
-            root.setOnClickListener { navController.navigate(R.id.nav_player_stats, bundle(PlayerStatsDetails(item.data, viewModel.playerEvents(item.data)))) }
+            root.setOnClickListener { navigateToPlayerStatsFragment(item) }
         }.apply { liveData(viewLifecycleOwner, viewModel.playersStatsLast(numberOfRecords)) }
+
+    private fun navigateToPlayerStatsFragment(item: PlayerStats) =
+        navController.navigate<PlayerStatsFragment>(bundle(PlayerStatsDetails(item.data, viewModel.playerEvents(item.data))))
 
 }
 
@@ -175,7 +181,7 @@ private class PlayerStats(
     val attended: Int,
     val points: Int,
     val data: PlayerData,
-    override val key: String = data.key
+    override val key: String = data.key,
 ) : HasKey
 
 val teamDetailsModule = module {

@@ -16,7 +16,7 @@ import com.morcinek.players.core.extensions.alert.alert
 import com.morcinek.players.core.extensions.alert.cancelButton
 import com.morcinek.players.core.ui.showDeleteCodeConfirmationDialog
 import com.morcinek.players.databinding.FragmentPlayerBinding
-import com.morcinek.players.ui.lazyNavController
+import com.morcinek.core.lazyNavController
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -56,7 +56,7 @@ class PlayerDetailsFragment : BaseFragment<FragmentPlayerBinding>(FragmentPlayer
                     }
                 }
             }
-            addAction(R.string.action_edit, R.drawable.ic_edit) { navController.navigate(R.id.action_nav_player_details_to_nav_edit_player, bundle(viewModel.playerData)) }
+            addAction(R.string.action_edit, R.drawable.ic_edit) { navController.navigate<CreatePlayerFragment>(bundle(viewModel.playerData)) }
         }
     }
 }

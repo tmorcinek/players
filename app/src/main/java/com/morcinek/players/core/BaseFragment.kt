@@ -12,6 +12,7 @@ import com.morcinek.players.ui.NavActivity
 
 abstract  class BaseFragment<T : ViewBinding>(private val createBinding: (LayoutInflater, ViewGroup?, Boolean) -> T) : Fragment() {
 
+    open val title: Int = R.string.group_by_age
     open val menuConfiguration: MenuConfiguration? = null
     open val fabConfiguration: FabConfiguration? = null
 
@@ -31,8 +32,7 @@ abstract  class BaseFragment<T : ViewBinding>(private val createBinding: (Layout
 
     override fun onResume() {
         super.onResume()
-
-        (requireActivity() as NavActivity).binding.navigationContent.fab.let { fab ->
+        (requireActivity() as NavActivity).binding.fab.let { fab ->
             if (fab.isOrWillBeShown) fab.hide {
                 initializeFab(fab)
             } else {

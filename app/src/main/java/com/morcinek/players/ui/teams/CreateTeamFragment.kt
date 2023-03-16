@@ -17,7 +17,7 @@ import com.morcinek.players.core.extensions.map
 import com.morcinek.players.core.extensions.observe
 import com.morcinek.players.core.extensions.viewModelWithFragment
 import com.morcinek.players.databinding.FragmentCreateTeamBinding
-import com.morcinek.players.ui.lazyNavController
+import com.morcinek.core.lazyNavController
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 

@@ -14,7 +14,7 @@ import com.morcinek.players.core.database.teamsLiveDataForValueListener
 import com.morcinek.players.core.extensions.bundle
 import com.morcinek.players.databinding.FragmentListBinding
 import com.morcinek.players.databinding.VhTeamBinding
-import com.morcinek.players.ui.lazyNavController
+import com.morcinek.core.lazyNavController
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.dsl.module
@@ -25,7 +25,7 @@ class TeamsFragment : BaseFragment<FragmentListBinding>(FragmentListBinding::inf
 
     private val navController by lazyNavController()
 
-    override val fabConfiguration = createFabConfiguration(R.drawable.ic_group_add) { navController.navigate(R.id.nav_create_team) }
+    override val fabConfiguration = createFabConfiguration(R.drawable.ic_group_add) { navController.navigate<CreateTeamFragment>() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -36,7 +36,7 @@ class TeamsFragment : BaseFragment<FragmentListBinding>(FragmentListBinding::inf
                     name.text = item.name
                     delete.setOnClickListener {
                     }
-                    edit.setOnClickListener { navController.navigate(R.id.action_nav_teams_to_team_info, bundle(item)) }
+                    edit.setOnClickListener { navController.navigate<TeamInfoFragment>(bundle(item)) }
                 }
                 liveData(viewLifecycleOwner, viewModel.teams) { progressBar.hide() }
             }

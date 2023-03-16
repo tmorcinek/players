@@ -15,7 +15,7 @@ import com.morcinek.players.core.database.teamsLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.ui.showStandardDropDown
 import com.morcinek.players.databinding.FragmentCreatePlayerBinding
-import com.morcinek.players.ui.lazyNavController
+import com.morcinek.core.lazyNavController
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import java.util.*

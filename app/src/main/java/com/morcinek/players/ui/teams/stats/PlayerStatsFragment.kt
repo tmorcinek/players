@@ -17,7 +17,8 @@ import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.databinding.FragmentPlayerStatsBinding
 import com.morcinek.players.databinding.VhPlayerEventCircleBinding
-import com.morcinek.players.ui.lazyNavController
+import com.morcinek.core.lazyNavController
+import com.morcinek.players.ui.players.PlayerDetailsFragment
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -32,7 +33,7 @@ class PlayerStatsFragment : BaseFragment<FragmentPlayerStatsBinding>(FragmentPla
     private val navController by lazyNavController()
 
     override val menuConfiguration = createMenuConfiguration {
-        addAction(R.string.menu_player_details, R.drawable.ic_profile) { navController.navigate(R.id.nav_player_details, viewModel.playerStatsDetails.playerData.toBundle()) }
+        addAction(R.string.menu_player_details, R.drawable.ic_profile) { navController.navigate<PlayerDetailsFragment>(viewModel.playerStatsDetails.playerData.toBundle()) }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -1,5 +1,11 @@
 package com.morcinek.players.ui
 
+//import androidx.navigation.Navigation
+//import androidx.navigation.findNavController
+//import androidx.navigation.ui.AppBarConfiguration
+//import androidx.navigation.ui.navigateUp
+//import androidx.navigation.ui.setupActionBarWithNavController
+//import androidx.navigation.ui.setupWithNavController
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -7,20 +13,15 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
-import androidx.navigation.Navigation
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.morcinek.core.navigate
+import com.morcinek.core.NavController
+import com.morcinek.core.NavControllerHost
+import com.morcinek.core.ToolbarNavController
 import com.morcinek.core.ui.PopupAdapter
 import com.morcinek.core.ui.showPopupWindow
 import com.morcinek.players.AppPreferences
@@ -35,12 +36,14 @@ import com.morcinek.players.core.extensions.startActivityForResult
 import com.morcinek.players.core.extensions.startNewActivityFinishCurrent
 import com.morcinek.players.databinding.ActivityMainBinding
 import com.morcinek.players.databinding.NavHeaderMainBinding
+import com.morcinek.players.ui.team.PlayersFragment
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.dsl.module
 
-class NavActivity : AppCompatActivity() {
+
+class NavActivity : AppCompatActivity(), NavControllerHost {
 
     lateinit var binding: ActivityMainBinding
 
@@ -48,23 +51,25 @@ class NavActivity : AppCompatActivity() {
 
     private val viewModel by viewModel<NavViewModel>()
 
-    private val appBarConfiguration by lazy {
-        AppBarConfiguration(
-            setOf(R.id.nav_players, R.id.nav_events, R.id.nav_team_stats),
-            binding.drawerLayout
-        )
-    }
+//    private val appBarConfiguration by lazy {
+//        AppBarConfiguration(
+//            setOf(R.id.nav_players, R.id.nav_events, R.id.nav_team_stats),
+//            binding.drawerLayout
+//        )
+//    }
 
     private val headerBinding: NavHeaderMainBinding get() = NavHeaderMainBinding.bind(binding.navigationView.getHeaderView(0))
 
-    private val navController by lazy { findNavController(R.id.navHostFragment) }
+    override val navController by lazy { NavController(this, R.id.fragmentContainer) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater).also {
             setContentView(it.root)
         }
-        setSupportActionBar(binding.navigationContent.toolbar)
+        setSupportActionBar(binding.toolbar)
+        ToolbarNavController(this, binding.drawerLayout, binding.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+
         viewModel.user.let { currentUser ->
             headerBinding.run {
                 if (currentUser.isAnonymous) {
@@ -109,7 +114,7 @@ class NavActivity : AppCompatActivity() {
                     }
                 }
                 editTeams.setOnClickListener {
-                    navController.navigate(R.id.nav_teams) { launchSingleTop = true }
+//                    navController.navigate(R.id.nav_teams) { launchSingleTop = true }
                     binding.drawerLayout.closeDrawers()
                 }
                 selectTeamButton.run {
@@ -136,9 +141,11 @@ class NavActivity : AppCompatActivity() {
             }
         }
 
-        setupActionBarWithNavController(navController, appBarConfiguration)
+        navController.navigate<PlayersFragment> ()
+//        toggle.onDrawerOpened(binding.drawerLayout)
+//        setupActionBarWithNavController(navController, appBarConfiguration)
         binding.navigationView.apply {
-            setupWithNavController(navController)
+//            setupWithNavController(navController)
 //            menu.findItem(R.id.teams).subMenu.let { menu ->
 //                observe(viewModel.teams) {
 //                    menu.clear()
@@ -151,11 +158,11 @@ class NavActivity : AppCompatActivity() {
 //                }
 //            }
         }
-        appPreferences.selectedTeamData?.let { navController.navigate(R.id.action_nav_teams_to_nav_team_details) }
+//        appPreferences.selectedTeamData?.let { navController.navigate(R.id.action_nav_teams_to_nav_team_details) }
     }
 
     private fun onTeamDataSelected() {
-        navController.navigate(R.id.nav_team_details) { popUpTo(R.id.nav_team_details) { inclusive = true } }
+//        navController.navigate(R.id.nav_team_details) { popUpTo(R.id.nav_team_details) { inclusive = true } }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -165,7 +172,7 @@ class NavActivity : AppCompatActivity() {
         }
     }
 
-    override fun onSupportNavigateUp() = navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    override fun onSupportNavigateUp() = navController.navigateUp(Unit) || super.onSupportNavigateUp()
 
     override fun onBackPressed() {
         binding.drawerLayout.run {
@@ -174,8 +181,6 @@ class NavActivity : AppCompatActivity() {
         }
     }
 }
-
-fun Fragment.lazyNavController() = lazy { Navigation.findNavController(view!!) }
 
 private class NavViewModel(references: FirebaseReferences, val auth: FirebaseAuth) : ViewModel() {
 

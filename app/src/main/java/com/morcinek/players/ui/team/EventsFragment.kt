@@ -15,7 +15,9 @@ import com.morcinek.players.core.database.eventsForTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.databinding.FragmentListBinding
 import com.morcinek.players.databinding.VhEventBinding
-import com.morcinek.players.ui.lazyNavController
+import com.morcinek.core.lazyNavController
+import com.morcinek.players.ui.teams.event.CreateEventFragment
+import com.morcinek.players.ui.teams.event.EventDetailsFragment
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.dsl.module
@@ -27,7 +29,7 @@ class EventsFragment : BaseFragment<FragmentListBinding>(FragmentListBinding::in
     private val navController by lazyNavController()
 
     override val fabConfiguration =
-        createFabConfiguration(R.drawable.ic_ball) { navController.navigate(R.id.action_nav_events_to_nav_create_event, bundle { putString(viewModel.teamData.key) }) }
+        createFabConfiguration(R.drawable.ic_ball) { navController.navigate<CreateEventFragment>(bundle { putString(viewModel.teamData.key) }) }
 
     private val formatter = dayOfWeekDateFormat()
 
@@ -41,8 +43,7 @@ class EventsFragment : BaseFragment<FragmentListBinding>(FragmentListBinding::in
                     date.text = formatter.formatCalendar(item.getDate())
                     subtitle.text = "${item.players.size} players"
                     root.setOnClickListener {
-                        navController.navigate(
-                            R.id.action_nav_events_to_nav_event_details,
+                        navController.navigate<EventDetailsFragment>(
                             bundle { putParcel(item); putString(viewModel.teamData.key) },
                             null,
                             FragmentNavigatorExtras(name, date)

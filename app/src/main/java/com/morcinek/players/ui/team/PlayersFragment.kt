@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.morcinek.android.HasKey
 import com.morcinek.android.setupSections
+import com.morcinek.core.lazyNavController
 import com.morcinek.core.ui.showPopupMenu
 import com.morcinek.players.AppPreferences
 import com.morcinek.players.R
@@ -19,7 +20,8 @@ import com.morcinek.players.core.extensions.*
 import com.morcinek.players.databinding.FragmentListBinding
 import com.morcinek.players.databinding.VhHeaderBinding
 import com.morcinek.players.databinding.VhPlayerBinding
-import com.morcinek.players.ui.lazyNavController
+import com.morcinek.players.ui.players.CreatePlayerFragment
+import com.morcinek.players.ui.players.PlayerDetailsFragment
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.dsl.module
@@ -30,8 +32,10 @@ class PlayersFragment : BaseFragment<FragmentListBinding>(FragmentListBinding::i
 
     private val navController by lazyNavController()
 
+    override val title = R.string.page_players
+
     override val fabConfiguration = createFabConfiguration(R.drawable.ic_person_add) {
-        navController.navigate(R.id.action_nav_players_to_nav_create_player, viewModel.teamData.toBundle())
+        navController.navigate<CreatePlayerFragment>(viewModel.teamData.toBundle())
     }
 
     override val menuConfiguration = createMenuConfiguration {
@@ -56,8 +60,7 @@ class PlayersFragment : BaseFragment<FragmentListBinding>(FragmentListBinding::i
                         name.text = "${item.index}. ${item.playerData}"
                         date.text = playersFormatter.formatCalendar(item.playerData.getBirthDate())
                         root.setOnClickListener {
-                            navController.navigate(
-                                R.id.action_nav_players_to_nav_player_details,
+                            navController.navigate<PlayerDetailsFragment>(
                                 item.playerData.toBundle(),
                                 null,
                                 FragmentNavigatorExtras(name, date)
