@@ -2,7 +2,6 @@ package com.morcinek.core
 
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import androidx.annotation.AnimRes
 import androidx.annotation.IdRes
@@ -76,18 +75,18 @@ class NavController(activity: AppCompatActivity, @IdRes val containerViewId: Int
     val supportFragmentManager by lazy { activity.supportFragmentManager }
 
     inline fun <reified F : Fragment> navigate(args: Bundle? = null, navOptions: NavOptions? = null, navigatorExtras: Navigator.Extras? = null) {
-        if (!supportFragmentManager.hasFragment<F>()) {
+//        if (!supportFragmentManager.hasFragment<F>()) {
             supportFragmentManager.commit {
 //                transitionAnimation?.let { setCustomAnimations(it.createEnter, it.createExit, it.finishEnter, it.finishExit) }
                 replace<F>(containerViewId, tag<F>(), args)
                 addToBackStack(tag<F>())
             }
-        }
+//        }
     }
 
     inline fun <reified F : Fragment> navigate(args: Bundle? = null, noinline optionsBuilder: NavOptionsBuilder.() -> Unit) = navigate<F>(args, navOptions(optionsBuilder))
 
-    fun popBackStack() {}
+    fun popBackStack() { supportFragmentManager.popBackStack() }
     fun navigateUp(appBarConfiguration: Any) = if (supportFragmentManager.backStackEntryCount > 1) {
         supportFragmentManager.popBackStack(); true
     } else {
@@ -101,11 +100,6 @@ interface NavControllerHost {
 
 fun Fragment.lazyNavController() = lazy { (activity as NavControllerHost).navController }
 
-
-private fun AppCompatActivity.setNavigationIcon(icon: Drawable?, @StringRes contentDescription: Int) {
-    supportActionBar?.setDisplayHomeAsUpEnabled(icon != null)
-    drawerToggleDelegate?.setActionBarUpIndicator(icon, contentDescription)
-}
 
 class ToolbarNavController(
     activity: AppCompatActivity,
@@ -133,8 +127,8 @@ class ToolbarNavController(
                 when (backStackEntryCount) {
                     0 -> activity.finish()
                     else -> {
-                        val fragment = findFragmentByTag(getBackStackEntryAt(backStackEntryCount - 1).name)
-                        toolbar.setTitle((fragment as BaseFragment<*>).title)
+                        val fragment = findFragmentByTag(getBackStackEntryAt(backStackEntryCount - 1).name) as BaseFragment<*>
+                        toolbar.setTitle(fragment.title)
                         val showAsDrawerIndicator = backStackEntryCount == 1
                         val (arrow, animate) = arrowDrawable?.run { this to true } ?: (DrawerArrowDrawable(activity).apply { color = activity.getColor(R.color.white) }.also { arrowDrawable = it } to false)
                         toolbar.run {

@@ -1,18 +1,15 @@
 package com.morcinek.players.ui
 
-//import androidx.navigation.Navigation
-//import androidx.navigation.findNavController
-//import androidx.navigation.ui.AppBarConfiguration
-//import androidx.navigation.ui.navigateUp
-//import androidx.navigation.ui.setupActionBarWithNavController
-//import androidx.navigation.ui.setupWithNavController
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -36,7 +33,11 @@ import com.morcinek.players.core.extensions.startActivityForResult
 import com.morcinek.players.core.extensions.startNewActivityFinishCurrent
 import com.morcinek.players.databinding.ActivityMainBinding
 import com.morcinek.players.databinding.NavHeaderMainBinding
+import com.morcinek.players.ui.team.EventsFragment
 import com.morcinek.players.ui.team.PlayersFragment
+import com.morcinek.players.ui.team.TeamStatsFragment
+import com.morcinek.players.ui.teams.TeamDetailsFragment
+import com.morcinek.players.ui.teams.TeamsFragment
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -50,13 +51,6 @@ class NavActivity : AppCompatActivity(), NavControllerHost {
     private val appPreferences by inject<AppPreferences>()
 
     private val viewModel by viewModel<NavViewModel>()
-
-//    private val appBarConfiguration by lazy {
-//        AppBarConfiguration(
-//            setOf(R.id.nav_players, R.id.nav_events, R.id.nav_team_stats),
-//            binding.drawerLayout
-//        )
-//    }
 
     private val headerBinding: NavHeaderMainBinding get() = NavHeaderMainBinding.bind(binding.navigationView.getHeaderView(0))
 
@@ -114,7 +108,7 @@ class NavActivity : AppCompatActivity(), NavControllerHost {
                     }
                 }
                 editTeams.setOnClickListener {
-//                    navController.navigate(R.id.nav_teams) { launchSingleTop = true }
+                    navController.navigate<TeamsFragment> { launchSingleTop = true }
                     binding.drawerLayout.closeDrawers()
                 }
                 selectTeamButton.run {
@@ -141,24 +135,23 @@ class NavActivity : AppCompatActivity(), NavControllerHost {
             }
         }
 
-        navController.navigate<PlayersFragment> ()
-//        toggle.onDrawerOpened(binding.drawerLayout)
-//        setupActionBarWithNavController(navController, appBarConfiguration)
+        navController.navigate<EventsFragment>()
         binding.navigationView.apply {
-//            setupWithNavController(navController)
-//            menu.findItem(R.id.teams).subMenu.let { menu ->
-//                observe(viewModel.teams) {
-//                    menu.clear()
-//                    it.forEach { team ->
-//                        menu.add(team.name, R.drawable.ic_menu_players) {
-//                            navController.navigateSingleTop(R.id.nav_team_details, team.toBundleWithTitle { name })
-//                            drawerLayout.closeDrawers()
-//                        }
-//                    }
-//                }
-//            }
+            menu.run {
+                addFragmentItem<PlayersFragment>(R.string.menu_players, R.drawable.ic_menu_players)
+                addFragmentItem<EventsFragment>(R.string.page_events, R.drawable.ic_menu_teams)
+                addFragmentItem<TeamStatsFragment>(R.string.team_stats, R.drawable.ic_menu_teams)
+                addSection(R.string.menu_players).run {
+                    addFragmentItem<TeamDetailsFragment>(R.string.page_stats, R.drawable.ic_menu_players)
+                }
+            }
+            setCheckedItem(0)
         }
-//        appPreferences.selectedTeamData?.let { navController.navigate(R.id.action_nav_teams_to_nav_team_details) }
+    }
+
+    private inline fun <reified T : Fragment> Menu.addFragmentItem(textRes: Int, iconRes: Int) = addItem(textRes, iconRes) {
+        navController.navigate<T>()
+        binding.drawerLayout.closeDrawers()
     }
 
     private fun onTeamDataSelected() {
@@ -195,3 +188,8 @@ private class NavViewModel(references: FirebaseReferences, val auth: FirebaseAut
 val navModule = module {
     viewModel { NavViewModel(get(), get()) }
 }
+
+private fun Menu.addItem(textRes: Int, iconRes: Int, action: (MenuItem) -> Unit) =
+    add(Menu.NONE, size(), size(), textRes).setIcon(iconRes).setCheckable(true).setOnMenuItemClickListener { action(it); true }
+
+private fun Menu.addSection(textRes: Int) = addSubMenu(Menu.NONE, size(), size(), textRes)
