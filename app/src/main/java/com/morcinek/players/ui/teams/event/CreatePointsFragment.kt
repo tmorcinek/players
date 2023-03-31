@@ -27,6 +27,8 @@ import org.koin.dsl.module
 
 class CreatePointsFragment : BaseFragment<FragmentCreatePointsBinding>(FragmentCreatePointsBinding::inflate) {
 
+    override val title = R.string.menu_create_points
+
     private val viewModel by viewModelWithFragment<CreatePointsViewModel>()
 
     private val navController by lazyNavController()

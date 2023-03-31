@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.morcinek.android.HasKey
 import com.morcinek.android.itemCallback
 import com.morcinek.android.list
+import com.morcinek.core.lazyNavController
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.data.EventData
@@ -17,7 +18,6 @@ import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.ui.showStandardDropDown
 import com.morcinek.players.databinding.FragmentCreateEventBinding
 import com.morcinek.players.databinding.VhSelectablePlayerBinding
-import com.morcinek.core.lazyNavController
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import java.util.*
@@ -25,6 +25,8 @@ import java.util.*
 class CreateEventFragment : BaseFragment<FragmentCreateEventBinding>(FragmentCreateEventBinding::inflate) {
 
     private val viewModel by viewModelWithFragment<CreateEventViewModel>()
+
+    override val title : Int get() = getIntOrNull() ?: R.string.menu_create_event
 
     private val navController by lazyNavController()
 

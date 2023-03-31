@@ -145,7 +145,7 @@ class NavActivity : AppCompatActivity(), NavControllerHost {
                     addFragmentItem<TeamDetailsFragment>(R.string.page_stats, R.drawable.ic_menu_players)
                 }
             }
-            setCheckedItem(0)
+            setCheckedItem(1)
         }
     }
 

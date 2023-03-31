@@ -6,6 +6,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.morcinek.core.lazyNavController
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.data.PlayerData
@@ -15,12 +16,13 @@ import com.morcinek.players.core.database.teamsLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.ui.showStandardDropDown
 import com.morcinek.players.databinding.FragmentCreatePlayerBinding
-import com.morcinek.core.lazyNavController
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import java.util.*
 
 class CreatePlayerFragment : BaseFragment<FragmentCreatePlayerBinding>(FragmentCreatePlayerBinding::inflate) {
+
+    override val title : Int get() = getIntOrNull() ?: R.string.menu_create_player
 
     private val viewModel by viewModelWithFragment<CreatePlayerViewModel>()
 

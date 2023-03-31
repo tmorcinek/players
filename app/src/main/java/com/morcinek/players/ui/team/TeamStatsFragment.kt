@@ -7,6 +7,7 @@ import com.morcinek.android.HasKey
 import com.morcinek.android.itemCallback
 import com.morcinek.android.list
 import com.morcinek.players.AppPreferences
+import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.database.FirebaseReferences
@@ -20,6 +21,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.dsl.module
 
 class TeamStatsFragment : BaseFragment<FragmentListBinding>(FragmentListBinding::inflate) {
+
+    override val title = R.string.team_stats
 
     private val viewModel by viewModel<TeamStatsViewModel>()
 

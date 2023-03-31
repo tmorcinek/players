@@ -38,6 +38,8 @@ import org.koin.dsl.module
 
 class TeamDetailsFragment : BaseFragment<FragmentTeamDetailsBinding>(FragmentTeamDetailsBinding::inflate) {
 
+    override val title = R.string.page_stats
+
     private val viewModel by viewModel<TeamDetailsViewModel>()
 
     private val navController by lazyNavController()

@@ -5,6 +5,7 @@ import android.view.View
 import androidx.lifecycle.ViewModel
 import com.morcinek.android.itemCallback
 import com.morcinek.android.list
+import com.morcinek.core.lazyNavController
 import com.morcinek.players.AppPreferences
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
@@ -15,7 +16,6 @@ import com.morcinek.players.core.database.eventsForTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.databinding.FragmentListBinding
 import com.morcinek.players.databinding.VhEventBinding
-import com.morcinek.core.lazyNavController
 import com.morcinek.players.ui.teams.event.CreateEventFragment
 import com.morcinek.players.ui.teams.event.EventDetailsFragment
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -23,6 +23,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.dsl.module
 
 class EventsFragment : BaseFragment<FragmentListBinding>(FragmentListBinding::inflate) {
+
+    override val title = R.string.page_events
 
     private val viewModel by viewModel<EventsViewModel>()
 

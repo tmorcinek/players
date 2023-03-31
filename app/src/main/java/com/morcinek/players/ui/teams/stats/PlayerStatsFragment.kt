@@ -28,6 +28,8 @@ import java.text.NumberFormat
 
 class PlayerStatsFragment : BaseFragment<FragmentPlayerStatsBinding>(FragmentPlayerStatsBinding::inflate) {
 
+    override val title = R.string.menu_player_stats
+
     private val viewModel by viewModelWithFragment<PlayerStatsViewModel>()
 
     private val navController by lazyNavController()

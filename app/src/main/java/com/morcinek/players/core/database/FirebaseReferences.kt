@@ -31,7 +31,7 @@ class FirebaseReferences(private val auth: FirebaseAuth, val database: FirebaseD
         .orderByChild("dateInMillis")
         .startAt(Calendar.getInstance().apply {
             year = 2021
-            month = 7
+            month = 6
             dayOfMonth = 1
         }.timeInMillis.toDouble())
 

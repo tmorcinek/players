@@ -5,6 +5,7 @@ import android.view.View
 import androidx.lifecycle.ViewModel
 import com.morcinek.android.itemCallback
 import com.morcinek.android.list
+import com.morcinek.core.lazyNavController
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.createFabConfiguration
@@ -14,12 +15,13 @@ import com.morcinek.players.core.database.teamsLiveDataForValueListener
 import com.morcinek.players.core.extensions.bundle
 import com.morcinek.players.databinding.FragmentListBinding
 import com.morcinek.players.databinding.VhTeamBinding
-import com.morcinek.core.lazyNavController
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.dsl.module
 
 class TeamsFragment : BaseFragment<FragmentListBinding>(FragmentListBinding::inflate) {
+
+    override val title = R.string.menu_teams
 
     private val viewModel by viewModel<TeamsViewModel>()
 

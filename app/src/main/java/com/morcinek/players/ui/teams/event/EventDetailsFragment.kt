@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import com.morcinek.android.HasKey
 import com.morcinek.android.setupSections
+import com.morcinek.core.lazyNavController
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.createMenuConfiguration
@@ -21,11 +22,12 @@ import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.ui.showDeleteCodeConfirmationDialog
 import com.morcinek.players.databinding.FragmentEventDetailsBinding
 import com.morcinek.players.databinding.VhPlayerEventPointsBinding
-import com.morcinek.core.lazyNavController
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 class EventDetailsFragment : BaseFragment<FragmentEventDetailsBinding>(FragmentEventDetailsBinding::inflate) {
+
+    override val title = R.string.menu_event_details
 
     private val viewModel by viewModelWithFragment<EventDetailsViewModel>()
 
@@ -84,6 +86,7 @@ class EventDetailsFragment : BaseFragment<FragmentEventDetailsBinding>(FragmentE
         }
         addAction(R.string.action_edit, R.drawable.ic_edit) {
             navController.navigate<CreateEventFragment>(bundle {
+                putInt(R.string.menu_edit_event)
                 putString(viewModel.teamKey)
                 putParcel(viewModel.event.value!!)
             })

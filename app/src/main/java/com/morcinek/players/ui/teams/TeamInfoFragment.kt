@@ -23,6 +23,8 @@ import org.koin.dsl.module
 
 class TeamInfoFragment : BaseFragment<FragmentTeamInfoBinding>(FragmentTeamInfoBinding::inflate) {
 
+    override val title = R.string.menu_team_info
+
     private val viewModel by viewModelWithFragment<TeamInfoViewModel>()
 
     override val menuConfiguration = createMenuConfiguration {

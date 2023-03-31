@@ -12,7 +12,7 @@ import com.morcinek.players.ui.NavActivity
 
 abstract  class BaseFragment<T : ViewBinding>(private val createBinding: (LayoutInflater, ViewGroup?, Boolean) -> T) : Fragment() {
 
-    open val title: Int = R.string.group_by_age
+    abstract val title: Int
     open val menuConfiguration: MenuConfiguration? = null
     open val fabConfiguration: FabConfiguration? = null
 

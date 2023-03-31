@@ -18,10 +18,13 @@ import com.morcinek.players.core.extensions.observe
 import com.morcinek.players.core.extensions.viewModelWithFragment
 import com.morcinek.players.databinding.FragmentCreateTeamBinding
 import com.morcinek.core.lazyNavController
+import com.morcinek.players.R
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 class CreateTeamFragment : BaseFragment<FragmentCreateTeamBinding>(FragmentCreateTeamBinding::inflate) {
+
+    override val title = R.string.menu_create_team
 
     private val viewModel by viewModelWithFragment<CreateTeamViewModel>()
 

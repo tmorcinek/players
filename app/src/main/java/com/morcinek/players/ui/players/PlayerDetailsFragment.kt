@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
+import com.morcinek.core.lazyNavController
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.createMenuConfiguration
@@ -16,11 +17,12 @@ import com.morcinek.players.core.extensions.alert.alert
 import com.morcinek.players.core.extensions.alert.cancelButton
 import com.morcinek.players.core.ui.showDeleteCodeConfirmationDialog
 import com.morcinek.players.databinding.FragmentPlayerBinding
-import com.morcinek.core.lazyNavController
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 class PlayerDetailsFragment : BaseFragment<FragmentPlayerBinding>(FragmentPlayerBinding::inflate) {
+
+    override val title = R.string.player_title
 
     private val viewModel by viewModelWithFragment<PlayerDetailsViewModel>()
 
@@ -56,7 +58,12 @@ class PlayerDetailsFragment : BaseFragment<FragmentPlayerBinding>(FragmentPlayer
                     }
                 }
             }
-            addAction(R.string.action_edit, R.drawable.ic_edit) { navController.navigate<CreatePlayerFragment>(bundle(viewModel.playerData)) }
+            addAction(R.string.action_edit, R.drawable.ic_edit) {
+                navController.navigate<CreatePlayerFragment>(bundle {
+                    putParcel(viewModel.playerData)
+                    putInt(R.string.title_edit_player)
+                })
+            }
         }
     }
 }

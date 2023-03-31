@@ -22,6 +22,8 @@ import org.koin.dsl.module
 
 class AddPlayersFragment : BaseFragment<FragmentAddPlayersBinding>(FragmentAddPlayersBinding::inflate) {
 
+    override val title = R.string.add_players
+
     private val viewModel by viewModelWithFragment<AddPlayersViewModel>()
 
     private val navController by lazyNavController()
