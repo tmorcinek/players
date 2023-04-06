@@ -1,4 +1,4 @@
-package com.morcinek.players.ui.teams
+package com.morcinek.players.ui.team
 
 import android.os.Bundle
 import android.view.View

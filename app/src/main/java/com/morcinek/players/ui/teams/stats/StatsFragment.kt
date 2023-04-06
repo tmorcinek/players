@@ -1,4 +1,4 @@
-package com.morcinek.players.ui.teams
+package com.morcinek.players.ui.teams.stats
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.viewbinding.ViewBinding
 import com.morcinek.android.HasKey
 import com.morcinek.android.itemCallback
+import com.morcinek.core.lazyNavController
 import com.morcinek.players.AppPreferences
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
@@ -26,17 +27,15 @@ import com.morcinek.players.core.ui.showDeleteCodeConfirmationDialog
 import com.morcinek.players.databinding.FragmentTeamDetailsBinding
 import com.morcinek.players.databinding.VhStatBinding
 import com.morcinek.players.databinding.ViewEmptyPlayersBinding
-import com.morcinek.core.lazyNavController
 import com.morcinek.players.ui.players.CreatePlayerFragment
+import com.morcinek.players.ui.teams.AddPlayersFragment
 import com.morcinek.players.ui.teams.event.CreateEventFragment
-import com.morcinek.players.ui.teams.stats.PlayerStatsDetails
-import com.morcinek.players.ui.teams.stats.PlayerStatsFragment
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.dsl.module
 
-class TeamDetailsFragment : BaseFragment<FragmentTeamDetailsBinding>(FragmentTeamDetailsBinding::inflate) {
+class StatsFragment : BaseFragment<FragmentTeamDetailsBinding>(FragmentTeamDetailsBinding::inflate) {
 
     override val title = R.string.page_stats
 

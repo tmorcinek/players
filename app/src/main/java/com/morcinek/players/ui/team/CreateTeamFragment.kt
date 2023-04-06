@@ -1,4 +1,4 @@
-package com.morcinek.players.ui.teams
+package com.morcinek.players.ui.team
 
 import android.os.Bundle
 import android.view.View
@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.morcinek.core.lazyNavController
+import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
@@ -17,8 +19,6 @@ import com.morcinek.players.core.extensions.map
 import com.morcinek.players.core.extensions.observe
 import com.morcinek.players.core.extensions.viewModelWithFragment
 import com.morcinek.players.databinding.FragmentCreateTeamBinding
-import com.morcinek.core.lazyNavController
-import com.morcinek.players.R
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 

@@ -1,4 +1,4 @@
-package com.morcinek.players.ui.team
+package com.morcinek.players.ui.players
 
 import android.os.Bundle
 import android.view.View
@@ -20,8 +20,6 @@ import com.morcinek.players.core.extensions.*
 import com.morcinek.players.databinding.FragmentListBinding
 import com.morcinek.players.databinding.VhHeaderBinding
 import com.morcinek.players.databinding.VhPlayerBinding
-import com.morcinek.players.ui.players.CreatePlayerFragment
-import com.morcinek.players.ui.players.PlayerDetailsFragment
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.dsl.module

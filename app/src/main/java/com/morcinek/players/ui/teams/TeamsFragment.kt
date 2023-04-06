@@ -15,6 +15,8 @@ import com.morcinek.players.core.database.teamsLiveDataForValueListener
 import com.morcinek.players.core.extensions.bundle
 import com.morcinek.players.databinding.FragmentListBinding
 import com.morcinek.players.databinding.VhTeamBinding
+import com.morcinek.players.ui.team.CreateTeamFragment
+import com.morcinek.players.ui.team.TeamInfoFragment
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.dsl.module
