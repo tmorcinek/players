@@ -19,11 +19,6 @@ import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 
 
-fun Fragment.recreateActivity() = requireActivity().recreate()
-
-fun FragmentActivity.popBackFragment() = supportFragmentManager.popBackStack()
-fun Fragment.popBackFragment() = requireActivity().popBackFragment()
-
 fun FragmentActivity.popBackAllFragments(name: String? = null) = supportFragmentManager.popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
 inline fun <reified F : Fragment> FragmentActivity.replaceFragment(@IdRes containerViewId: Int, args: Bundle? = null) {

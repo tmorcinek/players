@@ -113,7 +113,6 @@ class NavActivity : AppCompatActivity(), NavControllerHost {
                 }
                 selectTeamButton.run {
                     text = appPreferences.selectedTeamData?.name ?: "Select team"
-//                    icon.rotate180()
                     setOnClickListener {
                         observe(viewModel.teams) { teams ->
                             it.showPopupWindow(
@@ -126,7 +125,6 @@ class NavActivity : AppCompatActivity(), NavControllerHost {
                                     onTeamDataSelected()
                                     binding.drawerLayout.closeDrawers()
                                 },
-//                            onDismissed = { icon.rotate180() }
                             )
 
                         }
