@@ -53,16 +53,16 @@ private class TeamStatsViewModel(references: FirebaseReferences, appPreferences:
             GeneralStats("Number of players", "${it.fold(setOf<String>()) { acc, eventData -> acc.plus(eventData.players) }.count()}"),
             GeneralStats("Events", "${it.size}"),
             GeneralStats("Frequency", "${it.sumOf { it.players.size }.toDouble() / it.size}"),
-            GeneralStats("Frequency games", "${it.filter { it.type == "Game" }.let { events -> events.sumOf { it.players.size }.toDouble() / events.size }}"),
+            GeneralStats("Frequency games", "${it.filter { it.type == EventData.Type.Game }.let { events -> events.sumOf { it.players.size }.toDouble() / events.size }}"),
             GeneralStats(
                 "Frequency training",
-                "${it.filter { it.type == "Training" }.let { events -> events.sumOf { it.players.size }.toDouble() / events.size }}"
+                "${it.filter { it.type == EventData.Type.Training }.let { events -> events.sumOf { it.players.size }.toDouble() / events.size }}"
             ),
             GeneralStats(
                 "Frequency friendlies",
-                "${it.filter { it.type == "Friendly" }.let { events -> events.sumOf { it.players.size }.toDouble() / events.size }}"
+                "${it.filter { it.type == EventData.Type.Friendly }.let { events -> events.sumOf { it.players.size }.toDouble() / events.size }}"
             ),
-        ).plus(it.groupBy { it.type }.map { GeneralStats(it.key, "${it.value.size}") })
+        ).plus(it.groupBy { it.type }.map { GeneralStats(it.key!!.name, "${it.value.size}") })
     }
 }
 

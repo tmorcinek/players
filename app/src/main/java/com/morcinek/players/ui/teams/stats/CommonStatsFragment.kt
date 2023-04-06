@@ -35,9 +35,9 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.dsl.module
 
-class StatsFragment : BaseFragment<FragmentTeamDetailsBinding>(FragmentTeamDetailsBinding::inflate) {
+class CommonStatsFragment : BaseFragment<FragmentTeamDetailsBinding>(FragmentTeamDetailsBinding::inflate) {
 
-    override val title = R.string.page_stats
+    override val title = R.string.page_common_stats
 
     private val viewModel by viewModel<TeamDetailsViewModel>()
 
@@ -84,11 +84,6 @@ class StatsFragment : BaseFragment<FragmentTeamDetailsBinding>(FragmentTeamDetai
             }
         }
         exitTransition = moveTransition()
-    }
-
-    override fun onResume() {
-//        navController.currentDestination?.label = viewModel.teamData.name
-        super.onResume()
     }
 
     private fun <T, B : ViewBinding> listAdapter(
@@ -153,7 +148,7 @@ private class TeamDetailsViewModel(val references: FirebaseReferences, val appPr
         players.map { player ->
             PlayerStats(
                 name = player.toString(),
-                attended = events.filter { it.type == "Training" }.count { player.key in it.players },
+                attended = events.filter { it.type == EventData.Type.Training }.count { player.key in it.players },
                 points = events.filter { player.key in it.players }.sumOf { it.playerPointsSum(player.key) },
                 player
             )

@@ -35,11 +35,11 @@ class CreateEventFragment : BaseFragment<FragmentCreateEventBinding>(FragmentCre
         binding.run {
             typeLayout.run {
                 header.setText(R.string.type)
-                value.text = viewModel.event.type.takeIf { it.isNotEmpty() } ?: getString(R.string.value_not_set)
+                value.text = viewModel.event.type?.name ?: getString(R.string.value_not_set)
                 root.setOnClickListener {
-                    it.showStandardDropDown(android.R.layout.simple_dropdown_item_1line, listOf("Training", "Game", "Tournament", "Friendly")) {
-                        viewModel.updateValue { type = it }
-                        value.text = it
+                    it.showStandardDropDown(android.R.layout.simple_dropdown_item_1line, EventData.Type.values().toList()) {eventType ->
+                        viewModel.updateValue { type = eventType }
+                        value.text = eventType.name
                     }
                 }
             }
@@ -91,7 +91,7 @@ private class CreateEventViewModel(private val references: FirebaseReferences, p
 
     val selectedPlayers = combine(eventData, players) { event, players -> players.map { SelectedPlayer(it.toString(), it.key in event.players, it.key) } }
 
-    val isNextEnabled = eventData.map { event -> event.players.isNotEmpty() && event.type.isNotEmpty() && event.dateInMillis > 0 }
+    val isNextEnabled = eventData.map { event -> event.players.isNotEmpty() && event.type != null && event.dateInMillis > 0 }
 
     fun updateValue(function: EventData.() -> Unit) {
         eventData.postValue(event.apply(function))

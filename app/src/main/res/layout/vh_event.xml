@@ -1,41 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        style="@style/StandardCardView"
-        card_view:cardCornerRadius="8dp">
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/StandardCardView"
+    card_view:cardCornerRadius="8dp">
 
     <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin">
+
+        <TextView
+            android:id="@+id/name"
+            style="@style/ItemTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin"
+            android:transitionName="name"
+            tools:text="Name Surname" />
+
+        <TextView
+            android:id="@+id/subtitle"
+            style="@style/ItemSubtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/margin">
+            android:layout_below="@id/name"
+            android:transitionName="subtitle"
+            tools:text="subtitle" />
 
         <TextView
-                android:id="@+id/name"
-                style="@style/ItemTitle"
-                android:transitionName="name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin"
-                tools:text="Name Surname" />
-
-        <TextView
-                android:id="@+id/subtitle"
-                style="@style/ItemSubtitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/name"
-                android:transitionName="subtitle"
-                tools:text="subtitle" />
-
-        <TextView
-                android:id="@+id/date"
-                style="@style/ItemSpecial"
-                android:transitionName="date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                tools:text="21.03.2009" />
+            android:id="@+id/date"
+            style="@style/ItemSpecial"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:transitionName="date"
+            tools:text="21.03.2009" />
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

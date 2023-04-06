@@ -42,7 +42,7 @@ class EventDetailsFragment : BaseFragment<FragmentEventDetailsBinding>(FragmentE
         super.onViewCreated(view, savedInstanceState)
         binding.run {
             observe(viewModel.event) {
-                title.text = it.type
+                title.text = it.type?.name
                 year.text = it.getDate().toDayOfWeekDateFormat()
                 status.run {
                     setText(it.statusText())

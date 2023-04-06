@@ -41,7 +41,7 @@ class EventsFragment : BaseFragment<FragmentListBinding>(FragmentListBinding::in
             progressBar.show()
             recyclerView.list(itemCallback<EventData>(), VhEventBinding::inflate) {
                 onBind { _, item ->
-                    name.text = item.type
+                    name.text = item.type?.name
                     date.text = formatter.formatCalendar(item.getDate())
                     subtitle.text = "${item.players.size} players"
                     root.setOnClickListener {

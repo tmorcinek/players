@@ -9,6 +9,7 @@ import com.morcinek.android.HasKey
 import com.morcinek.android.itemCallback
 import com.morcinek.android.listAdapter
 import com.morcinek.android.setup
+import com.morcinek.core.lazyNavController
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.createMenuConfiguration
@@ -17,7 +18,6 @@ import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.databinding.FragmentPlayerStatsBinding
 import com.morcinek.players.databinding.VhPlayerEventCircleBinding
-import com.morcinek.core.lazyNavController
 import com.morcinek.players.ui.players.PlayerDetailsFragment
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
@@ -65,7 +65,7 @@ private class PlayerStatsViewModel(val playerStatsDetails: PlayerStatsDetails) :
 
     fun subtitle() = "Frequency: $playerStatsDetails"
 
-    fun events() = playerStatsDetails.events.map { PlayerEvent(it.type, dateFormat.formatCalendar(it.getDate()), eventBackground(it), it.key, it) }
+    fun events() = playerStatsDetails.events.map { PlayerEvent(it.type!!.name, dateFormat.formatCalendar(it.getDate()), eventBackground(it), it.key, it) }
 
     private fun eventBackground(it: EventData) = when (playerStatsDetails.playerData.key in it.players) {
         true -> R.drawable.circle_green

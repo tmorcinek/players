@@ -47,7 +47,7 @@
 
     <string name="page_general">General</string>
     <string name="page_events">Events</string>
-    <string name="page_stats">Stats</string>
+    <string name="page_common_stats">Common Stats</string>
     <string name="all">All</string>
     <string name="page_trainings">Trainings</string>
     <string name="page_stats_last_20">Last 20</string>
