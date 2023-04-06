@@ -3,6 +3,7 @@ package com.morcinek.players.ui.team
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModel
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.morcinek.android.HasKey
 import com.morcinek.android.itemCallback
 import com.morcinek.android.list
@@ -30,6 +31,7 @@ class TeamStatsFragment : BaseFragment<FragmentListBinding>(FragmentListBinding:
         super.onViewCreated(view, savedInstanceState)
         binding.run {
             progressBar.show()
+            recyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
             recyclerView.list(itemCallback<GeneralStats>(), VhPlayerBinding::inflate) {
                 onBind { _, item ->
                     name.text = item.name
@@ -47,8 +49,8 @@ private class TeamStatsViewModel(references: FirebaseReferences, appPreferences:
 
     val general = references.eventsForTeamLiveDataForValueListener(teamData.key).map {
         listOf(
-            GeneralStats("First Training", it.sortedBy(EventData::dateInMillis).first().getDate().toStandardString()),
-            GeneralStats("Number of players", "${it.fold(setOf<String>()) { acc, eventData -> acc.plus(eventData.players)  }.count()}"),
+            GeneralStats("First Training", it.sortedBy(EventData::dateInMillis).firstOrNull()?.getDate()?.toStandardString() ?: ""),
+            GeneralStats("Number of players", "${it.fold(setOf<String>()) { acc, eventData -> acc.plus(eventData.players) }.count()}"),
             GeneralStats("Events", "${it.size}"),
             GeneralStats("Frequency", "${it.sumOf { it.players.size }.toDouble() / it.size}"),
             GeneralStats("Frequency games", "${it.filter { it.type == "Game" }.let { events -> events.sumOf { it.players.size }.toDouble() / events.size }}"),

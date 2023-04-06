@@ -40,6 +40,7 @@
     <style name="ItemTitle">
         <item name="android:textColor">@color/textPrimary</item>
         <item name="android:textSize">@dimen/font_medium</item>
+        <item name="android:includeFontPadding">false</item>
     </style>
     <style name="ItemTitle.Bold">
         <item name="android:textStyle">bold</item>
@@ -63,9 +64,10 @@
     </style>
 
     <style name="ItemSpecial">
-        <item name="android:textColor">@color/colorPrimaryDark</item>
-        <item name="android:textSize">@dimen/font_std</item>
+        <item name="android:textColor">@color/textSecondary</item>
+        <item name="android:textSize">13sp</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:includeFontPadding">false</item>
     </style>
 
     <style name="GameScore">
