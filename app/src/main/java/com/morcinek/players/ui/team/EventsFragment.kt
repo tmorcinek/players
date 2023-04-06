@@ -1,5 +1,6 @@
 package com.morcinek.players.ui.team
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModel
@@ -41,7 +42,10 @@ class EventsFragment : BaseFragment<FragmentListBinding>(FragmentListBinding::in
             progressBar.show()
             recyclerView.list(itemCallback<EventData>(), VhEventBinding::inflate) {
                 onBind { _, item ->
-                    name.text = item.type?.name
+                    name.run {
+                        text = item.type!!.name
+                        background.setTint(getTypeColor(item.type!!))
+                    }
                     date.text = formatter.formatCalendar(item.getDate())
                     subtitle.text = "${item.players.size} players"
                     root.setOnClickListener {
@@ -55,6 +59,13 @@ class EventsFragment : BaseFragment<FragmentListBinding>(FragmentListBinding::in
                 liveData(viewLifecycleOwner, viewModel.events) { progressBar.hide() }
             }
         }
+    }
+
+    private fun getTypeColor(type: EventData.Type) = when (type) {
+        EventData.Type.Training -> Color.parseColor("#51A557")
+        EventData.Type.Friendly -> Color.parseColor("#EDA8C7")
+        EventData.Type.Game -> Color.parseColor("#FF696A")
+        EventData.Type.Tournament -> Color.parseColor("#E8C7A6")
     }
 }
 

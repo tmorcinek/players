@@ -7,16 +7,20 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/margin">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/name"
             style="@style/ItemTitle"
+            android:textColor="@color/white"
+            android:padding="@dimen/margin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin"
+            android:layout_marginBottom="@dimen/half_margin"
             android:transitionName="name"
+            android:background="@drawable/bg_round"
+            android:layout_marginTop="@dimen/half_margin"
+            android:layout_marginStart="@dimen/half_margin"
             tools:text="Name Surname" />
 
         <TextView
@@ -26,6 +30,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/name"
             android:transitionName="subtitle"
+            android:layout_marginStart="@dimen/margin"
+            android:layout_marginBottom="@dimen/margin"
             tools:text="subtitle" />
 
         <TextView
@@ -35,6 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/margin"
             android:gravity="center"
             android:transitionName="date"
             tools:text="21.03.2009" />
