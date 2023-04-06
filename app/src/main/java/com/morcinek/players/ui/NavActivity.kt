@@ -29,6 +29,7 @@ import com.morcinek.players.core.extensions.alert.alert
 import com.morcinek.players.core.extensions.alert.noButton
 import com.morcinek.players.core.extensions.alert.yesButton
 import com.morcinek.players.core.extensions.observe
+import com.morcinek.players.core.extensions.startActivity
 import com.morcinek.players.core.extensions.startActivityForResult
 import com.morcinek.players.core.extensions.startNewActivityFinishCurrent
 import com.morcinek.players.databinding.ActivityMainBinding
@@ -153,7 +154,7 @@ class NavActivity : AppCompatActivity(), NavControllerHost {
     }
 
     private fun onTeamDataSelected() {
-//        navController.navigate(R.id.nav_team_details) { popUpTo(R.id.nav_team_details) { inclusive = true } }
+        startActivity<NavActivity> { flags = Intent.FLAG_ACTIVITY_CLEAR_TOP }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -163,7 +164,7 @@ class NavActivity : AppCompatActivity(), NavControllerHost {
         }
     }
 
-    override fun onSupportNavigateUp() = navController.navigateUp(Unit) || super.onSupportNavigateUp()
+    override fun onSupportNavigateUp() = navController.navigateUp() || super.onSupportNavigateUp()
 
     override fun onBackPressed() {
         binding.drawerLayout.run {

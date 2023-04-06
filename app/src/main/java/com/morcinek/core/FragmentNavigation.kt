@@ -29,12 +29,6 @@ inline fun <reified F : Fragment> FragmentActivity.replaceFragment(@IdRes contai
     }
 }
 
-fun <F : Fragment> FragmentActivity.replaceFragment(@IdRes containerViewId: Int, fragmentClass: Class<F>, args: Bundle? = null) {
-    supportFragmentManager.commit {
-        replace(containerViewId, fragmentClass, args, fragmentClass.name)
-    }
-}
-
 inline fun <reified F : Fragment> FragmentActivity.pushFragment(
     @IdRes containerViewId: Int,
     args: Bundle? = null,
@@ -71,6 +65,7 @@ class NavController(activity: AppCompatActivity, @IdRes val containerViewId: Int
 
     inline fun <reified F : Fragment> navigate(args: Bundle? = null, navOptions: NavOptions? = null, navigatorExtras: Navigator.Extras? = null) {
 //        if (!supportFragmentManager.hasFragment<F>()) {
+//            if (popAllFragments) supportFragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
             supportFragmentManager.commit {
 //                transitionAnimation?.let { setCustomAnimations(it.createEnter, it.createExit, it.finishEnter, it.finishExit) }
                 replace<F>(containerViewId, tag<F>(), args)
@@ -82,11 +77,8 @@ class NavController(activity: AppCompatActivity, @IdRes val containerViewId: Int
     inline fun <reified F : Fragment> navigate(args: Bundle? = null, noinline optionsBuilder: NavOptionsBuilder.() -> Unit) = navigate<F>(args, navOptions(optionsBuilder))
 
     fun popBackStack() { supportFragmentManager.popBackStack() }
-    fun navigateUp(appBarConfiguration: Any) = if (supportFragmentManager.backStackEntryCount > 1) {
-        supportFragmentManager.popBackStack(); true
-    } else {
-        false
-    }
+
+    fun navigateUp() = if (supportFragmentManager.backStackEntryCount > 1) true.also { supportFragmentManager.popBackStack() } else false
 }
 
 interface NavControllerHost {
