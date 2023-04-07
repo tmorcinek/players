@@ -82,5 +82,8 @@
     <string name="group_by_age">Group by \'age\'</string>
 
     <string name="players_count">%d players</string>
+    <string name="trainings">Training</string>
+    <string name="friendlies">Friendlies</string>
+    <string name="games">Friendlies</string>
 
 </resources>

@@ -8,13 +8,13 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 
 
-fun Fragment.recyclerViewPagerAdapter(vararg pagers: Pair<Int, RecyclerView.Adapter<out RecyclerView.ViewHolder>>): PagerAdapter = object : PagerAdapter() {
+fun Fragment.recyclerViewPagerAdapter(vararg pagers: Pair<String, RecyclerView.Adapter<out RecyclerView.ViewHolder>>): PagerAdapter = object : PagerAdapter() {
 
     override fun isViewFromObject(view: View, `object`: Any) = view == `object`
 
     override fun getCount() = pagers.size
 
-    override fun getPageTitle(position: Int) = requireContext().getString(pagers[position].first)
+    override fun getPageTitle(position: Int) = pagers[position].first
 
     override fun instantiateItem(container: ViewGroup, position: Int) = RecyclerView(requireContext()).apply {
         layoutManager = LinearLayoutManager(requireContext())

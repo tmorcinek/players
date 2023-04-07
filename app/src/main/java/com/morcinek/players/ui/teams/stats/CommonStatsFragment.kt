@@ -24,7 +24,7 @@ import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
 import com.morcinek.players.core.database.playersWithoutTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.ui.showDeleteCodeConfirmationDialog
-import com.morcinek.players.databinding.FragmentTeamDetailsBinding
+import com.morcinek.players.databinding.FragmentPagerBinding
 import com.morcinek.players.databinding.VhStatBinding
 import com.morcinek.players.databinding.ViewEmptyPlayersBinding
 import com.morcinek.players.ui.players.CreatePlayerFragment
@@ -35,7 +35,7 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.dsl.module
 
-class CommonStatsFragment : BaseFragment<FragmentTeamDetailsBinding>(FragmentTeamDetailsBinding::inflate) {
+class CommonStatsFragment : BaseFragment<FragmentPagerBinding>(FragmentPagerBinding::inflate) {
 
     override val title = R.string.page_common_stats
 
@@ -66,9 +66,9 @@ class CommonStatsFragment : BaseFragment<FragmentTeamDetailsBinding>(FragmentTea
                 tabLayout.isVisible = it
                 viewPager.adapter = if (it) {
                     recyclerViewPagerAdapter(
-                        R.string.all to statsAdapter(),
-                        R.string.page_trainings to trainingsAdapter(),
-                        R.string.page_stats_last_20 to statsAdapterLast(20),
+                        getString(R.string.all) to statsAdapter(),
+                        getString(R.string.page_trainings) to trainingsAdapter(),
+                        getString(R.string.page_stats_last_20) to statsAdapterLast(20),
                     )
                 } else {
                     singlePageAdapter(ViewEmptyPlayersBinding::inflate) {
@@ -85,12 +85,6 @@ class CommonStatsFragment : BaseFragment<FragmentTeamDetailsBinding>(FragmentTea
         }
         exitTransition = moveTransition()
     }
-
-    private fun <T, B : ViewBinding> listAdapter(
-        diffCallback: DiffUtil.ItemCallback<T>,
-        createBinding: (LayoutInflater, ViewGroup?, Boolean) -> B,
-        onBindView: B.(position: Int, item: T) -> Unit,
-    ) = com.morcinek.android.listAdapter(diffCallback, createBinding) { onBind(onBindView) }
 
     private fun statsAdapter() = listAdapter(itemCallback<PlayerStats>(), VhStatBinding::inflate) { position, item ->
         name.text = "${position + 1}. ${item.name}"
@@ -183,3 +177,9 @@ private class PlayerStats(
 val teamDetailsModule = module {
     viewModel { TeamDetailsViewModel(get(), get()) }
 }
+
+fun <T, B : ViewBinding> listAdapter(
+    diffCallback: DiffUtil.ItemCallback<T>,
+    createBinding: (LayoutInflater, ViewGroup?, Boolean) -> B,
+    onBindView: B.(position: Int, item: T) -> Unit,
+) = com.morcinek.android.listAdapter(diffCallback, createBinding) { onBind(onBindView) }
