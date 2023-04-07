@@ -1,6 +1,5 @@
 package com.morcinek.players.ui.team
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModel
@@ -12,6 +11,7 @@ import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.createFabConfiguration
 import com.morcinek.players.core.data.EventData
+import com.morcinek.players.core.data.eventTypeColor
 import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.eventsForTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.*
@@ -43,11 +43,11 @@ class EventsFragment : BaseFragment<FragmentListBinding>(FragmentListBinding::in
             recyclerView.list(itemCallback<EventData>(), VhEventBinding::inflate) {
                 onBind { _, item ->
                     name.run {
-                        text = item.type!!.name
-                        background.setTint(getTypeColor(item.type!!))
+                        text = item.type?.name
+                        background.setTint(eventTypeColor(item.type!!))
                     }
                     date.text = formatter.formatCalendar(item.getDate())
-                    subtitle.text = "${item.players.size} players"
+                    subtitle.text = getString(R.string.players_count, item.players.size)
                     root.setOnClickListener {
                         navController.navigate<EventDetailsFragment>(
                             bundle { putParcel(item); putString(viewModel.teamData.key) },
@@ -59,13 +59,6 @@ class EventsFragment : BaseFragment<FragmentListBinding>(FragmentListBinding::in
                 liveData(viewLifecycleOwner, viewModel.events) { progressBar.hide() }
             }
         }
-    }
-
-    private fun getTypeColor(type: EventData.Type) = when (type) {
-        EventData.Type.Training -> Color.parseColor("#51A557")
-        EventData.Type.Friendly -> Color.parseColor("#EDA8C7")
-        EventData.Type.Game -> Color.parseColor("#FF696A")
-        EventData.Type.Tournament -> Color.parseColor("#E8C7A6")
     }
 }
 

@@ -15,6 +15,7 @@ import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.createMenuConfiguration
 import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.data.PointsData
+import com.morcinek.players.core.data.eventTypeColor
 import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.eventForTeamLiveDataForValueListener
 import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
@@ -42,12 +43,12 @@ class EventDetailsFragment : BaseFragment<FragmentEventDetailsBinding>(FragmentE
         super.onViewCreated(view, savedInstanceState)
         binding.run {
             observe(viewModel.event) {
-                title.text = it.type?.name
-                year.text = it.getDate().toDayOfWeekDateFormat()
-                status.run {
-                    setText(it.statusText())
-                    setTextColor(resources.getColor(it.statusColor()))
+                title.run {
+                    text = it.type?.name
+                    background.setTint(eventTypeColor(it.type))
                 }
+                year.text = it.getDate().toDayOfWeekDateFormat()
+                status.text = getString(R.string.players_count, it.players.size)
             }
             recyclerView.setupSections {
                 sectionBinding(VhPlayerEventPointsBinding::inflate) { _, item: PlayerWithPoints ->
@@ -120,12 +121,12 @@ private data class PlayerWithPoints(
     val name: String,
     val points: List<Int>,
     val sum: Int,
-    override val key: String
+    override val key: String,
 ) : HasKey
 
 private data class Header(
     val pointsDataList: List<PointsData>,
-    override val key: String = "Header"
+    override val key: String = "Header",
 ) : HasKey
 
 private fun EventData.statusText() = if (optional) R.string.optional else R.string.mandatory

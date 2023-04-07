@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/half_margin"
             android:transitionName="name"
-            android:background="@drawable/bg_round"
+            android:background="@drawable/template_rectangle"
             android:layout_marginTop="@dimen/half_margin"
             android:layout_marginStart="@dimen/half_margin"
             tools:text="Name Surname" />

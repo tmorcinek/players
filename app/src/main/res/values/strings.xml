@@ -81,4 +81,6 @@
     <string name="sort_by_age">Sort by \'age\'</string>
     <string name="group_by_age">Group by \'age\'</string>
 
+    <string name="players_count">%d players</string>
+
 </resources>

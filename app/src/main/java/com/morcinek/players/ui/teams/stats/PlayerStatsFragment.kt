@@ -1,5 +1,6 @@
 package com.morcinek.players.ui.teams.stats
 
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
@@ -15,6 +16,7 @@ import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.createMenuConfiguration
 import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.data.PlayerData
+import com.morcinek.players.core.data.eventTypeColor
 import com.morcinek.players.core.extensions.*
 import com.morcinek.players.databinding.FragmentPlayerStatsBinding
 import com.morcinek.players.databinding.VhPlayerEventCircleBinding
@@ -48,6 +50,7 @@ class PlayerStatsFragment : BaseFragment<FragmentPlayerStatsBinding>(FragmentPla
                     onBind { _, item ->
                         circleText.text = item.date
                         circleText.setBackgroundResource(item.statusColor)
+                        (circleText.background as GradientDrawable).setStroke(resources.getDimensionPixelSize(R.dimen.half_margin), eventTypeColor(item.eventData.type!!))
                     }
                     submitList(viewModel.events())
                 })

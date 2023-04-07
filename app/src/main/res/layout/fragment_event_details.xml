@@ -1,50 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <TextView
-            android:id="@+id/title"
-            style="@style/TitleText"
-            android:transitionName="name"
-            android:layout_marginStart="@dimen/margin"
-            android:layout_marginTop="@dimen/double_margin"
-            android:layout_marginEnd="@dimen/margin"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Zaki 2019" />
+        android:id="@+id/title"
+        style="@style/TitleText"
+        android:layout_marginStart="@dimen/margin"
+        android:layout_marginTop="@dimen/double_margin"
+        android:layout_marginEnd="@dimen/margin"
+        android:background="@drawable/template_rectangle"
+        android:paddingVertical="@dimen/half_margin"
+        android:textColor="@color/white"
+        android:transitionName="name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:backgroundTint="@color/black"
+        tools:text="Friendly" />
 
     <TextView
-            android:id="@+id/year"
-            android:transitionName="date"
-            style="@style/SubtitleText"
-            android:layout_marginStart="@dimen/margin"
-            android:layout_marginTop="@dimen/double_margin"
-            android:layout_marginEnd="@dimen/margin"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/title"
-            tools:text="2019" />
+        android:id="@+id/year"
+        style="@style/ItemSpecial"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin"
+        android:layout_marginTop="@dimen/double_margin"
+        android:layout_marginEnd="@dimen/margin"
+        android:textSize="@dimen/font_medium"
+        android:transitionName="date"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        tools:text="Wednesday\n05.04.2019" />
 
     <TextView
-            android:id="@+id/status"
-            style="@style/AccentText"
-            android:layout_marginStart="@dimen/margin"
-            android:layout_marginTop="@dimen/double_margin"
-            android:layout_marginEnd="@dimen/margin"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/title"
-            tools:text="Mandatory" />
+        android:id="@+id/status"
+        style="@style/ItemSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin"
+        android:layout_marginEnd="@dimen/margin"
+        android:layout_marginBottom="@dimen/margin"
+        android:textSize="@dimen/font_std"
+        app:layout_constraintBottom_toBottomOf="@id/year"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="13 players" />
 
     <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="@dimen/double_margin"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/year" />
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/double_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/year" />
 </androidx.constraintlayout.widget.ConstraintLayout>
