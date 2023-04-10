@@ -85,5 +85,7 @@
     <string name="trainings">Training</string>
     <string name="friendlies">Friendlies</string>
     <string name="games">Friendlies</string>
+    <string name="filter_stats">Filter Stats</string>
+    <string name="filter">Filter</string>
 
 </resources>

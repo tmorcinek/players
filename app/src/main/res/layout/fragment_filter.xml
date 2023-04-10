@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/half_margin"
+    android:paddingRight="@dimen/half_margin"
+    android:paddingBottom="@dimen/double_margin">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/one_half_margin"
+        android:src="@drawable/ic_sheet_handle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/periodHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/double_margin"
+        android:layout_marginTop="@dimen/triple_margin"
+        android:text="Time"
+        android:textColor="@color/textSecondary"
+        android:textSize="@dimen/font_title"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/periodGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin"
+        android:paddingHorizontal="@dimen/double_margin"
+        app:layout_constraintTop_toBottomOf="@id/periodHeader"
+        tools:layout_height="150dp" />
+
+    <TextView
+        android:id="@+id/typeHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/double_margin"
+        android:layout_marginTop="@dimen/double_margin"
+        android:text="Event types"
+        android:textColor="@color/textSecondary"
+        android:textSize="@dimen/font_title"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/periodGroup" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/typeGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/margin"
+        app:layout_constraintTop_toBottomOf="@id/typeHeader"
+        tools:layout_height="150dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

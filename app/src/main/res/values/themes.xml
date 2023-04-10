@@ -21,6 +21,8 @@
 
         <item name="popupMenuStyle">@style/AppTheme.PopupOverlay</item>
         <item name="android:itemTextAppearance">@style/AppTheme.MenuItemTextAppearance</item>
+
+        <item name="bottomSheetDialogTheme">@style/Theme.Material3.Light.BottomSheetDialog</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -35,7 +37,7 @@
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" >
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark">
         <item name="android:popupBackground">@drawable/bg_popup_dark</item>
     </style>
 
