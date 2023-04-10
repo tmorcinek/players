@@ -39,6 +39,7 @@ import com.morcinek.players.ui.players.PlayersFragment
 import com.morcinek.players.ui.team.TeamStatsFragment
 import com.morcinek.players.ui.teams.stats.CommonStatsFragment
 import com.morcinek.players.ui.teams.TeamsFragment
+import com.morcinek.players.ui.teams.stats.FilterStatsFragment
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -134,7 +135,9 @@ class NavActivity : AppCompatActivity(), NavControllerHost {
             }
         }
 
-        navController.navigate<EventsFragment>()
+        if (savedInstanceState == null) {
+            navController.navigate<EventsFragment>()
+        }
         binding.navigationView.apply {
             menu.run {
                 addFragmentItem<PlayersFragment>(R.string.menu_players, R.drawable.ic_menu_players)
@@ -142,6 +145,7 @@ class NavActivity : AppCompatActivity(), NavControllerHost {
                 addFragmentItem<TeamStatsFragment>(R.string.team_stats, R.drawable.ic_menu_teams)
                 addSection(R.string.menu_players).run {
                     addFragmentItem<CommonStatsFragment>(R.string.page_common_stats, R.drawable.ic_menu_players)
+                    addFragmentItem<FilterStatsFragment>(R.string.filter, R.drawable.ic_filter)
                 }
             }
             setCheckedItem(1)

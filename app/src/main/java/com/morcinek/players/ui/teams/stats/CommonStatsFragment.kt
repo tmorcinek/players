@@ -11,7 +11,6 @@ import androidx.viewbinding.ViewBinding
 import com.morcinek.android.HasKey
 import com.morcinek.android.itemCallback
 import com.morcinek.core.lazyNavController
-import com.morcinek.core.ui.showFragmentDialog
 import com.morcinek.players.AppPreferences
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
@@ -56,7 +55,6 @@ class CommonStatsFragment : BaseFragment<FragmentPagerBinding>(FragmentPagerBind
                 }
             }
         }
-        addAction(R.string.filter, R.drawable.ic_filter) { showFragmentDialog<FilterBottomSheetDialogFragment>() }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
