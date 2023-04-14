@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.morcinek.android.itemCallback
 import com.morcinek.android.list
+import com.morcinek.core.findFragment
 import com.morcinek.core.lazyNavController
 import com.morcinek.core.ui.show
 import com.morcinek.players.AppPreferences
@@ -51,6 +52,7 @@ class FilterStatsFragment : BaseFragment<FragmentListBinding>(FragmentListBindin
                 liveData(viewLifecycleOwner, viewModel.playersStats) { progressBar.hide() }
             }
         }
+        requireActivity().supportFragmentManager.findFragment<FilterBottomSheetDialogFragment>()?.let { it.filterData = viewModel.filterData }
     }
 }
 

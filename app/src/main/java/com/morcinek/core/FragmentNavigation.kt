@@ -48,7 +48,7 @@ inline fun <reified F : Fragment> Fragment.pushFragment(@IdRes containerViewId: 
     requireActivity().pushFragment<F>(containerViewId, args, transitionAnimation)
 
 inline fun <reified F : Fragment> tag(): String = F::class.java.name
-inline fun <reified F : Fragment> FragmentManager.findFragment() = findFragmentByTag(tag<F>())
+inline fun <reified F : Fragment> FragmentManager.findFragment() = findFragmentByTag(tag<F>()) as F?
 inline fun <reified F : Fragment> FragmentManager.hasFragment() = findFragment<F>() != null
 
 sealed class TransitionAnimation(
