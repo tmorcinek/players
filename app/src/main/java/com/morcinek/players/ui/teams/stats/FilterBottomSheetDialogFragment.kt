@@ -9,19 +9,30 @@ import com.morcinek.android.itemCallback
 import com.morcinek.android.setup
 import com.morcinek.core.ui.BindingDialogFragment
 import com.morcinek.players.core.data.EventData
-import com.morcinek.players.core.extensions.map
-import com.morcinek.players.core.extensions.updateValue
+import com.morcinek.players.core.extensions.*
 import com.morcinek.players.databinding.FragmentFilterBinding
 import com.morcinek.players.databinding.VhCheckboxBinding
 import com.morcinek.players.databinding.VhRadioButtonBinding
+import java.util.*
 
 class FilterBottomSheetDialogFragment : BindingDialogFragment<FragmentFilterBinding>(FragmentFilterBinding::inflate) {
 
-    val filterData = MutableLiveData(FilterData())
+    lateinit var filterData : MutableLiveData<FilterData>
+
+    private val currentDate: Calendar get() = calendar().apply { resetTime() }
+
+    private val periods = listOf(
+        Period.All,
+        Period.Number(5),Period.Number(10),Period.Number(20),
+        Period.AfterDate("Last month", currentDate.minusMonth(1)),
+        Period.AfterDate("Last 2 months", currentDate.minusMonth(2)),
+        Period.AfterDate("Last 3 months", currentDate.minusMonth(3)),
+        Period.AfterDate("Last 6 months", currentDate.minusMonth(6))
+    )
 
     override fun onBindingView(binding: FragmentFilterBinding) = binding.run {
         periodGroup.setup {
-            adapter(com.morcinek.android.listAdapter(itemCallback<SelectableItem<FilterData.Period>>(), VhRadioButtonBinding::inflate) {
+            adapter(com.morcinek.android.listAdapter(itemCallback<SelectableItem<Period>>(), VhRadioButtonBinding::inflate) {
                 onBind { _, item ->
                     root.run {
                         text = item.key
@@ -29,7 +40,7 @@ class FilterBottomSheetDialogFragment : BindingDialogFragment<FragmentFilterBind
                         setOnClickListener { filterData.updateValue { copy(period = item.item) } }
                     }
                 }
-                liveData(viewLifecycleOwner, filterData.map { data -> FilterData.Period.values().map { SelectableItem(it, it == data.period) } })
+                liveData(viewLifecycleOwner, filterData.map { data -> periods.map { SelectableItem(it, it == data.period) } })
             })
             grid(2)
         }
@@ -60,5 +71,13 @@ class SelectableItem<T>(val item: T, val isSelected: Boolean) : HasKey {
 }
 
 data class FilterData(val period: Period = Period.All, val types: Set<EventData.Type> = setOf(*EventData.Type.values())) {
-    enum class Period { All, Last_20, Last_15, Last_10, Last_5, Week, Month, Month_2, Month_3, Month_6 }
+}
+sealed class Period(val name: String, val events: (List<EventData>) -> List<EventData>) {
+    object All : Period("All", { it })
+    class AfterDate(name: String, afterDate: Calendar) : Period(name, { it.filter { eventData -> eventData.getDate().after(afterDate) }})
+    class Number(lastEvents: Int) : Period("Last $lastEvents", { it.take(lastEvents)})
+
+    override fun toString() = name
+
+    override fun equals(other: Any?) = other is Period && other.name == name
 }

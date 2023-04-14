@@ -5,11 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.DiffUtil
 import androidx.viewbinding.ViewBinding
 import com.morcinek.android.HasKey
 import com.morcinek.android.itemCallback
+import com.morcinek.core.NavController
 import com.morcinek.core.lazyNavController
 import com.morcinek.players.AppPreferences
 import com.morcinek.players.R
@@ -66,9 +68,9 @@ class CommonStatsFragment : BaseFragment<FragmentPagerBinding>(FragmentPagerBind
                 tabLayout.isVisible = it
                 viewPager.adapter = if (it) {
                     recyclerViewPagerAdapter(
-                        getString(R.string.all) to statsAdapter(),
-                        getString(R.string.page_trainings) to trainingsAdapter(),
-                        getString(R.string.page_stats_last_20) to statsAdapterLast(20),
+                        getString(R.string.all) to playerStatsAdapter(viewModel.playersStats),
+                        getString(R.string.page_trainings) to playerStatsAdapter(viewModel.playersTrainingStats),
+                        getString(R.string.page_stats_last_20) to playerStatsAdapter(viewModel.playersStatsLast(20)),
                     )
                 } else {
                     singlePageAdapter(ViewEmptyPlayersBinding::inflate) {
@@ -86,32 +88,13 @@ class CommonStatsFragment : BaseFragment<FragmentPagerBinding>(FragmentPagerBind
         exitTransition = moveTransition()
     }
 
-    private fun statsAdapter() = listAdapter(itemCallback<PlayerStats>(), VhStatBinding::inflate) { position, item ->
+    private fun playerStatsAdapter(liveData: LiveData<List<PlayerStats>>) = listAdapter(itemCallback<PlayerStats>(), VhStatBinding::inflate) { position, item ->
         name.text = "${position + 1}. ${item.name}"
         attendance.text = item.attended.toString()
         points.text = item.points.toString()
-        root.setOnClickListener { navigateToPlayerStatsFragment(item) }
-    }.apply {
-        liveData(viewLifecycleOwner, viewModel.playersStats)
-    }
+        root.setOnClickListener { navController.navigateToPlayerStatsFragment(item, viewModel.playerEvents(item.data)) }
+    }.apply { liveData(viewLifecycleOwner, liveData) }
 
-    private fun trainingsAdapter() = listAdapter(itemCallback<PlayerStats>(), VhStatBinding::inflate) { position, item ->
-        name.text = "${position + 1}. ${item.name}"
-        attendance.text = item.attended.toString()
-        points.text = item.points.toString()
-        root.setOnClickListener { navigateToPlayerStatsFragment(item) }
-    }.apply { liveData(viewLifecycleOwner, viewModel.playersTrainingStats) }
-
-    private fun statsAdapterLast(numberOfRecords: Int) =
-        listAdapter(itemCallback<PlayerStats>(), VhStatBinding::inflate) { position, item ->
-            name.text = "${position + 1}. ${item.name}"
-            attendance.text = item.attended.toString()
-            points.text = item.points.toString()
-            root.setOnClickListener { navigateToPlayerStatsFragment(item) }
-        }.apply { liveData(viewLifecycleOwner, viewModel.playersStatsLast(numberOfRecords)) }
-
-    private fun navigateToPlayerStatsFragment(item: PlayerStats) =
-        navController.navigate<PlayerStatsFragment>(bundle(PlayerStatsDetails(item.data, viewModel.playerEvents(item.data))))
 
 }
 
@@ -166,7 +149,7 @@ private class TeamDetailsViewModel(val references: FirebaseReferences, val appPr
     fun deleteTeam(doOnComplete: () -> Unit) = references.teamsReference().child(teamData.key).removeValue().addOnCompleteListener { doOnComplete() }
 }
 
-private class PlayerStats(
+internal class PlayerStats(
     val name: String,
     val attended: Int,
     val points: Int,
@@ -183,3 +166,5 @@ fun <T, B : ViewBinding> listAdapter(
     createBinding: (LayoutInflater, ViewGroup?, Boolean) -> B,
     onBindView: B.(position: Int, item: T) -> Unit,
 ) = com.morcinek.android.listAdapter(diffCallback, createBinding) { onBind(onBindView) }
+
+internal fun NavController.navigateToPlayerStatsFragment(item: PlayerStats, events: List<EventData>) = navigate<PlayerStatsFragment>(bundle(PlayerStatsDetails(item.data, events)))

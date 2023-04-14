@@ -39,3 +39,14 @@ fun dayOfWeekDateFormat() = SimpleDateFormat("EEEE\ndd.MM.yyyy", Locale.US)
 fun circleDayDate() = SimpleDateFormat("EEE\ndd.MM", Locale.US)
 
 fun DateFormat.formatCalendar(calendar: Calendar): String = format(calendar.time)
+
+fun Calendar.resetTime() {
+    set(Calendar.HOUR_OF_DAY, 0);            // set hour to midnight
+    set(Calendar.MINUTE, 0);                 // set minute in hour
+    set(Calendar.SECOND, 0);                 // set second in minute
+    set(Calendar.MILLISECOND, 0);
+}
+
+fun Calendar.minusMonth(number: Int) = apply {
+    add(Calendar.MONTH, -number)
+}
