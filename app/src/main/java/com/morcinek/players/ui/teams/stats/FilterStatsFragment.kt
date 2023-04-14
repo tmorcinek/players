@@ -46,7 +46,7 @@ class FilterStatsFragment : BaseFragment<FragmentListBinding>(FragmentListBindin
                 onBind { position, item ->
                     name.text = "${position + 1}. ${item.name}"
                     attendance.text = item.attended.toString()
-                    points.text = item.points.toString()
+                    points.text = "${item.points}%"
                     root.setOnClickListener { navController.navigateToPlayerStatsFragment(item, viewModel.playerEvents(item.data)) }
                 }
                 liveData(viewLifecycleOwner, viewModel.playersStats) { progressBar.hide() }
@@ -73,13 +73,13 @@ private class FilterStatsViewModel(val references: FirebaseReferences, val appPr
             PlayerStats(
                 name = player.toString(),
                 attended = events.count { player.key in it.players },
-                points = events.filter { player.key in it.players }.sumOf { it.playerPointsSum(player.key) },
+                points = events.count { player.key in it.players } * 100 / events.count(),
                 player
             )
         }.sortedByDescending { it.attended }
     }
 
-    fun playerEvents(player: PlayerData) = events.value!!.filter { !it.optional || player.key in it.players }
+    fun playerEvents(player: PlayerData) = filteredEvents.value!!.filter { !it.optional || player.key in it.players }
 }
 
 val filterStatsModule = module {
