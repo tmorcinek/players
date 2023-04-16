@@ -23,7 +23,11 @@ class FilterBottomSheetDialogFragment : BindingDialogFragment<FragmentFilterBind
 
     private val periods = listOf(
         Period.All,
-        Period.Number(5),Period.Number(10),Period.Number(20),
+        Period.Number(5),Period.Number(10),Period.Number(20),Period.Number(30),
+        Period.AfterDate("This year", currentDate.apply {
+            set(Calendar.DAY_OF_MONTH, 0)
+            set(Calendar.MONTH, 0)
+        }),
         Period.AfterDate("Last month", currentDate.minusMonth(1)),
         Period.AfterDate("Last 2 months", currentDate.minusMonth(2)),
         Period.AfterDate("Last 3 months", currentDate.minusMonth(3)),
