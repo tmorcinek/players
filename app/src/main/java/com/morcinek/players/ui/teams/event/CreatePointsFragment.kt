@@ -9,6 +9,7 @@ import com.google.android.gms.tasks.Task
 import com.morcinek.android.HasKey
 import com.morcinek.android.itemCallback
 import com.morcinek.android.list
+import com.morcinek.core.lazyNavController
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.createMenuConfiguration
@@ -16,12 +17,19 @@ import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.data.PointsData
 import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
-import com.morcinek.players.core.extensions.*
 import com.morcinek.players.core.extensions.alert.alert
 import com.morcinek.players.core.extensions.alert.okButton
+import com.morcinek.players.core.extensions.combine
+import com.morcinek.players.core.extensions.getIntOrNull
+import com.morcinek.players.core.extensions.getParcelable
+import com.morcinek.players.core.extensions.getString
+import com.morcinek.players.core.extensions.map
+import com.morcinek.players.core.extensions.observe
+import com.morcinek.players.core.extensions.updateValue
+import com.morcinek.players.core.extensions.viewModelWithFragment
 import com.morcinek.players.databinding.FragmentCreatePointsBinding
 import com.morcinek.players.databinding.VhPlayerPointsBinding
-import com.morcinek.core.lazyNavController
+import com.morcinek.players.databinding.ViewNumberPickerBinding
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -52,9 +60,22 @@ class CreatePointsFragment : BaseFragment<FragmentCreatePointsBinding>(FragmentC
                 onBind { _, player ->
                     name.text = player.name
                     name.setTextColor(resources.getColor(player.nameColor))
-                    pointsLabel.text = "${player.points}"
-                    plusButton.setOnClickListener { viewModel.updatePoints(player.key, player.points + 1) }
-                    minusButton.setOnClickListener { viewModel.updatePoints(player.key, player.points - 1) }
+                    fun ViewNumberPickerBinding.bindPointsLayout(player: PlayerPoints, minValue: Int = 0, maxValue: Int = 10, step: Int = 1){
+                        pointsLabel.text = "${player.points}"
+                        plusButton.run{
+                            isEnabled = player.points < maxValue
+                            setOnClickListener { viewModel.updatePoints(player.key, player.points + step) }
+                        }
+                        minusButton.run{
+                            isEnabled = player.points > minValue
+                            setOnClickListener { viewModel.updatePoints(player.key, player.points - step) }
+                        }
+                    }
+                    if (viewModel.eventData.type == EventData.Type.Training) {
+                        pointsLayout.bindPointsLayout(player, -1, 1)
+                    } else {
+                        pointsLayout.bindPointsLayout(player)
+                    }
                 }
                 liveData(viewLifecycleOwner, viewModel.playersPoints)
             }
