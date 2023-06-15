@@ -92,7 +92,7 @@ class EventDetailsFragment : BaseFragment<FragmentEventDetailsBinding>(FragmentE
                 putParcel(viewModel.event.value!!)
             })
         }
-        addAction(R.string.event_action_points, R.drawable.ic_menu_tournament) {
+        addAction(R.string.event_action_points, R.drawable.ic_star_half) {
             navController.navigate<CreatePointsFragment>(bundle {
                 putString(viewModel.teamKey)
                 putParcel(viewModel.event.value!!)

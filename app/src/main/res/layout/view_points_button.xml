@@ -5,6 +5,6 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/half_margin"
     android:layout_margin="2dp"
-    android:src="@drawable/ic_menu_tournament"
+    android:src="@drawable/ic_star_half"
     android:background="@drawable/bg_oval_button"
     tools:text="2" />
