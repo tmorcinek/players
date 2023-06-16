@@ -62,7 +62,7 @@ class EventDetailsFragment : BaseFragment<FragmentEventDetailsBinding>(FragmentE
             recyclerView.setupSections {
                 sectionBinding(VhPlayerEventPointsBinding::inflate) { _, item: PlayerWithPoints ->
                     name.text = item.name
-                    pointsSum.text = "${item.sum}"
+                    pointsSum.text = item.sum?.toString()
                 }
                 sectionBinding(VhPlayerEventHeaderBinding::inflate) { _, _: Header -> }
                 observe(viewModel.items) { submitList(it) }
@@ -99,7 +99,7 @@ private class EventDetailsViewModel(val references: FirebaseReferences, val team
 
     private val playersWithPoints = references.playersForTeamLiveDataForValueListener(teamKey).combineWith(event) { players, event ->
         players.filter { it.key in event.players }.map { player ->
-            event.points.map { it.playersPoints[player.key] ?: 0 }.let { points -> PlayerWithPoints(player.toString(), points.sum(), player.key) }
+            event.points.map { it.playersPoints[player.key] ?: 0 }.let { points -> PlayerWithPoints(player.toString(), points.sum().takeIf { it != 0 }, player.key) }
         }
     }
 
@@ -110,7 +110,7 @@ private class EventDetailsViewModel(val references: FirebaseReferences, val team
 
 private data class PlayerWithPoints(
     val name: String,
-    val sum: Int,
+    val sum: Int?,
     override val key: String,
 ) : HasKey
 
