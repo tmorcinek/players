@@ -11,16 +11,28 @@ import com.morcinek.android.list
 import com.morcinek.core.lazyNavController
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
+import com.morcinek.players.core.createMenuConfiguration
 import com.morcinek.players.core.data.EventData
+import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
-import com.morcinek.players.core.extensions.*
+import com.morcinek.players.core.extensions.combine
+import com.morcinek.players.core.extensions.getIntOrNull
+import com.morcinek.players.core.extensions.getParcelableOrNull
+import com.morcinek.players.core.extensions.getString
+import com.morcinek.players.core.extensions.map
+import com.morcinek.players.core.extensions.observe
+import com.morcinek.players.core.extensions.showDatePickerDialog
+import com.morcinek.players.core.extensions.toBundle
+import com.morcinek.players.core.extensions.toStandardString
+import com.morcinek.players.core.extensions.viewModelWithFragment
 import com.morcinek.players.core.ui.showStandardDropDown
 import com.morcinek.players.databinding.FragmentCreateEventBinding
 import com.morcinek.players.databinding.VhSelectablePlayerBinding
+import com.morcinek.players.ui.players.CreatePlayerFragment
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
-import java.util.*
+import java.util.Calendar
 
 class CreateEventFragment : BaseFragment<FragmentCreateEventBinding>(FragmentCreateEventBinding::inflate) {
 
@@ -29,6 +41,10 @@ class CreateEventFragment : BaseFragment<FragmentCreateEventBinding>(FragmentCre
     override val title : Int get() = getIntOrNull() ?: R.string.menu_create_event
 
     private val navController by lazyNavController()
+
+    override val menuConfiguration = createMenuConfiguration {
+        addAction(R.string.add_players, R.drawable.ic_person_add) { navController.navigate<CreatePlayerFragment>(TeamData(viewModel.teamKey).toBundle()) }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -80,7 +96,7 @@ class CreateEventFragment : BaseFragment<FragmentCreateEventBinding>(FragmentCre
 
 }
 
-private class CreateEventViewModel(private val references: FirebaseReferences, private val teamKey: String, editEvent: EventData? = null) : ViewModel() {
+private class CreateEventViewModel(private val references: FirebaseReferences, val teamKey: String, editEvent: EventData? = null) : ViewModel() {
 
     val event: EventData
         get() = eventData.value!!

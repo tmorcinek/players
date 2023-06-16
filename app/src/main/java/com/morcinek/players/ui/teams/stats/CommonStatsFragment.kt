@@ -17,20 +17,26 @@ import com.morcinek.players.AppPreferences
 import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.createFabConfiguration
-import com.morcinek.players.core.createMenuConfiguration
 import com.morcinek.players.core.data.EventData
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.eventsForTeamLiveDataForValueListener
 import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
 import com.morcinek.players.core.database.playersWithoutTeamLiveDataForValueListener
-import com.morcinek.players.core.extensions.*
+import com.morcinek.players.core.extensions.bundle
+import com.morcinek.players.core.extensions.combine
+import com.morcinek.players.core.extensions.map
+import com.morcinek.players.core.extensions.moveTransition
+import com.morcinek.players.core.extensions.observe
+import com.morcinek.players.core.extensions.putString
+import com.morcinek.players.core.extensions.recyclerViewPagerAdapter
+import com.morcinek.players.core.extensions.singlePageAdapter
+import com.morcinek.players.core.extensions.toBundle
 import com.morcinek.players.core.ui.showDeleteCodeConfirmationDialog
 import com.morcinek.players.databinding.FragmentPagerBinding
 import com.morcinek.players.databinding.VhStatBinding
 import com.morcinek.players.databinding.ViewEmptyPlayersBinding
 import com.morcinek.players.ui.players.CreatePlayerFragment
-import com.morcinek.players.ui.teams.AddPlayersFragment
 import com.morcinek.players.ui.teams.event.CreateEventFragment
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -47,17 +53,6 @@ class CommonStatsFragment : BaseFragment<FragmentPagerBinding>(FragmentPagerBind
     private val appPreferences by inject<AppPreferences>()
 
     override val fabConfiguration = createFabConfiguration(R.drawable.ic_ball) { navController.navigate<CreateEventFragment>(bundle { putString(viewModel.teamData.key) }) }
-
-    override val menuConfiguration = createMenuConfiguration {
-        addAction(R.string.add_players, R.drawable.ic_person_add) {
-            observe(viewModel.playersWithoutTeam) {
-                when {
-                    it.isEmpty() -> navController.navigate<CreatePlayerFragment>(viewModel.teamData.toBundle())
-                    else -> navController.navigate<AddPlayersFragment>(viewModel.teamData.toBundle())
-                }
-            }
-        }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
