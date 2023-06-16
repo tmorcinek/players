@@ -20,7 +20,6 @@ import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.alert.alert
 import com.morcinek.players.core.extensions.alert.okButton
 import com.morcinek.players.core.extensions.combine
-import com.morcinek.players.core.extensions.getIntOrNull
 import com.morcinek.players.core.extensions.getParcelable
 import com.morcinek.players.core.extensions.getString
 import com.morcinek.players.core.extensions.map
@@ -60,13 +59,13 @@ class CreatePointsFragment : BaseFragment<FragmentCreatePointsBinding>(FragmentC
                 onBind { _, player ->
                     name.text = player.name
                     name.setTextColor(resources.getColor(player.nameColor))
-                    fun ViewNumberPickerBinding.bindPointsLayout(player: PlayerPoints, minValue: Int = 0, maxValue: Int = 10, step: Int = 1){
+                    fun ViewNumberPickerBinding.bindPointsLayout(player: PlayerPoints, minValue: Int = 0, maxValue: Int = 10, step: Int = 1) {
                         pointsLabel.text = "${player.points}"
-                        plusButton.run{
+                        plusButton.run {
                             isEnabled = player.points < maxValue
                             setOnClickListener { viewModel.updatePoints(player.key, player.points + step) }
                         }
-                        minusButton.run{
+                        minusButton.run {
                             isEnabled = player.points > minValue
                             setOnClickListener { viewModel.updatePoints(player.key, player.points - step) }
                         }
@@ -83,7 +82,9 @@ class CreatePointsFragment : BaseFragment<FragmentCreatePointsBinding>(FragmentC
     }
 }
 
-private class CreatePointsViewModel(private val references: FirebaseReferences, val teamKey: String, val eventData: EventData, val pointsId: Int? = null) : ViewModel() {
+private class CreatePointsViewModel(private val references: FirebaseReferences, val teamKey: String, val eventData: EventData) : ViewModel() {
+
+    private val pointsId: Int? = eventData.points.firstOrNull()?.id
 
     private val players = references.playersForTeamLiveDataForValueListener(teamKey).map { it.filter { it.key in eventData.players } }
 
@@ -95,12 +96,9 @@ private class CreatePointsViewModel(private val references: FirebaseReferences, 
         points.updateValue { plus(playerKey to playerPoints) }
     }
 
-    fun submitPoints(): Task<Void> = if (pointsId == null) {
-        references.teamEventsReference(teamKey).child(eventData.key).child("points").setValue(eventData.points.plus(pointsData()))
-    } else {
-        references.teamEventsReference(teamKey).child(eventData.key).child("points")
-            .setValue(eventData.points.filterNot { it.id == pointsId }.plus(pointsData()))
-    }
+    fun submitPoints(): Task<Void> = references.teamEventsReference(teamKey).child(eventData.key).child("points").setValue(
+        if (pointsId == null) eventData.points.plus(pointsData()) else eventData.points.filterNot { it.id == pointsId }.plus(pointsData())
+    )
 
     val playersPoints = combine(players, points) { players, points ->
         players.map {
@@ -116,5 +114,5 @@ private class CreatePointsViewModel(private val references: FirebaseReferences, 
 private data class PlayerPoints(val name: String, val nameColor: Int, val points: Int, override val key: String) : HasKey
 
 val createPointsModule = module {
-    viewModel { (fragment: Fragment) -> CreatePointsViewModel(get(), fragment.getString(), fragment.getParcelable(), fragment.getIntOrNull()) }
+    viewModel { (fragment: Fragment) -> CreatePointsViewModel(get(), fragment.getString(), fragment.getParcelable()) }
 }

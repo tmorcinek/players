@@ -88,4 +88,7 @@
     <string name="filter_stats">Filter Stats</string>
     <string name="filter">Filter</string>
 
+    <string name="commentary">Commentary</string>
+    <string name="name_and_surname">Name and Surname</string>
+
 </resources>

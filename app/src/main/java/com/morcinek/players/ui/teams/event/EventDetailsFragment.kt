@@ -2,9 +2,7 @@ package com.morcinek.players.ui.teams.event
 
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import com.morcinek.android.HasKey
@@ -14,14 +12,25 @@ import com.morcinek.players.R
 import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.createMenuConfiguration
 import com.morcinek.players.core.data.EventData
-import com.morcinek.players.core.data.PointsData
 import com.morcinek.players.core.data.eventTypeColor
 import com.morcinek.players.core.database.FirebaseReferences
 import com.morcinek.players.core.database.eventForTeamLiveDataForValueListener
 import com.morcinek.players.core.database.playersForTeamLiveDataForValueListener
-import com.morcinek.players.core.extensions.*
+import com.morcinek.players.core.extensions.bundle
+import com.morcinek.players.core.extensions.combineWith
+import com.morcinek.players.core.extensions.getParcelable
+import com.morcinek.players.core.extensions.getString
+import com.morcinek.players.core.extensions.map
+import com.morcinek.players.core.extensions.moveTransition
+import com.morcinek.players.core.extensions.observe
+import com.morcinek.players.core.extensions.putInt
+import com.morcinek.players.core.extensions.putParcel
+import com.morcinek.players.core.extensions.putString
+import com.morcinek.players.core.extensions.toDayOfWeekDateFormat
+import com.morcinek.players.core.extensions.viewModelWithFragment
 import com.morcinek.players.core.ui.showDeleteCodeConfirmationDialog
 import com.morcinek.players.databinding.FragmentEventDetailsBinding
+import com.morcinek.players.databinding.VhPlayerEventHeaderBinding
 import com.morcinek.players.databinding.VhPlayerEventPointsBinding
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -53,26 +62,9 @@ class EventDetailsFragment : BaseFragment<FragmentEventDetailsBinding>(FragmentE
             recyclerView.setupSections {
                 sectionBinding(VhPlayerEventPointsBinding::inflate) { _, item: PlayerWithPoints ->
                     name.text = item.name
-                    pointsLayout.removeAllViews()
-                    item.points.forEach {
-                        pointsLayout.addView((LayoutInflater.from(context).inflate(R.layout.vh_point, pointsLayout, false) as TextView).apply { text = "$it" })
-                    }
                     pointsSum.text = "${item.sum}"
                 }
-                sectionBinding(VhPlayerEventPointsBinding::inflate) { _, item: Header ->
-                    pointsLayout.removeAllViews()
-                    item.pointsDataList.forEach { pointsData ->
-                        pointsLayout.addView((LayoutInflater.from(context).inflate(R.layout.view_points_button, pointsLayout, false)).apply {
-                            setOnClickListener {
-                                navController.navigate<CreatePointsFragment>(bundle {
-                                    putString(viewModel.teamKey)
-                                    putParcel(viewModel.event.value!!)
-                                    putInt(pointsData.id)
-                                })
-                            }
-                        })
-                    }
-                }
+                sectionBinding(VhPlayerEventHeaderBinding::inflate) { _, _: Header -> }
                 observe(viewModel.items) { submitList(it) }
             }
         }
@@ -107,30 +99,22 @@ private class EventDetailsViewModel(val references: FirebaseReferences, val team
 
     private val playersWithPoints = references.playersForTeamLiveDataForValueListener(teamKey).combineWith(event) { players, event ->
         players.filter { it.key in event.players }.map { player ->
-            event.points.map { it.playersPoints[player.key] ?: 0 }.let { points -> PlayerWithPoints(player.toString(), points, points.sum(), player.key) }
+            event.points.map { it.playersPoints[player.key] ?: 0 }.let { points -> PlayerWithPoints(player.toString(), points.sum(), player.key) }
         }
     }
 
-    val items = playersWithPoints.map { listOf<HasKey>(Header(event.value!!.points)).plus(it) }
+    val items = playersWithPoints.map { listOf<HasKey>(Header()).plus(it) }
 
-    fun deleteEvent(doOnComplete: () -> Unit) =
-        references.teamEventReference(teamKey, event.value!!.key).removeValue().addOnCompleteListener { doOnComplete() }
+    fun deleteEvent(doOnComplete: () -> Unit) = references.teamEventReference(teamKey, event.value!!.key).removeValue().addOnCompleteListener { doOnComplete() }
 }
 
 private data class PlayerWithPoints(
     val name: String,
-    val points: List<Int>,
     val sum: Int,
     override val key: String,
 ) : HasKey
 
-private data class Header(
-    val pointsDataList: List<PointsData>,
-    override val key: String = "Header",
-) : HasKey
-
-private fun EventData.statusText() = if (optional) R.string.optional else R.string.mandatory
-private fun EventData.statusColor() = if (optional) R.color.colorPrimary else R.color.colorAccent
+private data class Header(override val key: String = "Header") : HasKey
 
 val eventDetailsModule = module {
     viewModel { (fragment: Fragment) -> EventDetailsViewModel(get(), fragment.getString(), fragment.getParcelable()) }
