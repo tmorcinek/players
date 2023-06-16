@@ -142,9 +142,9 @@ class NavActivity : AppCompatActivity(), NavControllerHost {
             menu.run {
                 addFragmentItem<PlayersFragment>(R.string.menu_players, R.drawable.ic_menu_players)
                 addFragmentItem<EventsFragment>(R.string.page_events, R.drawable.ic_menu_teams)
-                addFragmentItem<TeamStatsFragment>(R.string.team_stats, R.drawable.ic_menu_teams)
+                addFragmentItem<TeamStatsFragment>(R.string.team_stats, R.drawable.ic_menu_team_stats)
                 addSection(R.string.menu_players).run {
-                    addFragmentItem<CommonStatsFragment>(R.string.page_common_stats, R.drawable.ic_menu_players)
+                    addFragmentItem<CommonStatsFragment>(R.string.page_common_stats, R.drawable.ic_menu_query_stats)
                     addFragmentItem<FilterStatsFragment>(R.string.filter, R.drawable.ic_filter)
                 }
             }
