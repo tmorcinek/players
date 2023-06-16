@@ -23,6 +23,7 @@ import com.morcinek.players.core.extensions.getString
 import com.morcinek.players.core.extensions.map
 import com.morcinek.players.core.extensions.moveTransition
 import com.morcinek.players.core.extensions.observe
+import com.morcinek.players.core.extensions.observeNonNull
 import com.morcinek.players.core.extensions.putInt
 import com.morcinek.players.core.extensions.putParcel
 import com.morcinek.players.core.extensions.putString
@@ -51,7 +52,7 @@ class EventDetailsFragment : BaseFragment<FragmentEventDetailsBinding>(FragmentE
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.run {
-            observe(viewModel.event) {
+            observeNonNull(viewModel.event) {
                 title.run {
                     text = it.type?.name
                     background.setTint(eventTypeColor(it.type))
@@ -98,8 +99,12 @@ private class EventDetailsViewModel(val references: FirebaseReferences, val team
     val event = references.eventForTeamLiveDataForValueListener(teamKey, eventData.key)
 
     private val playersWithPoints = references.playersForTeamLiveDataForValueListener(teamKey).combineWith(event) { players, event ->
-        players.filter { it.key in event.players }.map { player ->
-            event.points.map { it.playersPoints[player.key] ?: 0 }.let { points -> PlayerWithPoints(player.toString(), points.sum().takeIf { it != 0 }, player.key) }
+        if (event != null) {
+            players.filter { it.key in event.players }.map { player ->
+                event.points.map { it.playersPoints[player.key] ?: 0 }.let { points -> PlayerWithPoints(player.toString(), points.sum().takeIf { it != 0 }, player.key) }
+            }
+        } else {
+            listOf()
         }
     }
 

@@ -8,6 +8,7 @@ inline fun <reified T> LiveData<T>.observe(owner: LifecycleOwner, crossinline ob
 
 inline fun <reified T> AppCompatActivity.observe(liveData: LiveData<T>, observer: Observer<T>) = liveData.observe(this, observer)
 inline fun <reified T> Fragment.observe(liveData: LiveData<T>, observer: Observer<T>) = liveData.observe(viewLifecycleOwner, observer)
+inline fun <reified T> Fragment.observeNonNull(liveData: LiveData<T?>, observer: Observer<T>) = liveData.observe(viewLifecycleOwner) { it?.let { observer.onChanged(it) } }
 
 fun <X, Y> LiveData<X>.map(mapFunction: (X) -> (Y)): LiveData<Y> = Transformations.map(this, mapFunction)
 
