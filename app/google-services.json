@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "1005861914258-07h9k7pa5siumn9m0e9a7n82klbqt2mf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.morcinek.players",
+            "certificate_hash": "f713b3f5155f3b3eb2f23275be67c02b957cd8c5"
+          }
+        },
+        {
+          "client_id": "1005861914258-itbommrqj2jc5urpbvg4f68e9t5icn7r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.morcinek.players",
+            "certificate_hash": "86310a29f1acc7358a5b22dee80ffafea1e6310d"
+          }
+        },
+        {
           "client_id": "1005861914258-tdi5td2kgclq16bjd5219to8alvqdsfj.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
