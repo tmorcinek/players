@@ -13,7 +13,6 @@ import com.morcinek.players.core.BaseFragment
 import com.morcinek.players.core.data.PlayerData
 import com.morcinek.players.core.data.TeamData
 import com.morcinek.players.core.database.FirebaseReferences
-import com.morcinek.players.core.database.playersWithoutTeamLiveDataForValueListener
 import com.morcinek.players.core.extensions.getParcelableOrNull
 import com.morcinek.players.core.extensions.map
 import com.morcinek.players.core.extensions.observe
@@ -39,13 +38,6 @@ class CreateTeamFragment : BaseFragment<FragmentCreateTeamBinding>(FragmentCreat
             }
             recyclerView.run {
                 layoutManager = LinearLayoutManager(activity)
-//                adapter = SelectionListAdapter<PlayerData>(R.layout.vh_selectable_player, itemCallback()) { _, item ->
-//                    name.text = "$item"
-//                }.apply {
-//                    selectedItems = viewModel.selectedPlayers
-//                    observe(viewModel.players) { submitList(it) }
-//                    onSelectedItemsChanged { viewModel.selectedPlayers = it }
-//                }
             }
             nextButton.run {
                 observe(viewModel.isNextEnabled) { isEnabled = it }
@@ -75,8 +67,6 @@ private class CreateTeamViewModel(val references: FirebaseReferences, val teamDa
         }
         references.rootReference().updateChildren(childUpdates).addOnCompleteListener { doOnComplete() }
     }
-
-    val players = references.playersWithoutTeamLiveDataForValueListener()
 }
 
 val createTeamModule = module {

@@ -15,3 +15,4 @@ inline fun <reified T : Activity> Activity.startNewActivityFinishCurrent() {
 inline fun <reified T : Activity> Context.startActivity(function: Intent.() -> Unit = {}) = startActivity(createIntent<T>(function))
 
 fun Activity.startActivityForResult(intent: Intent, requestCode: Int = 0) = startActivityForResult(intent, requestCode)
+inline fun <reified T : Activity> Activity.startActivityForResult(requestCode: Int = 0) = startActivityForResult(createIntent<T>(), requestCode)

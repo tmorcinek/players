@@ -6,6 +6,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.gson.GsonBuilder
 import com.morcinek.players.core.database.FirebaseReferences
+import com.morcinek.players.ui.createFirstTeamModule
 import com.morcinek.players.ui.navModule
 import com.morcinek.players.ui.players.createPlayerModule
 import com.morcinek.players.ui.players.playerDetailsModule
@@ -39,6 +40,7 @@ class Application : Application() {
             androidContext(this@Application)
             modules(
                 splashModule,
+                createFirstTeamModule,
                 appModule, navModule,
                 teamsModule, eventsModule, teamStatsModule,
                 teamInfoModule,

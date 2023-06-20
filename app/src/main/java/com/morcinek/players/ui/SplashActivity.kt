@@ -57,8 +57,12 @@ class SplashActivity : AppCompatActivity() {
             startNewActivityFinishCurrent<NavActivity>()
         } else {
             observe(viewModel.teams) {
-                viewModel.appPreferences.selectedTeamData = it.first()
-                startNewActivityFinishCurrent<NavActivity>()
+                if (it.isEmpty()){
+                    startActivityForResult<CreateTeamActivity>()
+                } else{
+                    viewModel.appPreferences.selectedTeamData = it.first()
+                    startNewActivityFinishCurrent<NavActivity>()
+                }
             }
         }
     }
