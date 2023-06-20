@@ -10,6 +10,7 @@ import com.morcinek.players.ui.navModule
 import com.morcinek.players.ui.players.createPlayerModule
 import com.morcinek.players.ui.players.playerDetailsModule
 import com.morcinek.players.ui.players.playersModule
+import com.morcinek.players.ui.splashModule
 import com.morcinek.players.ui.team.createTeamModule
 import com.morcinek.players.ui.team.eventsModule
 import com.morcinek.players.ui.team.teamInfoModule
@@ -37,6 +38,7 @@ class Application : Application() {
             androidLogger(Level.NONE)
             androidContext(this@Application)
             modules(
+                splashModule,
                 appModule, navModule,
                 teamsModule, eventsModule, teamStatsModule,
                 teamInfoModule,
